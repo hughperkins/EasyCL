@@ -24,7 +24,7 @@ Imagine we have a kernel with the following signature, in the file /tmp/foo.cl:
         cl.local( N );
         cl.output( N, result );
         const size_t local_ws[1]; local_ws[0] = 512;
-        const size_t global_ws[1]; global_ws[0] = OpenCLHelper::roundUp(local_ws, size);
+        const size_t global_ws[1]; global_ws[0] = OpenCLHelper::roundUp(local_ws[0], size);
         cl.run( 1, global_ws, local_ws );
         // result now contains the result of running the kernel, and all resources used
         // have been cleaned up
