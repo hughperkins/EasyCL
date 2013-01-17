@@ -27,6 +27,8 @@ public:
 
     int nextArg;
 
+    int gpuIndex;
+
     static int roundUp( int quantization, int minimum ) {
         int size = ( minimum / quantization) * quantization;
         if( size < minimum ) {
@@ -36,6 +38,7 @@ public:
     }
 
     OpenCLHelper(int gpuindex, string kernelfilepath, string kernelname ) {
+        this->gpuIndex = gpuindex;
         nextArg = 0;
         error = 0;
 
@@ -87,7 +90,6 @@ public:
 
         // Builds the program
         error = clBuildProgram(program, 1, &device, NULL, NULL, NULL);
-        checkError(error);
 
         // Shows the log
         char* build_log;
@@ -103,9 +105,23 @@ public:
         }
         delete[] build_log;
 
+        checkError(error);
+
         // Extracting the kernel
         kernel = clCreateKernel(program, kernelname.c_str(), &error);
         assert(error == CL_SUCCESS);
+    }
+
+    int getComputeUnits() {
+        return (int)getDeviceInfoInt(CL_DEVICE_MAX_COMPUTE_UNITS);
+    }
+
+    int getLocalMemorySize() {
+        return (int)getDeviceInfoInt(CL_DEVICE_LOCAL_MEM_SIZE);
+    }
+
+    int getMaxWorkgroupSize() {
+        return (int)getDeviceInfoInt(CL_DEVICE_MAX_WORK_GROUP_SIZE);
     }
 
     std::vector<cl_mem> buffers;
@@ -207,6 +223,12 @@ std::string toString(T val ) {
    std::ostringstream myostringstream;
    myostringstream << val;
    return myostringstream.str();
+}
+
+long getDeviceInfoInt( cl_device_info name ) {
+    cl_ulong value = 0;
+    clGetDeviceInfo(device, name, sizeof(cl_ulong), &value, 0);
+    return value;
 }
 
 };
