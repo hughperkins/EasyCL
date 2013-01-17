@@ -33,20 +33,20 @@ Imagine we have a kernel with the following signature, in the file /tmp/foo.cl:
 API
 ---
 
-// constructor:
-OpenCLHelper::OpenCLHelper( int GPUIndex, string kernelfilepath, string kernelname );
+    // constructor:
+    OpenCLHelper::OpenCLHelper( int GPUIndex, string kernelfilepath, string kernelname );
 
-// passing arguments to kernel:
-OpenCLHelper::input( int integerinput );
-OpenCLHelper::input( int arraysize, const float *inputarray ); // size in number of floats
-OpenCLHelper::output( int arraysize, float *outputarray ); // size in number of floats
-OpenCLHelper::local( int localarraysize ); // size in number of floats
+    // passing arguments to kernel:
+    OpenCLHelper::input( int integerinput );
+    OpenCLHelper::input( int arraysize, const float *inputarray ); // size in number of floats
+    OpenCLHelper::output( int arraysize, float *outputarray ); // size in number of floats
+    OpenCLHelper::local( int localarraysize ); // size in number of floats
 
-// running kernel, getting result back, and cleaning up:
-OpenCLHelper::run( int number_dimensions, size_t *global_ws, size_t *local_ws );
+    // running kernel, getting result back, and cleaning up:
+    OpenCLHelper::run( int number_dimensions, size_t *global_ws, size_t *local_ws );
 
-// helper function:
-OpenCLHelper::roundUp( int quantizationSize, int desiredTotalSize );
+    // helper function:
+    OpenCLHelper::roundUp( int quantizationSize, int desiredTotalSize );
 
 License
 -------
