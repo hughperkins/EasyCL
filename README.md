@@ -8,7 +8,7 @@ Example Usage
 
 Imagine we have a kernel with the following signature, in the file /tmp/foo.cl:
 
-    kernel void my_kernel( global float *one, global float *two, local float *one_local, global float *result ) {
+    kernel void my_kernel( int N, global float *one, global float *two, local float *one_local, global float *result ) {
         // kernel code here...
     }
 
