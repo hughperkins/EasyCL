@@ -11,6 +11,8 @@
 #include <vector>
 #include <sstream>
 #include <fstream>
+#include <stdexcept>
+using namespace std;
 
 #include <CL/cl.h>
 
@@ -23,11 +25,15 @@ public:
     cl_context context;
     cl_command_queue queue;
     cl_device_id device;
-    cl_kernel kernel;
-
-    int nextArg;
 
     int gpuIndex;
+
+    class CLArray1d *array1d(int N );
+
+    ~OpenCLHelper() {
+        clReleaseCommandQueue(queue);
+        clReleaseContext(context);        
+    }
 
     static int roundUp( int quantization, int minimum ) {
         int size = ( minimum / quantization) * quantization;
@@ -37,9 +43,16 @@ public:
         return size;
     }
 
-    OpenCLHelper(int gpuindex, string kernelfilepath, string kernelname ) {
+    static int getPower2Upperbound( int value ) {
+        int upperbound = 1;
+        while( upperbound < value ) {
+            upperbound <<= 1;
+        }
+        return upperbound;
+    }
+
+    OpenCLHelper(int gpuindex ) {
         this->gpuIndex = gpuindex;
-        nextArg = 0;
         error = 0;
 
         // Platform
@@ -79,38 +92,14 @@ public:
            exit(error);
         }
 
-        size_t src_size = 0;
-        std::string path = kernelfilepath.c_str();
-        std::string source = getFileContents(path);
-        //cout << "source: " << source << endl;
-        const char *source_char = source.c_str();
-        src_size = source.length();
-        cl_program program = clCreateProgramWithSource(context, 1, &source_char, &src_size, &error);
-        assert(error == CL_SUCCESS);
-
-        // Builds the program
-        error = clBuildProgram(program, 1, &device, NULL, NULL, NULL);
-
-        // Shows the log
-        char* build_log;
-        size_t log_size;
-        // First call to know the proper size
-        clGetProgramBuildInfo(program, device, CL_PROGRAM_BUILD_LOG, 0, NULL, &log_size);
-        build_log = new char[log_size+1];
-        // Second call to get the log
-        clGetProgramBuildInfo(program, device, CL_PROGRAM_BUILD_LOG, log_size, build_log, NULL);
-        build_log[log_size] = '\0';
-        if( log_size > 2 ) {
-            cout << "build log: " << build_log << endl;
-        }
-        delete[] build_log;
-
-        checkError(error);
-
-        // Extracting the kernel
-        kernel = clCreateKernel(program, kernelname.c_str(), &error);
-        assert(error == CL_SUCCESS);
     }
+
+    void finish() {
+        error = clFinish( queue );
+        checkError(error);
+    }
+
+    class CLKernel *buildKernel( string kernelfilepath, string kernelname );
 
     int getComputeUnits() {
         return (int)getDeviceInfoInt(CL_DEVICE_MAX_COMPUTE_UNITS);
@@ -124,78 +113,23 @@ public:
         return (int)getDeviceInfoInt(CL_DEVICE_MAX_WORK_GROUP_SIZE);
     }
 
-    std::vector<cl_mem> buffers;
-    std::vector<int> inputArgInts;
-    std::vector<cl_mem> outputArgBuffers;
-    std::vector<void *> outputArgPointers;
-    std::vector<size_t> outputArgSizes;
 
-    void input( int N, const float *data ) {
-        cl_mem buffer = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(float) * N, (void *)data, &error);
-        assert(error == CL_SUCCESS);
-        error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), &buffer);
-        checkError(error);
-        buffers.push_back(buffer);
-        nextArg++;
-    }
-    void input( int value ) {
-        inputArgInts.push_back(value);
-        error = clSetKernelArg(kernel, nextArg, sizeof(int), &(inputArgInts[inputArgInts.size()-1]));
-        checkError(error);
-        nextArg++;
-    }
-    void local( int N ) {
-        error = clSetKernelArg(kernel, nextArg, sizeof(float) * N, 0);
-        checkError(error);
-        nextArg++;
-    }
-    void output( int N, float *data ) {
-        cl_mem buffer = clCreateBuffer(context, CL_MEM_WRITE_ONLY, sizeof(float) * N, 0, &error);
-        assert( error == CL_SUCCESS );
-        error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), &buffer);
-        buffers.push_back(buffer);
-        //outputArgNums.push_back(nextArg);
-        outputArgBuffers.push_back(buffer);
-        outputArgPointers.push_back(data);
-        outputArgSizes.push_back(sizeof(float) * N );
-        nextArg++;
-    }
 
-    void run(int ND, const size_t *global_ws, const size_t *local_ws ) {
-        error = clEnqueueNDRangeKernel(queue, kernel, ND, NULL, global_ws, local_ws, 0, NULL, NULL);
-        checkError(error);
-
-        for( int i = 0; i < outputArgBuffers.size(); i++ ) {
-            clEnqueueReadBuffer(queue, outputArgBuffers[i], CL_TRUE, 0, outputArgSizes[i], outputArgPointers[i], 0, NULL, NULL);            
-        }
-
-        clReleaseKernel(kernel);
-        clReleaseCommandQueue(queue);
-        clReleaseContext(context);
-
-        for(int i = 0; i < buffers.size(); i++ ) {
-            clReleaseMemObject(buffers[i]);
-        }
-        buffers.clear();
-        outputArgBuffers.clear();
-        outputArgPointers.clear();
-        outputArgSizes.clear();
-        inputArgInts.clear();
-    }
-private:
-
-string errorMessage(cl_int error ) {
+static string errorMessage(cl_int error ) {
     return toString(error);
 }
 
-void checkError( cl_int error ) {
+static void checkError( cl_int error ) {
     if( error != CL_SUCCESS ) {
         cout << "error: " << error << endl;
         assert (false);
     }
 }
 
-string getFileContents( string filename ) {
+private:
+
+
+static string getFileContents( string filename ) {
     char * buffer = 0;
     long length;
     FILE * f = fopen (filename.c_str(), "rb");
@@ -207,10 +141,16 @@ string getFileContents( string filename ) {
       length = ftell (f);
       fseek (f, 0, SEEK_SET);
       buffer = new char[length];
-      if (buffer)
-      {
-        int result = fread (buffer, 1, length, f);
-      }
+      if (buffer) {
+        int bytesread = fread (buffer, 1, length, f);
+        if( bytesread != length ) {
+            cout << "Failed to read cl source file" << endl;
+            exit(-1);
+        }
+      } else {
+        cout << "Failed to allocate memory for cl source" << endl;
+        exit(-1);
+       }
       fclose (f);
       returnstring = buffer;
       delete[] buffer;
@@ -219,7 +159,7 @@ string getFileContents( string filename ) {
 }
 
 template<typename T>
-std::string toString(T val ) {
+static std::string toString(T val ) {
    std::ostringstream myostringstream;
    myostringstream << val;
    return myostringstream.str();
