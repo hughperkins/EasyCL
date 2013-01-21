@@ -70,7 +70,7 @@ public:
     }
 
     void run(int ND, const size_t *global_ws, const size_t *local_ws ) {
-        cout << "running kernel" << endl;
+        //cout << "running kernel" << endl;
         error = clEnqueueNDRangeKernel(openclhelper->queue, kernel, ND, NULL, global_ws, local_ws, 0, NULL, NULL);
         switch( error ) {
             case 0:
@@ -87,6 +87,14 @@ public:
                 cout << "Program build failure, code -11" << endl;
                 exit(-1);
                 break;
+            case -46:
+                cout << "Invalid kernel name, code -46" << endl;
+                exit(-1);
+                break;
+            case -52:
+                cout << "Invalid kernel args, code -52" << endl;
+                exit(-1);
+                break;
             case -54:
                 cout << "Invalid work group size, code -54" << endl;
                 exit(-1);
@@ -96,8 +104,8 @@ public:
                 exit(-1);
         }
         openclhelper->checkError(error);
-        error = clFinish(openclhelper->queue);
-        openclhelper->checkError(error);
+//        error = clFinish(openclhelper->queue);
+//        openclhelper->checkError(error);
     //}
 
     //void retrieveresultsandcleanup() {

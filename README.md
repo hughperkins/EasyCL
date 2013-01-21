@@ -1,7 +1,11 @@
 OpenCLHelper
 ============
 
-Easy to run kernels using OpenCL
+Easy to run kernels using OpenCL.
+
+- makes it easy to pass input and output arguments
+- handles much of the boilerplate
+- uses clew to load opencl dynamically
 
 Example Usage
 -------------
@@ -17,6 +21,11 @@ Imagine we have a kernel with the following signature, in the file /tmp/foo.cl:
     #include "OpenCLHelper.h"
 
     void run_kernel( int N, const float *one, const float *two, float *result ) {
+        if( !OpenCLHelper::isOpenCLAvailable() ) {
+            cout << "opencl library not found" << endl;
+            exit(-1);
+        }
+        cout << "found opencl library" << endl;
         OpenCLHelper cl(0);
         CLKernel *kernel = cl.buildKernel( "/tmp/foo.cl", "my_kernel");
         kernel->input( N );
@@ -31,11 +40,13 @@ Imagine we have a kernel with the following signature, in the file /tmp/foo.cl:
         delete kernel; // cleanup
     }
 
+There is a simple example in the 'test' subdirectory.
+
 API
 ---
 
     // constructor:
-    OpenCLHelper::OpenCLHelper( int GPUIndex
+    OpenCLHelper::OpenCLHelper( int GPUIndex );
 
     // compile kernel
     CLKernel *OpenCLHelper::buildKernel( string kernelfilepath, string kernelname );

@@ -1,7 +1,15 @@
+// Copyright Hugh Perkins 2013 hughperkins at gmail
+//
+// This Source Code Form is subject to the terms of the Mozilla Public License, 
+// v. 2.0. If a copy of the MPL was not distributed with this file, You can 
+// obtain one at http://mozilla.org/MPL/2.0/.
+
 #pragma once
 
 #include <stdexcept>
-#include <CL/cl.h>
+//#include <CL/cl.h>
+
+#include "clcc/clew.h"
 
 #include "OpenCLHelper.h"
 
@@ -40,23 +48,23 @@ public:
     ~CLArray1d() {
         if( onHost ) {
             delete[] hostarray;
-            cout << "deleted hostarray of " << N << " floats" << endl;
+//            cout << "deleted hostarray of " << N << " floats" << endl;
         }
         if( onDevice ) {
             clReleaseMemObject(devicearray);                    
-            cout << "deleted device array of " << N << " floats" << endl;
+//            cout << "deleted device array of " << N << " floats" << endl;
         }
     }
     void createOnHost() {
         assert(!onHost && !onDevice);
         hostarray = new float[N];
-        cout << "allocated hostarray of " << N << " floats" << endl;
+//        cout << "allocated hostarray of " << N << " floats" << endl;
         onHost = true;
     }
     void createOnDevice() {
         assert(!onHost && !onDevice);
         devicearray = clCreateBuffer(openclhelper->context, CL_MEM_READ_WRITE, sizeof(float) * N, 0, &error);
-        cout << "allocated device array of " << N << " floats" << endl;
+//        cout << "allocated device array of " << N << " floats" << endl;
         assert( error == CL_SUCCESS );        
         onDevice = true;        
     }
@@ -65,7 +73,7 @@ public:
         hostarray = new float[N];
         error = clEnqueueReadBuffer(openclhelper->queue, devicearray, CL_TRUE, 0, sizeof(float) * N, hostarray, 0, NULL, NULL);    
         openclhelper->checkError( error );
-        cout << "allocated host array of " << N << " floats" << endl;
+//        cout << "allocated host array of " << N << " floats" << endl;
         onHost = true;                
     }
     void copyToDevice() {
@@ -73,15 +81,15 @@ public:
         devicearray = clCreateBuffer(openclhelper->context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(float) * N, (void *)hostarray, &error);
         openclhelper->checkError(error);
         onDevice = true;
-        cout << "allocated device array of " << N << " floats" << endl;
+//        cout << "allocated device array of " << N << " floats" << endl;
     }
     void moveToDevice() {
         assert( onHost && !onDevice );
         devicearray = clCreateBuffer(openclhelper->context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(float) * N, (void *)hostarray, &error);
         assert(error == CL_SUCCESS);
         delete[] hostarray;
-        cout << "deleted hostarray of " << N << " floats" << endl;
-        cout << "allocated device array of " << N << " floats" << endl;
+//        cout << "deleted hostarray of " << N << " floats" << endl;
+//        cout << "allocated device array of " << N << " floats" << endl;
         onDevice = true;
         onHost = false;
     }
@@ -95,13 +103,13 @@ public:
     }
     void deleteFromHost(){
         assert(onHost);
-        cout << "deleted hostarray of " << N << " floats" << endl;
+//        cout << "deleted hostarray of " << N << " floats" << endl;
         delete[] hostarray;
         onHost = false;
     }
     void deleteFromDevice(){
         assert(onDevice);
-        cout << "deleted device array of " << N << " floats" << endl;
+//        cout << "deleted device array of " << N << " floats" << endl;
         clReleaseMemObject(devicearray);        
         onDevice = false;
     }

@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <cstdlib>
 #include <cassert>
 #include <iostream>
 #include <vector>
@@ -14,21 +15,34 @@
 #include <stdexcept>
 using namespace std;
 
-#include <CL/cl.h>
+// #include <CL/cl.h>
+
+#include "clcc/clew.h"
 
 // This code is partly based on http://opencl.codeplex.com/wikipage?title=OpenCL%20Tutorials%20-%201 , with helpers added for input and output arguments
 class OpenCLHelper {
 public:
      cl_int error;  
 
+    cl_uint num_platforms;
     cl_platform_id platform_id;
     cl_context context;
     cl_command_queue queue;
     cl_device_id device;
 
+    cl_uint num_devices;
+
     int gpuIndex;
 
     class CLArray1d *array1d(int N );
+
+    static bool isOpenCLAvailable() {
+#ifdef WIN32
+        return 0 == clewInit("OpenCL.dll");
+#else
+        return 0 == clewInit("libOpenCL.so");
+#endif
+    }
 
     ~OpenCLHelper() {
         clReleaseCommandQueue(queue);
@@ -52,23 +66,22 @@ public:
     }
 
     OpenCLHelper(int gpuindex ) {
+//        cout << "this: " << this << endl;
         this->gpuIndex = gpuindex;
         error = 0;
 
         // Platform
-        cl_uint num_platforms;
         error = clGetPlatformIDs(1, &platform_id, &num_platforms);
-        cout << "num platforms: " << num_platforms << endl;
+//        cout << "num platforms: " << num_platforms << endl;
         assert (num_platforms == 1);
         assert (error == CL_SUCCESS);
 
-        cl_uint num_devices;
         error = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_GPU, 1, &device, &num_devices);
         if (error != CL_SUCCESS) {
            cout << "Error getting device ids: " << errorMessage(error) << endl;
            exit(error);
         }
-        cout << "num devices: " << num_devices << endl;
+  //      cout << "num devices: " << num_devices << endl;
         cl_device_id *device_ids = new cl_device_id[num_devices];
         error = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_GPU, num_devices, device_ids, &num_devices);
         if (error != CL_SUCCESS) {
@@ -77,6 +90,7 @@ public:
         }
         assert( gpuindex < num_devices );
         device = device_ids[gpuindex];
+//        cout << "using device: " << device << endl;
         delete[] device_ids;
 
         // Context
@@ -96,7 +110,15 @@ public:
 
     void finish() {
         error = clFinish( queue );
-        checkError(error);
+        switch( error ) {
+            case CL_SUCCESS:
+                break;
+            case -36:
+                cout << "Invalid command queue: often indicates out of bounds memory access within kernel" << endl;
+                exit(-1);
+            default:
+                checkError(error);                
+        }
     }
 
     class CLKernel *buildKernel( string kernelfilepath, string kernelname );
@@ -140,7 +162,7 @@ static string getFileContents( string filename ) {
       fseek (f, 0, SEEK_END);
       length = ftell (f);
       fseek (f, 0, SEEK_SET);
-      buffer = new char[length];
+      buffer = new char[length + 1];
       if (buffer) {
         int bytesread = fread (buffer, 1, length, f);
         if( bytesread != length ) {
@@ -152,7 +174,8 @@ static string getFileContents( string filename ) {
         exit(-1);
        }
       fclose (f);
-      returnstring = buffer;
+        buffer[length] = 0;
+      returnstring = string( buffer );
       delete[] buffer;
     }
     return returnstring;
