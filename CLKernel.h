@@ -68,6 +68,17 @@ public:
         outputArgSizes.push_back(sizeof(float) * N );
         nextArg++;
     }
+    void inout( int N, float *data ) {
+        cl_mem buffer = clCreateBuffer(openclhelper->context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(float) * N, (void *)data, &error);
+        assert(error == CL_SUCCESS);
+        error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), &buffer);
+        openclhelper->checkError(error);
+        buffers.push_back(buffer);
+        outputArgBuffers.push_back(buffer);
+        outputArgPointers.push_back(data);
+        outputArgSizes.push_back(sizeof(float) * N );
+        nextArg++;
+    }
 
     void run(int ND, const size_t *global_ws, const size_t *local_ws ) {
         //cout << "running kernel" << endl;

@@ -8,7 +8,7 @@ include_directories(clcc)
 add_library( clew SHARED clcc/clew.c )
 target_link_libraries( clew dl )
 
-add_library( OpenCLHelper SHARED OpenCLHelper.cpp )
+add_library( OpenCLHelper SHARED OpenCLHelper.cpp CLKernel.cpp )
 target_link_libraries( OpenCLHelper clew )
 
 add_executable( gpuinfo gpuinfo.cpp )
@@ -16,4 +16,10 @@ target_link_libraries( gpuinfo clew )
 
 add_executable( testopenclhelper test/testopenclhelper.cpp )
 target_link_libraries( testopenclhelper clew OpenCLHelper )
+
+add_executable( testinout test/testinout.cpp )
+target_link_libraries( testinout clew OpenCLHelper )
+
+add_executable( testclarray test/testclarray.cpp )
+target_link_libraries( testclarray clew OpenCLHelper )
 
