@@ -5,6 +5,8 @@ using namespace std;
 #include "OpenCLHelper.h"
 #include "CLKernel.h"
 
+#include "test/asserts.h"
+
 int main( int argc, char *argv[] ) {
     if( !OpenCLHelper::isOpenCLAvailable() ) {
         cout << "opencl library not found" << endl;
@@ -19,11 +21,14 @@ int main( int argc, char *argv[] ) {
         inout[i] = i * 3;
     }
     kernel->inout( 5, inout );
-    assert( inout[0] == 7 );
-    assert( inout[1] == 10 );
-    assert( inout[2] == 13 );
-    assert( inout[3] == 16 );
-    assert( inout[4] == 19 );
+    size_t global = 5;
+    size_t local = 5;
+    kernel->run(1, &global, &local );
+    assertEquals( inout[0] , 7 );
+    assertEquals( inout[1] , 10 );
+    assertEquals( inout[2] , 13 );
+    assertEquals( inout[3] , 16 );
+    assertEquals( inout[4] , 19 );
     cout << "tests completed ok" << endl;
 }
 

@@ -52,9 +52,16 @@ API
     CLKernel *OpenCLHelper::buildKernel( string kernelfilepath, string kernelname );
 
     // passing arguments to kernel:
+
     CLKernel::input( int integerinput );
+
     CLKernel::input( int arraysize, const float *inputarray ); // size in number of floats
+    CLKernel::input( int arraysize, const int *inputarray ); // size in number of ints
     CLKernel::output( int arraysize, float *outputarray ); // size in number of floats
+    CLKernel::output( int arraysize, int *outputarray ); // size in number of ints
+    CLKernel::inout( int arraysize, float *inoutarray ); // size in number of floats
+    CLKernel::inout( int arraysize, int *inoutarray ); // size in number of ints
+
     CLKernel::local( int localarraysize ); // size in number of floats
 
     // running kernel, getting result back, and cleaning up:
