@@ -26,3 +26,6 @@ target_link_libraries( testclarray clew OpenCLHelper )
 add_executable( testintarray test/testintarray.cpp )
 target_link_libraries( testintarray clew OpenCLHelper )
 
+add_executable( testscalars test/testscalars.cpp )
+target_link_libraries( testscalars clew OpenCLHelper )
+

@@ -68,7 +68,7 @@ public:
     }
     void input( float value ) {
         inputArgFloats.push_back(value);
-        error = clSetKernelArg(kernel, nextArg, sizeof(int), &(inputArgFloats[inputArgFloats.size()-1]));
+        error = clSetKernelArg(kernel, nextArg, sizeof(float), &(inputArgFloats[inputArgFloats.size()-1]));
         openclhelper->checkError(error);
         nextArg++;
     }
