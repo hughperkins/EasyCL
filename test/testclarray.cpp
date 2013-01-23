@@ -4,7 +4,7 @@ using namespace std;
 
 #include "OpenCLHelper.h"
 #include "CLKernel.h"
-#include "CLArray1d.h"
+#include "CLArrayFloat.h"
 
 #include "test/asserts.h"
 
@@ -17,7 +17,7 @@ int main( int argc, char *argv[] ) {
 
     OpenCLHelper cl(0);
     CLKernel *kernel = cl.buildKernel("../test/testopenclhelper.cl", "test");
-    CLArray1d *out = cl.array1d(5);
+    CLArrayFloat *out = cl.arrayFloat(5);
     float in[5];
     for( int i = 0; i < 5; i++ ) {
         in[i] = i * 3;

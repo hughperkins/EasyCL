@@ -9,11 +9,16 @@ using namespace std;
 
 #include "OpenCLHelper.h"
 
-#include "CLArray1d.h"
+#include "CLArrayFloat.h"
+#include "CLArrayInt.h"
 #include "CLKernel.h"
 
-CLArray1d *OpenCLHelper::array1d(int N ) {
-    return new CLArray1d( N, this );
+CLArrayFloat *OpenCLHelper::arrayFloat(int N ) {
+    return new CLArrayFloat( N, this );
+}
+
+CLArrayInt *OpenCLHelper::arrayInt(int N ) {
+    return new CLArrayInt( N, this );
 }
 
 CLKernel *OpenCLHelper::buildKernel( string kernelfilepath, string kernelname ) {

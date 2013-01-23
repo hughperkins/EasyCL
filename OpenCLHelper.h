@@ -34,7 +34,8 @@ public:
 
     int gpuIndex;
 
-    class CLArray1d *array1d(int N );
+    class CLArrayFloat *arrayFloat(int N );
+    class CLArrayInt *arrayInt(int N );
 
     static bool isOpenCLAvailable() {
 #ifdef WIN32

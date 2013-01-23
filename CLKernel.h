@@ -1,6 +1,7 @@
 #pragma once
 
-#include "CLArray1d.h"
+#include "CLArrayInt.h"
+#include "CLArrayFloat.h"
 
 class CLKernel {
     OpenCLHelper *openclhelper; // NOT owned by this object, dont delete!
@@ -28,15 +29,20 @@ public:
     std::vector<cl_mem> buffers;
 
     std::vector<int> inputArgInts;
+    std::vector<float> inputArgFloats;
 
     std::vector<cl_mem> outputArgBuffers;
     std::vector<void *> outputArgPointers;
     std::vector<size_t> outputArgSizes;
 
-    std::vector<CLArray1d *> clarray1ds;
+    std::vector<CLArrayFloat *> clarray1ds;
 
-    void input( CLArray1d *clarray1d );
-    void output( CLArray1d *clarray1d );
+    void input( CLArrayFloat *clarray1d );
+    void input( CLArrayInt *clarray1d );
+    void output( CLArrayFloat *clarray1d );
+    void output( CLArrayInt *clarray1d );
+    void inout( CLArrayFloat *clarray1d );
+    void inout( CLArrayInt *clarray1d );
 
     void input( int N, const float *data ) {
         cl_mem buffer = clCreateBuffer(openclhelper->context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(float) * N, (void *)data, &error);
@@ -57,6 +63,12 @@ public:
     void input( int value ) {
         inputArgInts.push_back(value);
         error = clSetKernelArg(kernel, nextArg, sizeof(int), &(inputArgInts[inputArgInts.size()-1]));
+        openclhelper->checkError(error);
+        nextArg++;
+    }
+    void input( float value ) {
+        inputArgFloats.push_back(value);
+        error = clSetKernelArg(kernel, nextArg, sizeof(int), &(inputArgFloats[inputArgFloats.size()-1]));
         openclhelper->checkError(error);
         nextArg++;
     }
@@ -163,6 +175,7 @@ public:
         outputArgPointers.clear();
         outputArgSizes.clear();
         inputArgInts.clear();
+        inputArgFloats.clear();
         nextArg = 0;
     }
 };

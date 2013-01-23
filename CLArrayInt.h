@@ -13,20 +13,20 @@
 
 #include "OpenCLHelper.h"
 
-class CLArray1d {
+class CLArrayInt {
 protected:
     int N;
     bool onHost;
     bool onDevice;
 
-    float *hostarray;
+    int *hostarray;
     cl_mem devicearray;
     OpenCLHelper *openclhelper; // NOT owned by this object, so dont free!
 
     cl_int error;
 
 public:
-    CLArray1d( int N, OpenCLHelper *openclhelper ) {
+    CLArrayInt( int N, OpenCLHelper *openclhelper ) {
         this->N = N;
         this->openclhelper = openclhelper;
         error = CL_SUCCESS;
@@ -36,16 +36,16 @@ public:
 
         hostarray = 0;
     }
-    CLArray1d( const CLArray1d &source ) { // copy constructor
+    CLArrayInt( const CLArrayInt &source ) { // copy constructor
         throw std::runtime_error("can't assign these...");
     }
-    CLArray1d &operator=( const CLArray1d &two ) { // assignment operator
+    CLArrayInt &operator=( const CLArrayInt &two ) { // assignment operator
        if( this == &two ) { // self-assignment
           return *this;
        }
        throw std::runtime_error("can't assign these...");
     }
-    ~CLArray1d() {
+    ~CLArrayInt() {
         if( onHost ) {
             delete[] hostarray;
 //            cout << "deleted hostarray of " << N << " floats" << endl;
@@ -57,35 +57,35 @@ public:
     }
     void createOnHost() {
         assert(!onHost && !onDevice);
-        hostarray = new float[N];
+        hostarray = new int[N];
 //        cout << "allocated hostarray of " << N << " floats" << endl;
         onHost = true;
     }
     void createOnDevice() {
         assert(!onHost && !onDevice);
-        devicearray = clCreateBuffer(openclhelper->context, CL_MEM_READ_WRITE, sizeof(float) * N, 0, &error);
+        devicearray = clCreateBuffer(openclhelper->context, CL_MEM_READ_WRITE, sizeof(int) * N, 0, &error);
 //        cout << "allocated device array of " << N << " floats" << endl;
         assert( error == CL_SUCCESS );        
         onDevice = true;        
     }
     void copyToHost() {
         assert( !onHost && onDevice );
-        hostarray = new float[N];
-        error = clEnqueueReadBuffer(openclhelper->queue, devicearray, CL_TRUE, 0, sizeof(float) * N, hostarray, 0, NULL, NULL);    
+        hostarray = new int[N];
+        error = clEnqueueReadBuffer(openclhelper->queue, devicearray, CL_TRUE, 0, sizeof(int) * N, hostarray, 0, NULL, NULL);    
         openclhelper->checkError( error );
 //        cout << "allocated host array of " << N << " floats" << endl;
         onHost = true;                
     }
     void copyToDevice() {
         assert( onHost && !onDevice );
-        devicearray = clCreateBuffer(openclhelper->context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(float) * N, (void *)hostarray, &error);
+        devicearray = clCreateBuffer(openclhelper->context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(int) * N, (void *)hostarray, &error);
         openclhelper->checkError(error);
         onDevice = true;
 //        cout << "allocated device array of " << N << " floats" << endl;
     }
     void moveToDevice() {
         assert( onHost && !onDevice );
-        devicearray = clCreateBuffer(openclhelper->context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(float) * N, (void *)hostarray, &error);
+        devicearray = clCreateBuffer(openclhelper->context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(int) * N, (void *)hostarray, &error);
         assert(error == CL_SUCCESS);
         delete[] hostarray;
 //        cout << "deleted hostarray of " << N << " floats" << endl;
@@ -113,7 +113,7 @@ public:
         clReleaseMemObject(devicearray);        
         onDevice = false;
     }
-    float &operator[]( int n ) {
+    int &operator[]( int n ) {
         if( !onHost ) {
             if( !onDevice ) {
                 throw runtime_error("array not present either on host or device!");
@@ -130,12 +130,6 @@ public:
     }
     inline bool isOnDevice(){
         return onDevice;
-    }
-};
-
-class CLArray2d {
-public:
-    CLArray2d( int row, int cols ) {
     }
 };
 

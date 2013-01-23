@@ -70,11 +70,11 @@ API
     // helper function:
     OpenCLHelper::roundUp( int quantizationSize, int desiredTotalSize );
 
-CLArray1d objects
------------------
+CLArray objects
+---------------
 
 To make it possible to reuse data between kernels, without moving back to PC
-main memory, and back onto the GPU, you can use CLArray1d objects.
+main memory, and back onto the GPU, you can use CLArray objects.
 
 These can be created on the GPU, or on the host, and moved backwards 
 and forwards between each other, as required.  They can be passed as an 'input'
@@ -82,21 +82,23 @@ and 'output' to a CLKernel object.  They can be reused between kernels.
 
     OpenCLHelper cl(0);
 
-    CLArray1d *one = cl.array1d(10000); // create CLArray1d object for 10,000 floats
+    CLArrayFloat *one = cl.arrayFloat(10000); // create CLArray object for 10,000 floats
     one->createOnHost(); // allocate on the host
     (*one)[0] = 5;
     (*one)[1] = 7; // give some data...
 
     // create on device:
-    CLArray1d *two = cl.array1d(10000);
+    CLArrayFloat *two = cl.arrayFloat(10000);
     two->createOnDevice();
 
     // pass to kernel:
     kernel->input(one);
     kernel->output(two);
 
-You can then take the 'two' CLArray1d object, and pass it as the 'input' to 
+You can then take the 'two' CLArray object, and pass it as the 'input' to 
 a different kernel, or you can use operator[] to read values from it.
+
+Currently, CLArray is available as 'CLArrayFloat' and 'CLArrayInt'.
 
 License
 -------
