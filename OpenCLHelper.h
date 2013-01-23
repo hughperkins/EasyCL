@@ -67,6 +67,15 @@ public:
     }
 
     OpenCLHelper(int gpuindex ) {
+#ifdef WIN32
+        bool clpresent = 0 == clewInit("OpenCL.dll");
+#else
+        bool clpresent = 0 == clewInit("libOpenCL.so");
+#endif
+        if( !clpresent ) {
+            throw runtime_error("OpenCL library not found");
+        }
+
 //        cout << "this: " << this << endl;
         this->gpuIndex = gpuindex;
         error = 0;
