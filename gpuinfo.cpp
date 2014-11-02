@@ -16,11 +16,7 @@ using namespace std;
 #include "deviceinfo_helper.h"
 
 int main( int argc, char *argv[] ) {
-#ifdef WIN32
-    bool clpresent = 0 == clewInit("OpenCL.dll");
-#else
-    bool clpresent = 0 == clewInit("libOpenCL.so");
-#endif
+    bool clpresent = 0 == clewInit();
 
     if( !clpresent ) {
         cout << "opencl library not found." << endl;

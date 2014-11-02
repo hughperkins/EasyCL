@@ -38,11 +38,7 @@ public:
     class CLArrayInt *arrayInt(int N );
 
     static bool isOpenCLAvailable() {
-#ifdef WIN32
-        return 0 == clewInit("OpenCL.dll");
-#else
-        return 0 == clewInit("libOpenCL.so");
-#endif
+        return 0 == clewInit();
     }
 
     ~OpenCLHelper() {
@@ -67,11 +63,7 @@ public:
     }
 
     OpenCLHelper(int gpuindex ) {
-#ifdef WIN32
-        bool clpresent = 0 == clewInit("OpenCL.dll");
-#else
-        bool clpresent = 0 == clewInit("libOpenCL.so");
-#endif
+        bool clpresent = 0 == clewInit();
         if( !clpresent ) {
             throw runtime_error("OpenCL library not found");
         }
