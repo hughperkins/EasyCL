@@ -8,6 +8,7 @@ using namespace std;
 #include "test/asserts.h"
 
 int main( int argc, char *argv[] ) {
+    cout << "start" << endl;
     if( !OpenCLHelper::isOpenCLAvailable() ) {
         cout << "opencl library not found" << endl;
         exit(-1);

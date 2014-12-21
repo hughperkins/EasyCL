@@ -4,8 +4,8 @@ set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build, options a
 
 # This is not used yet, but it will be soon ;-)
 include_directories(.)
-include_directories(clcc)
-add_library( clew SHARED clcc/clew.c )
+include_directories(clew/include)
+add_library( clew SHARED clew/src/clew.c )
 target_link_libraries( clew dl )
 
 add_library( OpenCLHelper SHARED OpenCLHelper.cpp CLKernel.cpp )

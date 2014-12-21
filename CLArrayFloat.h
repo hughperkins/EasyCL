@@ -9,7 +9,7 @@
 #include <stdexcept>
 //#include <CL/cl.h>
 
-#include "clcc/clew.h"
+//#include "clcc/clew.h"
 
 #include "OpenCLHelper.h"
 

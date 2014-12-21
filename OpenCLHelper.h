@@ -15,11 +15,7 @@
 #include <stdexcept>
 using namespace std;
 
-// #include <CL/cl.h>
-
-#include <dlfcn.h>
-
-#include "clcc/clew.h"
+#include "clew/include/clew.h"
 
 // This code is partly based on http://opencl.codeplex.com/wikipage?title=OpenCL%20Tutorials%20-%201 , with helpers added for input and output arguments
 class OpenCLHelper {
@@ -40,11 +36,7 @@ public:
     class CLArrayInt *arrayInt(int N );
 
     static bool isOpenCLAvailable() {
-#ifdef WIN32
-        return 0 == clewInit("OpenCL.dll");
-#else
-        return 0 == clewInit("libOpenCL.so");
-#endif
+        return 0 == clewInit();
     }
 
     ~OpenCLHelper() {
@@ -69,13 +61,7 @@ public:
     }
 
     OpenCLHelper(int gpuindex ) {
-   void * result = dlopen("/usr/local/lib/beignet/libcl.so", RTLD_NOW | RTLD_GLOBAL);
-#ifdef WIN32
-        bool clpresent = 0 == clewInit("OpenCL.dll");
-#else
-//        bool clpresent = 0 == clewInit("libOpenCL.so");
-        bool clpresent = 0 == clewInit("/usr/local/lib/beignet/libcl.so");
-#endif
+        bool clpresent = 0 == clewInit();
         if( !clpresent ) {
             throw runtime_error("OpenCL library not found");
         }

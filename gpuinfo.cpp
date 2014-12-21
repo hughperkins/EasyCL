@@ -13,19 +13,12 @@ using namespace std;
 
 #include <dlfcn.h>
 
-#include "clcc/clew.h"
+#include "clew/include/clew.h"
 
 #include "deviceinfo_helper.h"
 
 int main( int argc, char *argv[] ) {
-#ifdef WIN32
-    bool clpresent = 0 == clewInit("OpenCL.dll");
-#else
-    bool clpresent = 0 == clewInit("libOpenCL.so");
-//    bool clpresent = 0 == clewInit("libcl.so");
-//    bool clpresent = 0 == clewInit("libcl.so");
-#endif
-
+    bool clpresent = 0 == clewInit();
     if( !clpresent ) {
         cout << "opencl library not found." << endl;
         return -1;
