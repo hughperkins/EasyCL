@@ -1,0 +1,3 @@
+[submodule "clew"]
+	path = clew
+	url = https://github.com/martijnberger/clew.git
