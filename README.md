@@ -100,6 +100,15 @@ a different kernel, or you can use operator[] to read values from it.
 
 Currently, CLArray is available as 'CLArrayFloat' and 'CLArrayInt'.
 
+What if it doesn't run?
+-----------------------
+
+- In Ubuntu, you can use `clinfo` (install via `sudo apt-get install clinfo`), to check the
+OpenCL installation itself is ok.  If this says 'no installations found', then it's an OpenCL
+configuration issue.
+- If this runs, then try build/run `gpuinfo`
+- If that runs, then try build/run `testopenclhelper`
+
 License
 -------
 
