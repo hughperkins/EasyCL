@@ -100,14 +100,46 @@ a different kernel, or you can use operator[] to read values from it.
 
 Currently, CLArray is available as 'CLArrayFloat' and 'CLArrayInt'.
 
+Pre-requisites
+--------------
+
+- OpenCL needs to be installed, which means things like:
+  - in linux, you'll need a libOpenCL.so installed, and 
+  - an OpenCL implementation, ie some kind of .so file, and
+  - an appropriate text file at /etc/OpenCL/vendors/somename.icd , containing the full path to the Open
+CL implementation .so file
+- CMake
+- C++ compiler
+- git
+
+How to build
+------------
+
+    git clone https://github.com/hughperkins/OpenCLHelper.git
+    cd OpenCLHelper
+    mkdir build
+    cd build
+    cmake ..
+    make
+
+How to run self-tests
+---------------------
+
+    ./gpuinfo
+
+... should print some information about your graphics card
+
+    ./testopenclhelper
+
+... will compile a kernel, pass in some data, run the kernel, and check the results
+are expected
+
 What if it doesn't run?
 -----------------------
 
 - In Ubuntu, you can use `clinfo` (install via `sudo apt-get install clinfo`), to check the
 OpenCL installation itself is ok.  If this says 'no installations found', then it's an OpenCL
 configuration issue.
-- If this runs, then try build/run `gpuinfo`
-- If that runs, then try build/run `testopenclhelper`
 
 License
 -------
