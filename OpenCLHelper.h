@@ -17,6 +17,8 @@ using namespace std;
 
 // #include <CL/cl.h>
 
+#include <dlfcn.h>
+
 #include "clcc/clew.h"
 
 // This code is partly based on http://opencl.codeplex.com/wikipage?title=OpenCL%20Tutorials%20-%201 , with helpers added for input and output arguments
@@ -41,7 +43,11 @@ public:
 #ifdef WIN32
         return 0 == clewInit("OpenCL.dll");
 #else
-        return 0 == clewInit("libOpenCL.so");
+        if( clewInit("libcl.so") ) {
+            return true;
+        } else {
+            return 0 == clewInit("libOpenCL.so");
+        }
 #endif
     }
 
@@ -67,10 +73,12 @@ public:
     }
 
     OpenCLHelper(int gpuindex ) {
+   void * result = dlopen("/usr/local/lib/beignet/libcl.so", RTLD_NOW | RTLD_GLOBAL);
 #ifdef WIN32
         bool clpresent = 0 == clewInit("OpenCL.dll");
 #else
-        bool clpresent = 0 == clewInit("libOpenCL.so");
+//        bool clpresent = 0 == clewInit("libOpenCL.so");
+        bool clpresent = 0 == clewInit("/usr/local/lib/beignet/libcl.so");
 #endif
         if( !clpresent ) {
             throw runtime_error("OpenCL library not found");
@@ -82,7 +90,7 @@ public:
 
         // Platform
         error = clGetPlatformIDs(1, &platform_id, &num_platforms);
-//        cout << "num platforms: " << num_platforms << endl;
+        cout << "num platforms: " << num_platforms << endl;
         assert (num_platforms == 1);
         assert (error == CL_SUCCESS);
 
@@ -91,7 +99,7 @@ public:
            cout << "Error getting device ids: " << errorMessage(error) << endl;
            exit(error);
         }
-  //      cout << "num devices: " << num_devices << endl;
+        cout << "num devices: " << num_devices << endl;
         cl_device_id *device_ids = new cl_device_id[num_devices];
         error = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_GPU, num_devices, device_ids, &num_devices);
         if (error != CL_SUCCESS) {
@@ -100,7 +108,7 @@ public:
         }
         assert( gpuindex < num_devices );
         device = device_ids[gpuindex];
-//        cout << "using device: " << device << endl;
+        cout << "using device: " << device << endl;
         delete[] device_ids;
 
         // Context

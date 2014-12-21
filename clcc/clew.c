@@ -6,6 +6,8 @@
 //  (See accompanying file license.txt)
 //////////////////////////////////////////////////////////////////////////
 
+#include "stdio.h"
+
 #include "clew.h"
 
 //! \file clew.c
@@ -153,6 +155,7 @@ int clewInit(const char* path)
     //  Check for errors
     if (module == NULL)
     {
+/*        printf("module null\n");*/
         return CLEW_ERROR_OPEN_FAILED;
     }
 
@@ -169,6 +172,7 @@ int clewInit(const char* path)
     }
 
     //  Determine function entry-points
+//        printf("checking fns...\n");
     CLEW_CHECK_FUNCTION(__clewGetPlatformIDs                = (PFNCLGETPLATFORMIDS              )CLCC_DYNLIB_IMPORT(module, "clGetPlatformIDs"));
     CLEW_CHECK_FUNCTION(__clewGetPlatformInfo               = (PFNCLGETPLATFORMINFO             )CLCC_DYNLIB_IMPORT(module, "clGetPlatformInfo"));
     CLEW_CHECK_FUNCTION(__clewGetDeviceIDs                  = (PFNCLGETDEVICEIDS                )CLCC_DYNLIB_IMPORT(module, "clGetDeviceIDs"));
@@ -178,12 +182,17 @@ int clewInit(const char* path)
     CLEW_CHECK_FUNCTION(__clewRetainContext                 = (PFNCLRETAINCONTEXT               )CLCC_DYNLIB_IMPORT(module, "clRetainContext"));
     CLEW_CHECK_FUNCTION(__clewReleaseContext                = (PFNCLRELEASECONTEXT              )CLCC_DYNLIB_IMPORT(module, "clReleaseContext"));
     CLEW_CHECK_FUNCTION(__clewGetContextInfo                = (PFNCLGETCONTEXTINFO              )CLCC_DYNLIB_IMPORT(module, "clGetContextInfo"));
-    CLEW_CHECK_FUNCTION(__clewCreateCommandQueue            = (PFNCLCREATECOMMANDQUEUE          )CLCC_DYNLIB_IMPORT(module, "clCreateCommandQueue"));
+/*    printf("1\n");*/
+      CLEW_CHECK_FUNCTION(__clewCreateCommandQueue            = (PFNCLCREATECOMMANDQUEUE          )CLCC_DYNLIB_IMPORT(module, "clCreateCommandQueue"));
     CLEW_CHECK_FUNCTION(__clewRetainCommandQueue            = (PFNCLRETAINCOMMANDQUEUE          )CLCC_DYNLIB_IMPORT(module, "clRetainCommandQueue"));
     CLEW_CHECK_FUNCTION(__clewReleaseCommandQueue           = (PFNCLRELEASECOMMANDQUEUE         )CLCC_DYNLIB_IMPORT(module, "clReleaseCommandQueue"));
+/*    printf("4\n");*/
     CLEW_CHECK_FUNCTION(__clewGetCommandQueueInfo           = (PFNCLGETCOMMANDQUEUEINFO         )CLCC_DYNLIB_IMPORT(module, "clGetCommandQueueInfo"));
-    CLEW_CHECK_FUNCTION(__clewSetCommandQueueProperty       = (PFNCLSETCOMMANDQUEUEPROPERTY     )CLCC_DYNLIB_IMPORT(module, "clSetCommandQueueProperty"));
+/*    printf("6\n");*/
+//    CLEW_CHECK_FUNCTION(__clewSetCommandQueueProperty       = (PFNCLSETCOMMANDQUEUEPROPERTY     )CLCC_DYNLIB_IMPORT(module, "clSetCommandQueueProperty"));
+/*    printf("5\n");*/
     CLEW_CHECK_FUNCTION(__clewCreateBuffer                  = (PFNCLCREATEBUFFER                )CLCC_DYNLIB_IMPORT(module, "clCreateBuffer"));
+/*    printf("3\n");*/
     CLEW_CHECK_FUNCTION(__clewCreateImage2D                 = (PFNCLCREATEIMAGE2D               )CLCC_DYNLIB_IMPORT(module, "clCreateImage2D"));
     CLEW_CHECK_FUNCTION(__clewCreateImage3D                 = (PFNCLCREATEIMAGE3D               )CLCC_DYNLIB_IMPORT(module, "clCreateImage3D"));
     CLEW_CHECK_FUNCTION(__clewRetainMemObject               = (PFNCLRETAINMEMOBJECT             )CLCC_DYNLIB_IMPORT(module, "clRetainMemObject"));
@@ -194,6 +203,7 @@ int clewInit(const char* path)
     CLEW_CHECK_FUNCTION(__clewCreateSampler                 = (PFNCLCREATESAMPLER               )CLCC_DYNLIB_IMPORT(module, "clCreateSampler"));
     CLEW_CHECK_FUNCTION(__clewRetainSampler                 = (PFNCLRETAINSAMPLER               )CLCC_DYNLIB_IMPORT(module, "clRetainSampler"));
     CLEW_CHECK_FUNCTION(__clewReleaseSampler                = (PFNCLRELEASESAMPLER              )CLCC_DYNLIB_IMPORT(module, "clReleaseSampler"));
+/*    printf("2\n");*/
     CLEW_CHECK_FUNCTION(__clewGetSamplerInfo                = (PFNCLGETSAMPLERINFO              )CLCC_DYNLIB_IMPORT(module, "clGetSamplerInfo"));
     CLEW_CHECK_FUNCTION(__clewCreateProgramWithSource       = (PFNCLCREATEPROGRAMWITHSOURCE     )CLCC_DYNLIB_IMPORT(module, "clCreateProgramWithSource"));
     CLEW_CHECK_FUNCTION(__clewCreateProgramWithBinary       = (PFNCLCREATEPROGRAMWITHBINARY     )CLCC_DYNLIB_IMPORT(module, "clCreateProgramWithBinary"));
