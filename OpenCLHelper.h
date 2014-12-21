@@ -43,11 +43,7 @@ public:
 #ifdef WIN32
         return 0 == clewInit("OpenCL.dll");
 #else
-        if( clewInit("libcl.so") ) {
-            return true;
-        } else {
-            return 0 == clewInit("libOpenCL.so");
-        }
+        return 0 == clewInit("libOpenCL.so");
 #endif
     }
 

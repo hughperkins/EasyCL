@@ -21,8 +21,8 @@ int main( int argc, char *argv[] ) {
 #ifdef WIN32
     bool clpresent = 0 == clewInit("OpenCL.dll");
 #else
-//    bool clpresent = 0 == clewInit("libOpenCL.so");
-    bool clpresent = 0 == clewInit("libcl.so");
+    bool clpresent = 0 == clewInit("libOpenCL.so");
+//    bool clpresent = 0 == clewInit("libcl.so");
 //    bool clpresent = 0 == clewInit("libcl.so");
 #endif
 
