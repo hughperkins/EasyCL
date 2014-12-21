@@ -9,10 +9,6 @@
 #include <cstdlib>
 using namespace std;
 
-//#include <CL/cl.h>
-
-#include <dlfcn.h>
-
 #include "clew/include/clew.h"
 
 #include "deviceinfo_helper.h"
