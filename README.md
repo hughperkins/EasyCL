@@ -84,6 +84,9 @@ These can be created on the GPU, or on the host, and moved backwards
 and forwards between each other, as required.  They can be passed as an 'input'
 and 'output' to a CLKernel object.  They can be reused between kernels.
 
+Compared to CLWrapper objects, they are more automated, but involve more 
+memory copying.  They're more mature.
+
     OpenCLHelper cl(0);
 
     CLArrayFloat *one = cl.arrayFloat(10000); // create CLArray object for 10,000 floats
@@ -103,6 +106,47 @@ You can then take the 'two' CLArray object, and pass it as the 'input' to
 a different kernel, or you can use operator[] to read values from it.
 
 Currently, CLArray is available as 'CLArrayFloat' and 'CLArrayInt'.
+
+CLWrapper objects
+-----------------
+
+To make it possible to reuse data between kernels, without moving back to PC
+main memory, and back onto the GPU, you can use CLArray objects.
+
+These can be created on the GPU, or on the host, and moved backwards 
+and forwards between each other, as required.  They can be passed as an 'input'
+and 'output' to a CLKernel object.  They can be reused between kernels.
+
+Compared to CLArray objects, CLWrapper objects are currently in 'draft' status,
+but involve less memory copying.  They're less automated, since you 
+have to explicitly call 'copyToHost()' and 'copyToDevice()'.
+
+    if( !OpenCLHelper::isOpenCLAvailable() ) {
+        cout << "opencl library not found" << endl;
+        exit(-1);
+    }
+    cout << "found opencl library" << endl;
+
+    OpenCLHelper cl(0);
+    CLKernel *kernel = cl.buildKernel("../test/testopenclhelper.cl", "test_int");
+    int in[5];
+    for( int i = 0; i < 5; i++ ) {
+        in[i] = i * 3;
+    }
+    int out[5];
+    CLIntWrapper *inwrapper = cl.intWrapper(5, in);
+    CLIntWrapper *outwrapper = cl.intWrapper(5, out);
+    inwrapper->copyToDevice();
+    kernel->input( inwrapper );
+    kernel->output( outwrapper );
+    kernel->run_1d( 5, 5 );
+    outwrapper->copyToHost();
+    assertEquals( out[0] , 7 );
+    assertEquals( out[1] , 10 );
+    assertEquals( out[2] , 13 );
+    assertEquals( out[3] , 16 );
+    assertEquals( out[4] , 19 );
+    cout << "tests completed ok" << endl;
 
 Pre-requisites
 --------------

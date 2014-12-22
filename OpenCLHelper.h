@@ -13,7 +13,6 @@
 #include <sstream>
 #include <fstream>
 #include <stdexcept>
-using namespace std;
 
 #include "clew/include/clew.h"
 

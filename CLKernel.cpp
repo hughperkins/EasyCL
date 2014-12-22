@@ -4,6 +4,9 @@
 // v. 2.0. If a copy of the MPL was not distributed with this file, You can 
 // obtain one at http://mozilla.org/MPL/2.0/.
 
+#include <stdexcept>
+using namespace std;
+
 #include "CLKernel.h"
 #include "CLArrayFloat.h"
 #include "CLArrayInt.h"
@@ -56,6 +59,27 @@ void CLKernel::input( CLArrayInt *clarray1d ) {
     error = clSetKernelArg( kernel, nextArg, sizeof(cl_mem), devicearray );
     openclhelper->checkError(error);
     nextArg++;
+}
+
+void CLKernel::input( CLIntWrapper *intWrapper ) {
+    assert( intWrapper != 0 );
+    if( !intWrapper->isOnDevice() ) {
+        throw std::runtime_error("need to copyToDevice() before calling kernel->input");
+    }
+    cl_mem *devicearray = intWrapper->getDeviceArray();
+    error = clSetKernelArg( kernel, nextArg, sizeof(cl_mem), devicearray );
+    openclhelper->checkError(error);
+    nextArg++;
+}
+
+void CLKernel::output( CLIntWrapper *intWrapper ) {
+    assert( intWrapper != 0 );
+    if( !intWrapper->isOnDevice() ) {
+        intWrapper->createOnDevice();
+    }
+    error = clSetKernelArg( kernel, nextArg, sizeof(cl_mem), (intWrapper->getDeviceArray()) );
+    openclhelper->checkError(error);
+    nextArg++;        
 }
 
 void CLKernel::output( CLArrayInt *clarray1d ) {
