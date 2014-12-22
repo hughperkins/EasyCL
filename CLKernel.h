@@ -44,6 +44,9 @@ public:
     void inout( CLArrayFloat *clarray1d );
     void inout( CLArrayInt *clarray1d );
 
+    void input( CLIntWrapper *intWrapper );
+    void output( CLIntWrapper *intWrapper );
+
     void input( int N, const float *data ) {
         cl_mem buffer = clCreateBuffer(openclhelper->context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(float) * N, (void *)data, &error);
         assert(error == CL_SUCCESS);

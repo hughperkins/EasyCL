@@ -5,27 +5,30 @@ set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build, options a
 # This is not used yet, but it will be soon ;-)
 include_directories(.)
 include_directories(clew/include)
-add_library( clew SHARED clew/src/clew.c )
-target_link_libraries( clew dl )
+#add_library( clew SHARED clew/src/clew.c )
+#target_link_libraries( clew dl )
 
-add_library( OpenCLHelper SHARED OpenCLHelper.cpp CLKernel.cpp )
-target_link_libraries( OpenCLHelper clew )
+add_library( OpenCLHelper SHARED OpenCLHelper.cpp CLKernel.cpp clew/src/clew.c )
+target_link_libraries( OpenCLHelper dl )
 
 add_executable( gpuinfo gpuinfo.cpp )
-target_link_libraries( gpuinfo clew )
+target_link_libraries( gpuinfo OpenCLHelper )
 
 add_executable( testopenclhelper test/testopenclhelper.cpp )
-target_link_libraries( testopenclhelper clew OpenCLHelper )
+target_link_libraries( testopenclhelper OpenCLHelper )
 
 add_executable( testinout test/testinout.cpp )
-target_link_libraries( testinout clew OpenCLHelper )
+target_link_libraries( testinout OpenCLHelper )
 
 add_executable( testclarray test/testclarray.cpp )
-target_link_libraries( testclarray clew OpenCLHelper )
+target_link_libraries( testclarray OpenCLHelper )
 
 add_executable( testintarray test/testintarray.cpp )
-target_link_libraries( testintarray clew OpenCLHelper )
+target_link_libraries( testintarray OpenCLHelper )
+
+add_executable( testintwrapper test/testintwrapper.cpp )
+target_link_libraries( testintwrapper OpenCLHelper )
 
 add_executable( testscalars test/testscalars.cpp )
-target_link_libraries( testscalars clew OpenCLHelper )
+target_link_libraries( testscalars OpenCLHelper )
 

@@ -1,4 +1,4 @@
-// Copyright Hugh Perkins 2013 hughperkins at gmail
+// Copyright Hugh Perkins 2013,2014 hughperkins at gmail
 //
 // This Source Code Form is subject to the terms of the Mozilla Public License, 
 // v. 2.0. If a copy of the MPL was not distributed with this file, You can 
@@ -11,6 +11,7 @@ using namespace std;
 
 #include "CLArrayFloat.h"
 #include "CLArrayInt.h"
+#include "CLIntWrapper.h"
 #include "CLKernel.h"
 
 CLArrayFloat *OpenCLHelper::arrayFloat(int N ) {
@@ -19,6 +20,10 @@ CLArrayFloat *OpenCLHelper::arrayFloat(int N ) {
 
 CLArrayInt *OpenCLHelper::arrayInt(int N ) {
     return new CLArrayInt( N, this );
+}
+
+CLIntWrapper *OpenCLHelper::intWrapper(int N, int *source ) {
+    return new CLIntWrapper( N, source, this );
 }
 
 CLKernel *OpenCLHelper::buildKernel( string kernelfilepath, string kernelname ) {
