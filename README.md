@@ -20,27 +20,30 @@ Imagine we have a kernel with the following signature, in the file /tmp/foo.cl:
 
     #include "OpenCLHelper.h"
 
-    void run_kernel( int N, const float *one, const float *two, float *result ) {
-        if( !OpenCLHelper::isOpenCLAvailable() ) {
-            cout << "opencl library not found" << endl;
-            exit(-1);
-        }
-        cout << "found opencl library" << endl;
-        OpenCLHelper cl(0);
-        CLKernel *kernel = cl.buildKernel( "/tmp/foo.cl", "my_kernel");
-        kernel->input( N );
-        kernel->input( N, one );
-        kernel->input( N, two );
-        kernel->local( N );
-        kernel->output( N, result );
-        const size_t local_ws[1]; local_ws[0] = 512;
-        const size_t global_ws[1]; global_ws[0] = OpenCLHelper::roundUp(local_ws[0], size);
-        kernel->run( 1, global_ws, local_ws );
-        // result now contains the result of running the kernel
-        delete kernel; // cleanup
+    if( !OpenCLHelper::isOpenCLAvailable() ) {
+        cout << "opencl library not found" << endl;
+        exit(-1);
     }
+    OpenCLHelper cl(0);
+    CLKernel *kernel = cl.buildKernel("somekernelfile.cl", "test_function");
+    int in[5];
+    int out[5];
+    for( int i = 0; i < 5; i++ ) {
+        in[i] = i * 3;
+    }
+    kernel->input( 5, in );
+    kernel->output( 5, out );
+    kernel->run_1d( 5, 5 ); // global workgroup size = 5, local workgroup size = 5
+    delete kernel;
+    // use the results in 'out' array here
 
-There is a simple example in the 'test' subdirectory.
+More generally, you can call on 2d and 3d workgroups by using the `kernel->run` method:
+
+    const size_t local_ws[1]; local_ws[0] = 512;
+    const size_t global_ws[1]; global_ws[0] = OpenCLHelper::roundUp(local_ws[0], size);
+    kernel->run( 1, global_ws, local_ws ); // 1 is number of dimensions, could be 2, or 3
+
+There are some examples in the 'test' subdirectory.
 
 API
 ---
@@ -65,6 +68,7 @@ API
     CLKernel::local( int localarraysize ); // size in number of floats
 
     // running kernel, getting result back, and cleaning up:
+    CLKernel::run_1d( int global_ws, int local_ws );
     CLKernel::run( int number_dimensions, size_t *global_ws, size_t *local_ws );
 
     // helper function:
