@@ -27,21 +27,23 @@ CLKernel *OpenCLHelper::buildKernel( string kernelfilepath, string kernelname ) 
     std::string source = getFileContents(path);
     const char *source_char = source.c_str();
     src_size = strlen( source_char );
-    cl_program program = clCreateProgramWithSource(context, 1, &source_char, &src_size, &error);
-    assert(error == CL_SUCCESS);
+    program = clCreateProgramWithSource(context, 1, &source_char, &src_size, &error);
+    checkError(error);
 
 //    error = clBuildProgram(program, 1, &device, "-cl-opt-disable", NULL, NULL);
     error = clBuildProgram(program, 1, &device, 0, NULL, NULL);
 
     char* build_log;
     size_t log_size;
-    clGetProgramBuildInfo(program, device, CL_PROGRAM_BUILD_LOG, 0, NULL, &log_size);
+    error = clGetProgramBuildInfo(program, device, CL_PROGRAM_BUILD_LOG, 0, NULL, &log_size);
+    checkError(error);
     build_log = new char[log_size+1];
-    clGetProgramBuildInfo(program, device, CL_PROGRAM_BUILD_LOG, log_size, build_log, NULL);
+    error = clGetProgramBuildInfo(program, device, CL_PROGRAM_BUILD_LOG, log_size, build_log, NULL);
+    checkError(error);
     build_log[log_size] = '\0';
     if( log_size > 2 ) {
         cout << "build log: " << build_log << endl;
-        }
+    }
     delete[] build_log;
     checkError(error);
 
@@ -59,6 +61,7 @@ CLKernel *OpenCLHelper::buildKernel( string kernelfilepath, string kernelname ) 
             break;
     }
     checkError(error);
+//    clReleaseProgram(program);
     return new CLKernel(this, kernel);
 }
 

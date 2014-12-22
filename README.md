@@ -141,6 +141,12 @@ What if it doesn't run?
 OpenCL installation itself is ok.  If this says 'no installations found', then it's an OpenCL
 configuration issue.
 
+What if it runs, but no results?
+--------------------------------
+
+- check types, eg if you pass in int arrays, but the kernel expects floats, results might not
+  be what you were hoping to see
+
 License
 -------
 

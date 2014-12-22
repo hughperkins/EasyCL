@@ -122,6 +122,12 @@ public:
         nextArg++;
     }
 
+    void run_1d( int global_worksize, int local_worksize ) {
+        size_t global_ws = global_worksize;
+        size_t local_ws = local_worksize;
+        run( 1, &global_ws, &local_ws );
+    }
+
     void run(int ND, const size_t *global_ws, const size_t *local_ws ) {
         //cout << "running kernel" << endl;
         error = clEnqueueNDRangeKernel(openclhelper->queue, kernel, ND, NULL, global_ws, local_ws, 0, NULL, NULL);
@@ -165,8 +171,8 @@ public:
         for( int i = 0; i < outputArgBuffers.size(); i++ ) {
             clEnqueueReadBuffer(openclhelper->queue, outputArgBuffers[i], CL_TRUE, 0, outputArgSizes[i], outputArgPointers[i], 0, NULL, NULL);            
         }
-
-
+        cout << "done" << endl;
+       
         for(int i = 0; i < buffers.size(); i++ ) {
             clReleaseMemObject(buffers[i]);
         }

@@ -1,4 +1,4 @@
-// Copyright Hugh Perkins 2013 hughperkins at gmail
+// Copyright Hugh Perkins 2013, 2014 hughperkins at gmail
 //
 // This Source Code Form is subject to the terms of the Mozilla Public License, 
 // v. 2.0. If a copy of the MPL was not distributed with this file, You can 
@@ -17,7 +17,6 @@ using namespace std;
 
 #include "clew/include/clew.h"
 
-// This code is partly based on http://opencl.codeplex.com/wikipage?title=OpenCL%20Tutorials%20-%201 , with helpers added for input and output arguments
 class OpenCLHelper {
 public:
      cl_int error;  
@@ -27,6 +26,7 @@ public:
     cl_context context;
     cl_command_queue queue;
     cl_device_id device;
+    cl_program program;
 
     cl_uint num_devices;
 
@@ -40,6 +40,7 @@ public:
     }
 
     ~OpenCLHelper() {
+//        clReleaseProgram(program);
         clReleaseCommandQueue(queue);
         clReleaseContext(context);        
     }
@@ -72,25 +73,35 @@ public:
 
         // Platform
         error = clGetPlatformIDs(1, &platform_id, &num_platforms);
-        cout << "num platforms: " << num_platforms << endl;
-        assert (num_platforms == 1);
-        assert (error == CL_SUCCESS);
+//        cout << "num platforms: " << num_platforms << endl;
+//        assert (num_platforms == 1);
+        if (error != CL_SUCCESS) {
+           cout << "Error getting platforms ids: " << errorMessage(error) << endl;
+           exit(error);
+        }
+        if( num_platforms == 0 ) {
+           cout << "Error: no platforms available" << endl;
+           exit(-1);
+        }
 
         error = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_GPU, 1, &device, &num_devices);
         if (error != CL_SUCCESS) {
            cout << "Error getting device ids: " << errorMessage(error) << endl;
            exit(error);
         }
-        cout << "num devices: " << num_devices << endl;
+  //      cout << "num devices: " << num_devices << endl;
         cl_device_id *device_ids = new cl_device_id[num_devices];
         error = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_GPU, num_devices, device_ids, &num_devices);
         if (error != CL_SUCCESS) {
            cout << "Error getting device ids: " << errorMessage(error) << endl;
            exit(error);
         }
-        assert( gpuindex < num_devices );
+        if( gpuindex >= num_devices ) {
+           cout << "requested gpuindex " << gpuindex << " goes beyond number of available device " << num_devices << endl;
+           exit(-1);
+        }
         device = device_ids[gpuindex];
-        cout << "using device: " << device << endl;
+//        cout << "using device: " << device << endl;
         delete[] device_ids;
 
         // Context
@@ -144,7 +155,8 @@ static string errorMessage(cl_int error ) {
 static void checkError( cl_int error ) {
     if( error != CL_SUCCESS ) {
         cout << "error: " << error << endl;
-        assert (false);
+        //assert (false);
+        exit(-1);
     }
 }
 
@@ -195,4 +207,8 @@ long getDeviceInfoInt( cl_device_info name ) {
 }
 
 };
+
+#include "CLKernel.h"
+
+
 
