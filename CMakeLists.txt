@@ -29,6 +29,9 @@ target_link_libraries( testintarray OpenCLHelper )
 add_executable( testintwrapper test/testintwrapper.cpp )
 target_link_libraries( testintwrapper OpenCLHelper )
 
+add_executable( testfloatwrapper test/testfloatwrapper.cpp )
+target_link_libraries( testfloatwrapper OpenCLHelper )
+
 add_executable( testscalars test/testscalars.cpp )
 target_link_libraries( testscalars OpenCLHelper )
 

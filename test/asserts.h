@@ -10,19 +10,19 @@ std::string toString(T val ) { // not terribly efficient, but works...
 template<typename T>
 void assertEquals( T one, T two ) {
     if( one != two ) {
-        throw runtime_error("FAIL " + toString(one) + " != " + toString(two ) );
+        throw std::runtime_error("FAIL " + toString(one) + " != " + toString(two ) );
     }
 }
 
 void assertEquals( float one, int two ) {
     if( one != two ) {
-        throw runtime_error("FAIL " + toString(one) + " != " + toString(two ) );
+        throw std::runtime_error("FAIL " + toString(one) + " != " + toString(two ) );
     }
 }
 
 void assertEquals( int one, float two ) {
     if( one != two ) {
-        throw runtime_error("FAIL " + toString(one) + " != " + toString(two ) );
+        throw std::runtime_error("FAIL " + toString(one) + " != " + toString(two ) );
     }
 }
 

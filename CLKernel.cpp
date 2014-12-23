@@ -82,6 +82,27 @@ void CLKernel::output( CLIntWrapper *intWrapper ) {
     nextArg++;        
 }
 
+void CLKernel::input( CLFloatWrapper *wrapper ) {
+    assert( wrapper != 0 );
+    if( !wrapper->isOnDevice() ) {
+        throw std::runtime_error("need to copyToDevice() before calling kernel->input");
+    }
+    cl_mem *devicearray = wrapper->getDeviceArray();
+    error = clSetKernelArg( kernel, nextArg, sizeof(cl_mem), devicearray );
+    openclhelper->checkError(error);
+    nextArg++;
+}
+
+void CLKernel::output( CLFloatWrapper *wrapper ) {
+    assert( wrapper != 0 );
+    if( !wrapper->isOnDevice() ) {
+        wrapper->createOnDevice();
+    }
+    error = clSetKernelArg( kernel, nextArg, sizeof(cl_mem), (wrapper->getDeviceArray()) );
+    openclhelper->checkError(error);
+    nextArg++;        
+}
+
 void CLKernel::output( CLArrayInt *clarray1d ) {
     assert( clarray1d != 0 );
     assert( clarray1d->isOnDevice() && !clarray1d->isOnHost() );

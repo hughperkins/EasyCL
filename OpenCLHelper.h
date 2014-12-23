@@ -34,6 +34,7 @@ public:
     class CLArrayFloat *arrayFloat(int N );
     class CLArrayInt *arrayInt(int N );
     class CLIntWrapper *intWrapper(int N, int *source );
+    class CLFloatWrapper *floatWrapper(int N, float *source );
 
     static bool isOpenCLAvailable() {
         return 0 == clewInit();
@@ -64,56 +65,56 @@ public:
     OpenCLHelper(int gpuindex ) {
         bool clpresent = 0 == clewInit();
         if( !clpresent ) {
-            throw runtime_error("OpenCL library not found");
+            throw std::runtime_error("OpenCL library not found");
         }
 
-//        cout << "this: " << this << endl;
+//        std::cout << "this: " << this << std::endl;
         this->gpuIndex = gpuindex;
         error = 0;
 
         // Platform
         error = clGetPlatformIDs(1, &platform_id, &num_platforms);
-//        cout << "num platforms: " << num_platforms << endl;
+//        std::cout << "num platforms: " << num_platforms << std::endl;
 //        assert (num_platforms == 1);
         if (error != CL_SUCCESS) {
-           cout << "Error getting platforms ids: " << errorMessage(error) << endl;
+           std::cout << "Error getting platforms ids: " << errorMessage(error) << std::endl;
            exit(error);
         }
         if( num_platforms == 0 ) {
-           cout << "Error: no platforms available" << endl;
+           std::cout << "Error: no platforms available" << std::endl;
            exit(-1);
         }
 
         error = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_GPU, 1, &device, &num_devices);
         if (error != CL_SUCCESS) {
-           cout << "Error getting device ids: " << errorMessage(error) << endl;
+           std::cout << "Error getting device ids: " << errorMessage(error) << std::endl;
            exit(error);
         }
-  //      cout << "num devices: " << num_devices << endl;
+  //      std::cout << "num devices: " << num_devices << std::endl;
         cl_device_id *device_ids = new cl_device_id[num_devices];
         error = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_GPU, num_devices, device_ids, &num_devices);
         if (error != CL_SUCCESS) {
-           cout << "Error getting device ids: " << errorMessage(error) << endl;
+           std::cout << "Error getting device ids: " << errorMessage(error) << std::endl;
            exit(error);
         }
         if( gpuindex >= num_devices ) {
-           cout << "requested gpuindex " << gpuindex << " goes beyond number of available device " << num_devices << endl;
+           std::cout << "requested gpuindex " << gpuindex << " goes beyond number of available device " << num_devices << std::endl;
            exit(-1);
         }
         device = device_ids[gpuindex];
-//        cout << "using device: " << device << endl;
+//        std::cout << "using device: " << device << std::endl;
         delete[] device_ids;
 
         // Context
         context = clCreateContext(0, 1, &device, NULL, NULL, &error);
         if (error != CL_SUCCESS) {
-           cout << "Error creating context: " << errorMessage(error) << endl;
+           std::cout << "Error creating context: " << errorMessage(error) << std::endl;
            exit(error);
         }
         // Command-queue
         queue = clCreateCommandQueue(context, device, 0, &error);
         if (error != CL_SUCCESS) {
-           cout << "Error creating command queue: " << errorMessage(error) << endl;
+           std::cout << "Error creating command queue: " << errorMessage(error) << std::endl;
            exit(error);
         }
 
@@ -125,14 +126,14 @@ public:
             case CL_SUCCESS:
                 break;
             case -36:
-                cout << "Invalid command queue: often indicates out of bounds memory access within kernel" << endl;
+                std::cout << "Invalid command queue: often indicates out of bounds memory access within kernel" << std::endl;
                 exit(-1);
             default:
                 checkError(error);                
         }
     }
 
-    class CLKernel *buildKernel( string kernelfilepath, string kernelname );
+    class CLKernel *buildKernel( std::string kernelfilepath, std::string kernelname );
 
     int getComputeUnits() {
         return (int)getDeviceInfoInt(CL_DEVICE_MAX_COMPUTE_UNITS);
@@ -148,13 +149,13 @@ public:
 
 
 
-static string errorMessage(cl_int error ) {
+static std::string errorMessage(cl_int error ) {
     return toString(error);
 }
 
 static void checkError( cl_int error ) {
     if( error != CL_SUCCESS ) {
-        cout << "error: " << error << endl;
+        std::cout << "error: " << error << std::endl;
         //assert (false);
         exit(-1);
     }
@@ -163,12 +164,12 @@ static void checkError( cl_int error ) {
 private:
 
 
-static string getFileContents( string filename ) {
+static std::string getFileContents( std::string filename ) {
     char * buffer = 0;
     long length;
     FILE * f = fopen (filename.c_str(), "rb");
 
-    string returnstring = "";
+    std::string returnstring = "";
     if (f)
     {
       fseek (f, 0, SEEK_END);
@@ -178,16 +179,16 @@ static string getFileContents( string filename ) {
       if (buffer) {
         int bytesread = fread (buffer, 1, length, f);
         if( bytesread != length ) {
-            cout << "Failed to read cl source file" << endl;
+            std::cout << "Failed to read cl source file" << std::endl;
             exit(-1);
         }
       } else {
-        cout << "Failed to allocate memory for cl source" << endl;
+        std::cout << "Failed to allocate memory for cl source" << std::endl;
         exit(-1);
        }
       fclose (f);
         buffer[length] = 0;
-      returnstring = string( buffer );
+      returnstring = std::string( buffer );
       delete[] buffer;
     }
     return returnstring;
@@ -210,5 +211,6 @@ long getDeviceInfoInt( cl_device_info name ) {
 
 #include "CLKernel.h"
 #include "CLIntWrapper.h"
+#include "CLFloatWrapper.h"
 
 

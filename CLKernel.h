@@ -17,10 +17,10 @@ public:
         this->kernel = kernel;
     }
     CLKernel( const CLKernel &kernel ) {
-        throw runtime_error("can't assign CLKernel");
+        throw std::runtime_error("can't assign CLKernel");
     }
     CLKernel &operator=( const CLKernel &kernel ) {
-        throw runtime_error("can't assign CLKernel");
+        throw std::runtime_error("can't assign CLKernel");
     }
     ~CLKernel() {
         clReleaseKernel(kernel);
@@ -46,6 +46,8 @@ public:
 
     void input( CLIntWrapper *intWrapper );
     void output( CLIntWrapper *intWrapper );
+    void input( CLFloatWrapper *wrapper );
+    void output( CLFloatWrapper *wrapper );
 
     void input( int N, const float *data ) {
         cl_mem buffer = clCreateBuffer(openclhelper->context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(float) * N, (void *)data, &error);
@@ -132,37 +134,37 @@ public:
     }
 
     void run(int ND, const size_t *global_ws, const size_t *local_ws ) {
-        //cout << "running kernel" << endl;
+        //cout << "running kernel" << std::endl;
         error = clEnqueueNDRangeKernel(openclhelper->queue, kernel, ND, NULL, global_ws, local_ws, 0, NULL, NULL);
         switch( error ) {
             case 0:
                 break;
             case -4:
-                cout << "Memory object allocation failure, code -4" << endl;
+                std::cout << "Memory object allocation failure, code -4" << std::endl;
                 exit(-1);
                 break;
             case -5:
-                cout << "Out of resources, code -5" << endl;
+                std::cout << "Out of resources, code -5" << std::endl;
                 exit(-1);
                 break;
             case -11:
-                cout << "Program build failure, code -11" << endl;
+                std::cout << "Program build failure, code -11" << std::endl;
                 exit(-1);
                 break;
             case -46:
-                cout << "Invalid kernel name, code -46" << endl;
+                std::cout << "Invalid kernel name, code -46" << std::endl;
                 exit(-1);
                 break;
             case -52:
-                cout << "Invalid kernel args, code -52" << endl;
+                std::cout << "Invalid kernel args, code -52" << std::endl;
                 exit(-1);
                 break;
             case -54:
-                cout << "Invalid work group size, code -54" << endl;
+                std::cout << "Invalid work group size, code -54" << std::endl;
                 exit(-1);
                 break;
             default:
-                cout << "Something went wrong, code " << error << endl;
+                std::cout << "Something went wrong, code " << error << std::endl;
                 exit(-1);
         }
         openclhelper->checkError(error);
@@ -174,7 +176,7 @@ public:
         for( int i = 0; i < outputArgBuffers.size(); i++ ) {
             clEnqueueReadBuffer(openclhelper->queue, outputArgBuffers[i], CL_TRUE, 0, outputArgSizes[i], outputArgPointers[i], 0, NULL, NULL);            
         }
-        cout << "done" << endl;
+        std::cout << "done" << std::endl;
        
         for(int i = 0; i < buffers.size(); i++ ) {
             clReleaseMemObject(buffers[i]);

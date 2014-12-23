@@ -74,52 +74,28 @@ API
     // helper function:
     OpenCLHelper::roundUp( int quantizationSize, int desiredTotalSize );
 
-CLArray objects
----------------
+CLArray and CLWrapper objects
+-----------------------------
 
 To make it possible to reuse data between kernels, without moving back to PC
-main memory, and back onto the GPU, you can use CLArray objects.
+main memory, and back onto the GPU, you can use CLWrapper objects.
 
 These can be created on the GPU, or on the host, and moved backwards 
 and forwards between each other, as required.  They can be passed as an 'input'
 and 'output' to a CLKernel object.  They can be reused between kernels.
 
-Compared to CLWrapper objects, they are more automated, but involve more 
-memory copying.  They're more mature.
-
-    OpenCLHelper cl(0);
-
-    CLArrayFloat *one = cl.arrayFloat(10000); // create CLArray object for 10,000 floats
-    one->createOnHost(); // allocate on the host
-    (*one)[0] = 5;
-    (*one)[1] = 7; // give some data...
-
-    // create on device:
-    CLArrayFloat *two = cl.arrayFloat(10000);
-    two->createOnDevice();
-
-    // pass to kernel:
-    kernel->input(one);
-    kernel->output(two);
-
-You can then take the 'two' CLArray object, and pass it as the 'input' to 
-a different kernel, or you can use operator[] to read values from it.
-
-Currently, CLArray is available as 'CLArrayFloat' and 'CLArrayInt'.
+There are two 'flavors':
+- CLWrapper: wraps an existing host array, you'll need to call `copyToDevice()` and
+`copyToHost()` yourself
+- CLArray: more automated, but more memory copying, since creates a new array 
+on the host
 
 CLWrapper objects
 -----------------
 
-To make it possible to reuse data between kernels, without moving back to PC
-main memory, and back onto the GPU, you can use CLArray objects.
-
-These can be created on the GPU, or on the host, and moved backwards 
-and forwards between each other, as required.  They can be passed as an 'input'
-and 'output' to a CLKernel object.  They can be reused between kernels.
-
-Compared to CLArray objects, CLWrapper objects are currently in 'draft' status,
-but involve less memory copying.  They're less automated, since you 
-have to explicitly call 'copyToHost()' and 'copyToDevice()'.
+Compared to CLArray objects, CLWrapper objects need less memory copying,
+since they wrap an existing native array, but you will need to call `copyToDevice()`
+and `copyToHost()` yourself.
 
     if( !OpenCLHelper::isOpenCLAvailable() ) {
         cout << "opencl library not found" << endl;
@@ -147,6 +123,34 @@ have to explicitly call 'copyToHost()' and 'copyToDevice()'.
     assertEquals( out[3] , 16 );
     assertEquals( out[4] , 19 );
     cout << "tests completed ok" << endl;
+
+CLWrapper objects are currently available as `CLIntWrapper` and `CLFloatWrapper`.
+
+CLArray objects
+---------------
+
+Compared to CLWrapper objects, CLArray objects are more automated, but involve more 
+memory copying.
+
+    OpenCLHelper cl(0);
+
+    CLArrayFloat *one = cl.arrayFloat(10000); // create CLArray object for 10,000 floats
+    one->createOnHost(); // allocate on the host
+    (*one)[0] = 5;
+    (*one)[1] = 7; // give some data...
+
+    // create on device:
+    CLArrayFloat *two = cl.arrayFloat(10000);
+    two->createOnDevice();
+
+    // pass to kernel:
+    kernel->input(one);
+    kernel->output(two);
+
+You can then take the 'two' CLArray object, and pass it as the 'input' to 
+a different kernel, or you can use operator[] to read values from it.
+
+Currently, CLArray is available as 'CLArrayFloat' and 'CLArrayInt'.
 
 Pre-requisites
 --------------

@@ -116,7 +116,7 @@ public:
     float &operator[]( int n ) {
         if( !onHost ) {
             if( !onDevice ) {
-                throw runtime_error("array not present either on host or device!");
+                throw std::runtime_error("array not present either on host or device!");
             }
             copyToHost();
         }

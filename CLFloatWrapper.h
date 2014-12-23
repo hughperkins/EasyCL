@@ -12,20 +12,20 @@
 
 // this wraps an existing array, which we wont free, rather than creating a new array
 // probably more efficient....
-class CLIntWrapper {
+class CLFloatWrapper {
 protected:
     const int N;
     const bool onHost;
     bool onDevice;
 
-    int *hostarray;  // NOT owned by this object, do NOT free :-)
+    float *hostarray;  // NOT owned by this object, do NOT free :-)
     cl_mem devicearray;
     OpenCLHelper *openclhelper; // NOT owned by this object, so dont free!
 
     cl_int error;
 
 public:
-    CLIntWrapper( int N, int *_hostarray, OpenCLHelper *openclhelper ) : 
+    CLFloatWrapper( int N, float *_hostarray, OpenCLHelper *openclhelper ) : 
              onHost(true),
              hostarray(_hostarray),
              N(N),
@@ -34,17 +34,17 @@ public:
 
         onDevice = false;
     }
-    CLIntWrapper( const CLIntWrapper &source ) :
+    CLFloatWrapper( const CLFloatWrapper &source ) :
         onHost(false), hostarray(0), N(0), openclhelper(0) { // copy constructor
         throw std::runtime_error("can't assign these...");
     }
-    CLIntWrapper &operator=( const CLIntWrapper &two ) { // assignment operator
+    CLFloatWrapper &operator=( const CLFloatWrapper &two ) { // assignment operator
        if( this == &two ) { // self-assignment
           return *this;
        }
        throw std::runtime_error("can't assign these...");
     }
-    virtual ~CLIntWrapper() {
+    virtual ~CLFloatWrapper() {
         if( onDevice ) {
             clReleaseMemObject(devicearray);                    
         }

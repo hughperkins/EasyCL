@@ -26,6 +26,10 @@ CLIntWrapper *OpenCLHelper::intWrapper(int N, int *source ) {
     return new CLIntWrapper( N, source, this );
 }
 
+CLFloatWrapper *OpenCLHelper::floatWrapper(int N, float *source ) {
+    return new CLFloatWrapper( N, source, this );
+}
+
 CLKernel *OpenCLHelper::buildKernel( string kernelfilepath, string kernelname ) {
     size_t src_size = 0;
     std::string path = kernelfilepath.c_str();
