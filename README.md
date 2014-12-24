@@ -167,7 +167,7 @@ CL implementation .so file
 How to build
 ------------
 
-    git clone https://github.com/hughperkins/OpenCLHelper.git
+    git clone --recursive https://github.com/hughperkins/OpenCLHelper.git
     cd OpenCLHelper
     mkdir build
     cd build
