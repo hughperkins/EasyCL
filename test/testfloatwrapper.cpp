@@ -3,8 +3,6 @@
 // using namespace std;
 
 #include "OpenCLHelper.h"
-#include "CLKernel.h"
-#include "CLArrayFloat.h"
 
 #include "test/asserts.h"
 
@@ -24,8 +22,8 @@ int main( int argc, char *argv[] ) {
         in[i] = i * 3;
     }
     float out[5];
-    CLFloatWrapper *inwrapper = cl.floatWrapper(5, in);
-    CLFloatWrapper *outwrapper = cl.floatWrapper(5, out);
+    CLWrapper *inwrapper = cl.wrap(5, in);
+    CLWrapper *outwrapper = cl.wrap(5, out);
     inwrapper->copyToDevice();
     kernel->input( inwrapper );
     kernel->output( outwrapper );
