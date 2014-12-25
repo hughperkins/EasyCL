@@ -176,7 +176,7 @@ public:
         for( int i = 0; i < outputArgBuffers.size(); i++ ) {
             clEnqueueReadBuffer(openclhelper->queue, outputArgBuffers[i], CL_TRUE, 0, outputArgSizes[i], outputArgPointers[i], 0, NULL, NULL);            
         }
-        std::cout << "done" << std::endl;
+//        std::cout << "done" << std::endl;
        
         for(int i = 0; i < buffers.size(); i++ ) {
             clReleaseMemObject(buffers[i]);
