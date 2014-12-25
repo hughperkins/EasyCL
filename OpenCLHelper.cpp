@@ -23,11 +23,11 @@ CLArrayInt *OpenCLHelper::arrayInt(int N ) {
     return new CLArrayInt( N, this );
 }
 
-CLIntWrapper *OpenCLHelper::intWrapper(int N, int *source ) {
+CLIntWrapper *OpenCLHelper::wrap(int N, int *source ) {
     return new CLIntWrapper( N, source, this );
 }
 
-CLFloatWrapper *OpenCLHelper::floatWrapper(int N, float *source ) {
+CLFloatWrapper *OpenCLHelper::wrap(int N, float *source ) {
     return new CLFloatWrapper( N, source, this );
 }
 

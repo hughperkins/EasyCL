@@ -33,8 +33,8 @@ public:
 
     class CLArrayFloat *arrayFloat(int N );
     class CLArrayInt *arrayInt(int N );
-    class CLIntWrapper *intWrapper(int N, int *source );
-    class CLFloatWrapper *floatWrapper(int N, float *source );
+    class CLIntWrapper *wrap(int N, int *source );
+    class CLFloatWrapper *wrap(int N, float *source );
 
     static bool isOpenCLAvailable() {
         return 0 == clewInit();
