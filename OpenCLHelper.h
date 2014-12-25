@@ -209,8 +209,9 @@ long getDeviceInfoInt( cl_device_info name ) {
 
 };
 
-#include "CLKernel.h"
 #include "CLIntWrapper.h"
 #include "CLFloatWrapper.h"
+#include "CLWrapper.h"
+#include "CLKernel.h"
 
 

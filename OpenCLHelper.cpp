@@ -12,6 +12,7 @@ using namespace std;
 #include "CLArrayFloat.h"
 #include "CLArrayInt.h"
 #include "CLIntWrapper.h"
+#include "CLWrapper.h"
 #include "CLKernel.h"
 
 CLArrayFloat *OpenCLHelper::arrayFloat(int N ) {
