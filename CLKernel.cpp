@@ -12,7 +12,7 @@ using namespace std;
 #include "CLArrayInt.h"
 #include "CLArray.h"
 
-void CLKernel::input( CLArray *clarray1d ) {
+CLKernel *CLKernel::input( CLArray *clarray1d ) {
     assert( clarray1d != 0 );
     if( !clarray1d->isOnDevice() ) {
         clarray1d->moveToDevice();
@@ -24,17 +24,19 @@ void CLKernel::input( CLArray *clarray1d ) {
     error = clSetKernelArg( kernel, nextArg, sizeof(cl_mem), devicearray );
     openclhelper->checkError(error);
     nextArg++;
+    return this;
 }
 
-void CLKernel::output( CLArray *clarray1d ) {
+CLKernel *CLKernel::output( CLArray *clarray1d ) {
     assert( clarray1d != 0 );
     assert( clarray1d->isOnDevice() && !clarray1d->isOnHost() );
     error = clSetKernelArg( kernel, nextArg, sizeof(cl_mem), (clarray1d->getDeviceArray()) );
     openclhelper->checkError(error);
-    nextArg++;        
+    nextArg++;  
+    return this;      
 }
 
-void CLKernel::inout( CLArray *clarray1d ) {
+CLKernel *CLKernel::inout( CLArray *clarray1d ) {
     assert( clarray1d != 0 );
     if( !clarray1d->isOnDevice() ) {
         clarray1d->moveToDevice();
@@ -46,9 +48,10 @@ void CLKernel::inout( CLArray *clarray1d ) {
     error = clSetKernelArg( kernel, nextArg, sizeof(cl_mem), devicearray );
     openclhelper->checkError(error);
     nextArg++;
+    return this;
 }
 
-void CLKernel::input( CLWrapper *wrapper ) {
+CLKernel *CLKernel::input( CLWrapper *wrapper ) {
     assert( wrapper != 0 );
     if( !wrapper->isOnDevice() ) {
         throw std::runtime_error("need to copyToDevice() before calling kernel->input");
@@ -57,15 +60,17 @@ void CLKernel::input( CLWrapper *wrapper ) {
     error = clSetKernelArg( kernel, nextArg, sizeof(cl_mem), devicearray );
     openclhelper->checkError(error);
     nextArg++;
+    return this;
 }
 
-void CLKernel::output( CLWrapper *wrapper ) {
+CLKernel *CLKernel::output( CLWrapper *wrapper ) {
     assert( wrapper != 0 );
     if( !wrapper->isOnDevice() ) {
         wrapper->createOnDevice();
     }
     error = clSetKernelArg( kernel, nextArg, sizeof(cl_mem), (wrapper->getDeviceArray()) );
     openclhelper->checkError(error);
-    nextArg++;        
+    nextArg++;
+    return this;      
 }
 

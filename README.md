@@ -196,6 +196,12 @@ How to run self-tests
 ... will compile a kernel, pass in some data, run the kernel, and check the results
 are expected
 
+On linux you can do, from the `build` directory:
+
+    ../runtests.sh
+
+This will run the various available test files
+
 What if it doesn't run?
 -----------------------
 

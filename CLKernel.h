@@ -35,12 +35,18 @@ public:
     std::vector<void *> outputArgPointers;
     std::vector<size_t> outputArgSizes;
 
-    void input( CLArray *clarray1d );
-    void inout( CLArray *clarray1d );
-    void output( CLArray *clarray1d );
+    CLKernel *input( CLArray *clarray1d );
+    CLKernel *inout( CLArray *clarray1d );
+    CLKernel *output( CLArray *clarray1d );
 
-    void input( CLWrapper *wrapper );
-    void output( CLWrapper *wrapper );
+    CLKernel *in( CLArray *clarray1d ) { return input( clarray1d ); }
+    CLKernel *out( CLArray *clarray1d ) { return output( clarray1d ); }
+
+    CLKernel *input( CLWrapper *wrapper );
+    CLKernel *output( CLWrapper *wrapper );
+
+    CLKernel *in( CLWrapper *wrapper ) { return input( wrapper ); }
+    CLKernel *out( CLWrapper *wrapper ) { return output( wrapper ); }
 
     template<typename T>
     CLKernel *input( int N, const T *data ) {
