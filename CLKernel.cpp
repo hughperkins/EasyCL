@@ -10,8 +10,9 @@ using namespace std;
 #include "CLKernel.h"
 #include "CLArrayFloat.h"
 #include "CLArrayInt.h"
+#include "CLArray.h"
 
-void CLKernel::input( CLArrayFloat *clarray1d ) {
+void CLKernel::input( CLArray *clarray1d ) {
     assert( clarray1d != 0 );
     if( !clarray1d->isOnDevice() ) {
         clarray1d->moveToDevice();
@@ -25,7 +26,7 @@ void CLKernel::input( CLArrayFloat *clarray1d ) {
     nextArg++;
 }
 
-void CLKernel::output( CLArrayFloat *clarray1d ) {
+void CLKernel::output( CLArray *clarray1d ) {
     assert( clarray1d != 0 );
     assert( clarray1d->isOnDevice() && !clarray1d->isOnHost() );
     error = clSetKernelArg( kernel, nextArg, sizeof(cl_mem), (clarray1d->getDeviceArray()) );
@@ -33,21 +34,7 @@ void CLKernel::output( CLArrayFloat *clarray1d ) {
     nextArg++;        
 }
 
-void CLKernel::inout( CLArrayFloat *clarray1d ) {
-    assert( clarray1d != 0 );
-    if( !clarray1d->isOnDevice() ) {
-        clarray1d->moveToDevice();
-    }
-    if( clarray1d->isOnHost() ) {
-        clarray1d->deleteFromHost();
-    }
-    cl_mem *devicearray = clarray1d->getDeviceArray();
-    error = clSetKernelArg( kernel, nextArg, sizeof(cl_mem), devicearray );
-    openclhelper->checkError(error);
-    nextArg++;
-}
-
-void CLKernel::input( CLArrayInt *clarray1d ) {
+void CLKernel::inout( CLArray *clarray1d ) {
     assert( clarray1d != 0 );
     if( !clarray1d->isOnDevice() ) {
         clarray1d->moveToDevice();
@@ -81,27 +68,4 @@ void CLKernel::output( CLWrapper *wrapper ) {
     openclhelper->checkError(error);
     nextArg++;        
 }
-
-void CLKernel::output( CLArrayInt *clarray1d ) {
-    assert( clarray1d != 0 );
-    assert( clarray1d->isOnDevice() && !clarray1d->isOnHost() );
-    error = clSetKernelArg( kernel, nextArg, sizeof(cl_mem), (clarray1d->getDeviceArray()) );
-    openclhelper->checkError(error);
-    nextArg++;        
-}
-
-void CLKernel::inout( CLArrayInt *clarray1d ) {
-    assert( clarray1d != 0 );
-    if( !clarray1d->isOnDevice() ) {
-        clarray1d->moveToDevice();
-    }
-    if( clarray1d->isOnHost() ) {
-        clarray1d->deleteFromHost();
-    }
-    cl_mem *devicearray = clarray1d->getDeviceArray();
-    error = clSetKernelArg( kernel, nextArg, sizeof(cl_mem), devicearray );
-    openclhelper->checkError(error);
-    nextArg++;
-}
-
 

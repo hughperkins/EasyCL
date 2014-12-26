@@ -35,14 +35,11 @@ public:
     std::vector<void *> outputArgPointers;
     std::vector<size_t> outputArgSizes;
 
-    std::vector<CLArrayFloat *> clarray1ds;
+    std::vector<CLArray*> clarray1ds;
 
-    void input( CLArrayFloat *clarray1d );
-    void input( CLArrayInt *clarray1d );
-    void output( CLArrayFloat *clarray1d );
-    void output( CLArrayInt *clarray1d );
-    void inout( CLArrayFloat *clarray1d );
-    void inout( CLArrayInt *clarray1d );
+    void input( CLArray *clarray1d );
+    void inout( CLArray *clarray1d );
+    void output( CLArray *clarray1d );
 
     void input( CLWrapper *wrapper );
     void output( CLWrapper *wrapper );
