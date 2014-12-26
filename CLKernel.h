@@ -50,7 +50,7 @@ public:
 //    void output( CLFloatWrapper *wrapper );
 
     void input( int N, const float *data ) {
-        cl_mem buffer = clCreateBuffer(openclhelper->context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(float) * N, (void *)data, &error);
+        cl_mem buffer = clCreateBuffer(*(openclhelper->context), CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(float) * N, (void *)data, &error);
         assert(error == CL_SUCCESS);
         error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), &buffer);
         openclhelper->checkError(error);
@@ -58,7 +58,7 @@ public:
         nextArg++;
     }
     void input( int N, const cl_int *data ) {
-        cl_mem buffer = clCreateBuffer(openclhelper->context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(cl_int) * N, (void *)data, &error);
+        cl_mem buffer = clCreateBuffer(*(openclhelper->context), CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(cl_int) * N, (void *)data, &error);
         assert(error == CL_SUCCESS);
         error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), &buffer);
         openclhelper->checkError(error);
@@ -83,7 +83,7 @@ public:
         nextArg++;
     }
     void output( int N, float *data ) {
-        cl_mem buffer = clCreateBuffer(openclhelper->context, CL_MEM_WRITE_ONLY, sizeof(float) * N, 0, &error);
+        cl_mem buffer = clCreateBuffer(*(openclhelper->context), CL_MEM_WRITE_ONLY, sizeof(float) * N, 0, &error);
         assert( error == CL_SUCCESS );
         error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), &buffer);
         buffers.push_back(buffer);
@@ -94,7 +94,7 @@ public:
         nextArg++;
     }
     void output( int N, cl_int *data ) {
-        cl_mem buffer = clCreateBuffer(openclhelper->context, CL_MEM_WRITE_ONLY, sizeof(cl_int) * N, 0, &error);
+        cl_mem buffer = clCreateBuffer(*(openclhelper->context), CL_MEM_WRITE_ONLY, sizeof(cl_int) * N, 0, &error);
         assert( error == CL_SUCCESS );
         error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), &buffer);
         buffers.push_back(buffer);
@@ -105,7 +105,7 @@ public:
         nextArg++;
     }
     void inout( int N, float *data ) {
-        cl_mem buffer = clCreateBuffer(openclhelper->context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(float) * N, (void *)data, &error);
+        cl_mem buffer = clCreateBuffer(*(openclhelper->context), CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(float) * N, (void *)data, &error);
         assert(error == CL_SUCCESS);
         error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), &buffer);
         openclhelper->checkError(error);
@@ -116,7 +116,7 @@ public:
         nextArg++;
     }
     void inout( int N, int *data ) {
-        cl_mem buffer = clCreateBuffer(openclhelper->context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(int) * N, (void *)data, &error);
+        cl_mem buffer = clCreateBuffer(*(openclhelper->context), CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(int) * N, (void *)data, &error);
         assert(error == CL_SUCCESS);
         error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), &buffer);
         openclhelper->checkError(error);
@@ -135,7 +135,7 @@ public:
 
     void run(int ND, const size_t *global_ws, const size_t *local_ws ) {
         //cout << "running kernel" << std::endl;
-        error = clEnqueueNDRangeKernel(openclhelper->queue, kernel, ND, NULL, global_ws, local_ws, 0, NULL, NULL);
+        error = clEnqueueNDRangeKernel(*(openclhelper->queue), kernel, ND, NULL, global_ws, local_ws, 0, NULL, NULL);
         switch( error ) {
             case 0:
                 break;
@@ -174,7 +174,7 @@ public:
 
     //void retrieveresultsandcleanup() {
         for( int i = 0; i < outputArgBuffers.size(); i++ ) {
-            clEnqueueReadBuffer(openclhelper->queue, outputArgBuffers[i], CL_TRUE, 0, outputArgSizes[i], outputArgPointers[i], 0, NULL, NULL);            
+            clEnqueueReadBuffer(*(openclhelper->queue), outputArgBuffers[i], CL_TRUE, 0, outputArgSizes[i], outputArgPointers[i], 0, NULL, NULL);            
         }
         std::cout << "done" << std::endl;
        

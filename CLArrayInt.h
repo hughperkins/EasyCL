@@ -12,31 +12,20 @@
 //#include "clcc/clew.h"
 
 #include "OpenCLHelper.h"
+#include "CLArray.h"
 
-class CLArrayInt {
+class CLArrayInt : public CLArray {
 protected:
-    int N;
-    bool onHost;
-    bool onDevice;
-
     int *hostarray;
-    cl_mem devicearray;
-    OpenCLHelper *openclhelper; // NOT owned by this object, so dont free!
 
-    cl_int error;
 
 public:
-    CLArrayInt( int N, OpenCLHelper *openclhelper ) {
-        this->N = N;
-        this->openclhelper = openclhelper;
-        error = CL_SUCCESS;
-
-        onDevice = false;
-        onHost = false;
-
+    CLArrayInt( int N, OpenCLHelper *openclhelper ) :
+        CLArray( N, openclhelper ) {
         hostarray = 0;
     }
-    CLArrayInt( const CLArrayInt &source ) { // copy constructor
+    CLArrayInt( const CLArrayInt &source ) :
+        CLArray( 0, 0 ) { // copy constructor
         throw std::runtime_error("can't assign these...");
     }
     CLArrayInt &operator=( const CLArrayInt &two ) { // assignment operator
@@ -45,73 +34,27 @@ public:
        }
        throw std::runtime_error("can't assign these...");
     }
-    ~CLArrayInt() {
+    virtual ~CLArrayInt() {
         if( onHost ) {
-            delete[] hostarray;
-//            cout << "deleted hostarray of " << N << " floats" << endl;
-        }
-        if( onDevice ) {
-            clReleaseMemObject(devicearray);                    
-//            cout << "deleted device array of " << N << " floats" << endl;
+            deleteHostArray();
         }
     }
-    void createOnHost() {
+    virtual void createOnHost() {
         assert(!onHost && !onDevice);
         hostarray = new int[N];
-//        cout << "allocated hostarray of " << N << " floats" << endl;
         onHost = true;
     }
-    void createOnDevice() {
-        assert(!onHost && !onDevice);
-        devicearray = clCreateBuffer(openclhelper->context, CL_MEM_READ_WRITE, sizeof(int) * N, 0, &error);
-//        cout << "allocated device array of " << N << " floats" << endl;
-        assert( error == CL_SUCCESS );        
-        onDevice = true;        
+    virtual int getElementSize() {
+        return sizeof( int );
     }
-    void copyToHost() {
-        assert( !onHost && onDevice );
+    virtual void allocateHostArray(int N) {
         hostarray = new int[N];
-        error = clEnqueueReadBuffer(openclhelper->queue, devicearray, CL_TRUE, 0, sizeof(int) * N, hostarray, 0, NULL, NULL);    
-        openclhelper->checkError( error );
-//        cout << "allocated host array of " << N << " floats" << endl;
-        onHost = true;                
     }
-    void copyToDevice() {
-        assert( onHost && !onDevice );
-        devicearray = clCreateBuffer(openclhelper->context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(int) * N, (void *)hostarray, &error);
-        openclhelper->checkError(error);
-        onDevice = true;
-//        cout << "allocated device array of " << N << " floats" << endl;
-    }
-    void moveToDevice() {
-        assert( onHost && !onDevice );
-        devicearray = clCreateBuffer(openclhelper->context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(int) * N, (void *)hostarray, &error);
-        assert(error == CL_SUCCESS);
+    virtual void deleteHostArray() {
         delete[] hostarray;
-//        cout << "deleted hostarray of " << N << " floats" << endl;
-//        cout << "allocated device array of " << N << " floats" << endl;
-        onDevice = true;
-        onHost = false;
     }
-    cl_mem *getDeviceArray() {
-        if( !onDevice ) {
-            assert( onHost );
-            copyToDevice();
-            deleteFromHost();
-        }
-        return &devicearray;
-    }
-    void deleteFromHost(){
-        assert(onHost);
-//        cout << "deleted hostarray of " << N << " floats" << endl;
-        delete[] hostarray;
-        onHost = false;
-    }
-    void deleteFromDevice(){
-        assert(onDevice);
-//        cout << "deleted device array of " << N << " floats" << endl;
-        clReleaseMemObject(devicearray);        
-        onDevice = false;
+    virtual void *getHostArray() {
+        return hostarray;
     }
     int &operator[]( int n ) {
         if( !onHost ) {
@@ -121,15 +64,6 @@ public:
             copyToHost();
         }
         return hostarray[n];
-    }
-    inline int size() {
-        return N;
-    }
-    inline bool isOnHost(){
-        return onHost;
-    }
-    inline bool isOnDevice(){
-        return onDevice;
     }
 };
 

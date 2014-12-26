@@ -74,6 +74,10 @@ API
     // helper function:
     OpenCLHelper::roundUp( int quantizationSize, int desiredTotalSize );
 
+You can choose a different gpu index, if you have more than one, eg for gpu index 1:
+
+    cl.gpu(1);
+
 CLArray and CLWrapper objects
 -----------------------------
 
@@ -103,7 +107,7 @@ and `copyToHost()` yourself.
     }
     cout << "found opencl library" << endl;
 
-    OpenCLHelper cl(0);
+    OpenCLHelper cl;
     CLKernel *kernel = cl.buildKernel("../test/testopenclhelper.cl", "test_int");
     int in[5];
     for( int i = 0; i < 5; i++ ) {
@@ -132,7 +136,7 @@ CLArray objects
 Compared to CLWrapper objects, CLArray objects are more automated, but involve more 
 memory copying.
 
-    OpenCLHelper cl(0);
+    OpenCLHelper cl;
 
     CLArrayFloat *one = cl.arrayFloat(10000); // create CLArray object for 10,000 floats
     one->createOnHost(); // allocate on the host

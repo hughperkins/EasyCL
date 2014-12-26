@@ -15,7 +15,7 @@ int main( int argc, char *argv[] ) {
     }
     cout << "found opencl library" << endl;
 
-    OpenCLHelper cl(0);
+    OpenCLHelper cl;
     CLKernel *kernel = cl.buildKernel("../test/testopenclhelper.cl", "test");
     CLArrayFloat *out = cl.arrayFloat(5);
     float in[5];

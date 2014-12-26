@@ -14,7 +14,7 @@ int main( int argc, char *argv[] ) {
     }
     cout << "found opencl library" << endl;
 
-    OpenCLHelper cl(0);
+    OpenCLHelper cl;
     CLKernel *kernel = cl.buildKernel("../test/testscalars.cl", "test");
     int intout[5];
     float floatout[5];
