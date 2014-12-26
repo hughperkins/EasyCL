@@ -48,11 +48,13 @@ public:
         onHost = false;
     }
     void copyToHost() {
-        assert( !onHost && onDevice );
-        allocateHostArray(N);
+        assert( onDevice );
+        if( !onHost ) {
+            allocateHostArray(N);
+            onHost = true;                
+        }
         error = clEnqueueReadBuffer(*(openclhelper->queue), devicearray, CL_TRUE, 0, getElementSize() * N, getHostArray(), 0, NULL, NULL);    
         openclhelper->checkError( error );
-        onHost = true;                
     }
     void deleteFromHost(){
         assert(onHost);

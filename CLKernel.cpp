@@ -29,6 +29,12 @@ CLKernel *CLKernel::input( CLArray *clarray1d ) {
 
 CLKernel *CLKernel::output( CLArray *clarray1d ) {
     assert( clarray1d != 0 );
+    if( clarray1d->isOnHost() ) {
+        clarray1d->deleteFromHost();
+    }
+    if( !clarray1d->isOnDevice() ) {
+        clarray1d->createOnDevice();
+    }
     assert( clarray1d->isOnDevice() && !clarray1d->isOnHost() );
     error = clSetKernelArg( kernel, nextArg, sizeof(cl_mem), (clarray1d->getDeviceArray()) );
     openclhelper->checkError(error);
