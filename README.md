@@ -24,7 +24,7 @@ Imagine we have a kernel with the following signature, in the file /tmp/foo.cl:
         cout << "opencl library not found" << endl;
         exit(-1);
     }
-    OpenCLHelper cl(0);
+    OpenCLHelper cl;
     CLKernel *kernel = cl.buildKernel("somekernelfile.cl", "test_function");
     int in[5];
     int out[5];
@@ -43,13 +43,19 @@ More generally, you can call on 2d and 3d workgroups by using the `kernel->run` 
     const size_t global_ws[1]; global_ws[0] = OpenCLHelper::roundUp(local_ws[0], size);
     kernel->run( 1, global_ws, local_ws ); // 1 is number of dimensions, could be 2, or 3
 
+You can choose a different gpu index, if you have more than one, eg for gpu index 1:
+
+    cl.gpu(1);
+
 There are some examples in the 'test' subdirectory.
 
 API
 ---
 
     // constructor:
-    OpenCLHelper::OpenCLHelper( int GPUIndex );
+    OpenCLHelper::OpenCLHelper();
+    // choose different gpu index
+    void OpenCLHelper::gpu( int gpuindex );
 
     // compile kernel
     CLKernel *OpenCLHelper::buildKernel( string kernelfilepath, string kernelname );
@@ -73,10 +79,6 @@ API
 
     // helper function:
     OpenCLHelper::roundUp( int quantizationSize, int desiredTotalSize );
-
-You can choose a different gpu index, if you have more than one, eg for gpu index 1:
-
-    cl.gpu(1);
 
 CLArray and CLWrapper objects
 -----------------------------
