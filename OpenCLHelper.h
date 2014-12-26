@@ -38,6 +38,7 @@ public:
     class CLArrayInt *arrayInt(int N );
     class CLIntWrapper *wrap(int N, int *source );
     class CLFloatWrapper *wrap(int N, float *source );
+    class CLFloatWrapperConst *wrap(int N, float const*source );
 
     static bool isOpenCLAvailable() {
         return 0 == clewInit();
@@ -232,6 +233,7 @@ long getDeviceInfoInt( cl_device_info name ) {
 
 #include "CLIntWrapper.h"
 #include "CLFloatWrapper.h"
+#include "CLFloatWrapperConst.h"
 #include "CLWrapper.h"
 #include "CLKernel.h"
 

@@ -12,6 +12,7 @@ using namespace std;
 #include "CLArrayFloat.h"
 #include "CLArrayInt.h"
 #include "CLIntWrapper.h"
+#include "CLFloatWrapperConst.h"
 #include "CLWrapper.h"
 #include "CLKernel.h"
 
@@ -29,6 +30,10 @@ CLIntWrapper *OpenCLHelper::wrap(int N, int *source ) {
 
 CLFloatWrapper *OpenCLHelper::wrap(int N, float *source ) {
     return new CLFloatWrapper( N, source, this );
+}
+
+CLFloatWrapperConst *OpenCLHelper::wrap(int N, float const*source ) {
+    return new CLFloatWrapperConst( N, source, this );
 }
 
 CLKernel *OpenCLHelper::buildKernel( string kernelfilepath, string kernelname ) {

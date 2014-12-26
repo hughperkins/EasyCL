@@ -44,6 +44,7 @@ public:
     }
     virtual int getElementSize() = 0;
     virtual void *getHostArray() = 0;
+    virtual void const *getHostArrayConst() = 0;
     virtual void createOnDevice() {
         assert( !onDevice);
         devicearray = clCreateBuffer(*(openclhelper->context), CL_MEM_READ_WRITE, getElementSize() * N, 0, &error);
@@ -57,7 +58,7 @@ public:
     }
     virtual void copyToDevice() {
         assert( onHost && !onDevice );
-        devicearray = clCreateBuffer(*(openclhelper->context), CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, getElementSize() * N, getHostArray(), &error);
+        devicearray = clCreateBuffer(*(openclhelper->context), CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, getElementSize() * N, (void *)getHostArrayConst(), &error);
         openclhelper->checkError(error);
         onDevice = true;
     }
