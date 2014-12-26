@@ -100,14 +100,22 @@ public:
         }
     }
 
+    OpenCLHelper(int gpu) {
+        init(gpu);
+    }
+
     OpenCLHelper() {
+         init(0);
+    }
+
+    void init(int gpuindex) {
         bool clpresent = 0 == clewInit();
         if( !clpresent ) {
             throw std::runtime_error("OpenCL library not found");
         }
 
 //        std::cout << "this: " << this << std::endl;
-        this->gpuIndex = 0;
+        this->gpuIndex = gpuindex;
         error = 0;
 
         queue = 0;
@@ -135,7 +143,7 @@ public:
            throw std::runtime_error( "Error getting device ids: " + errorMessage(error) );
         }
 
-        gpu( 0 );
+        gpu( gpuindex );
     }
 
     void finish() {
