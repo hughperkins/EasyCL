@@ -43,33 +43,38 @@ public:
     void output( CLWrapper *wrapper );
 
     template<typename T>
-    void input( int N, const T *data ) {
+    CLKernel *input( int N, const T *data ) {
         cl_mem buffer = clCreateBuffer(*(openclhelper->context), CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(T) * N, (void *)data, &error);
         assert(error == CL_SUCCESS);
         error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), &buffer);
         openclhelper->checkError(error);
         buffers.push_back(buffer);
         nextArg++;
+        return this;
     }
-//    void input( int N, const cl_int *data ) {
-//        cl_mem buffer = clCreateBuffer(*(openclhelper->context), CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(cl_int) * N, (void *)data, &error);
-//        assert(error == CL_SUCCESS);
-//        error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), &buffer);
-//        openclhelper->checkError(error);
-//        buffers.push_back(buffer);
-//        nextArg++;
-//    }
-    void input( int value ) {
+    template<typename T>
+    CLKernel *in( int N, const T *data ) {
+        return input( N, data );
+    }
+    CLKernel *input( int value ) {
         inputArgInts.push_back(value);
         error = clSetKernelArg(kernel, nextArg, sizeof(int), &(inputArgInts[inputArgInts.size()-1]));
         openclhelper->checkError(error);
         nextArg++;
+        return this;
     }
-    void input( float value ) {
+    CLKernel *in( int value ) {
+        return input( value );
+    }
+    CLKernel *input( float value ) {
         inputArgFloats.push_back(value);
         error = clSetKernelArg(kernel, nextArg, sizeof(float), &(inputArgFloats[inputArgFloats.size()-1]));
         openclhelper->checkError(error);
         nextArg++;
+        return this;
+    }
+    CLKernel *in( float value ) {
+        return input( value );
     }
     void local( int N ) {
         error = clSetKernelArg(kernel, nextArg, sizeof(float) * N, 0);
@@ -77,7 +82,7 @@ public:
         nextArg++;
     }
     template<typename T>
-    void output( int N, T *data ) {
+    CLKernel *output( int N, T *data ) {
         cl_mem buffer = clCreateBuffer(*(openclhelper->context), CL_MEM_WRITE_ONLY, sizeof(T) * N, 0, &error);
         assert( error == CL_SUCCESS );
         error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), &buffer);
@@ -87,9 +92,14 @@ public:
         outputArgPointers.push_back(data);
         outputArgSizes.push_back(sizeof(T) * N );
         nextArg++;
+        return this;
     }
     template<typename T>
-    void inout( int N, T *data ) {
+    CLKernel *out( int N, T *data ) {
+        return output( N, data );
+    }
+    template<typename T>
+    CLKernel *inout( int N, T *data ) {
         cl_mem buffer = clCreateBuffer(*(openclhelper->context), CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(T) * N, (void *)data, &error);
         assert(error == CL_SUCCESS);
         error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), &buffer);
@@ -99,8 +109,8 @@ public:
         outputArgPointers.push_back(data);
         outputArgSizes.push_back(sizeof(T) * N );
         nextArg++;
+        return this;
     }
-
     void run_1d( int global_worksize, int local_worksize ) {
         size_t global_ws = global_worksize;
         size_t local_ws = local_worksize;

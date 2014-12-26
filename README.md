@@ -47,6 +47,10 @@ You can choose a different gpu index, if you have more than one, eg for gpu inde
 
     cl.gpu(1);
 
+'Fluent' style is also possible, eg:
+
+    kernel->in(10)->in(5)->out( 5, outarray )->run_1d( 5, 5 );
+
 There are some examples in the 'test' subdirectory.
 
 API

@@ -18,13 +18,8 @@ int main( int argc, char *argv[] ) {
     CLKernel *kernel = cl.buildKernel("../test/testscalars.cl", "test");
     int intout[5];
     float floatout[5];
-    kernel->input( 37 );
-    kernel->input( 1.234f);
-    kernel->output( 5, intout );
-    kernel->output( 5, floatout );
-    size_t global = 5;
-    size_t local = 5;
-    kernel->run( 1, &global, &local );
+    kernel->in( 37 )->in( 1.234f)->out( 5, intout )->out( 5, floatout );
+    kernel->run_1d( 5, 5 );
 
     for( int i = 0; i < 5; i++ ) {
         cout << intout[i] << " ";
