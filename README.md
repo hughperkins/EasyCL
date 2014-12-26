@@ -145,17 +145,13 @@ memory copying.
     OpenCLHelper cl;
 
     CLArrayFloat *one = cl.arrayFloat(10000); // create CLArray object for 10,000 floats
-    one->createOnHost(); // allocate on the host
-    (*one)[0] = 5;
-    (*one)[1] = 7; // give some data...
+    (*one)[0] = 5; // give some data...
+    (*one)[1] = 7; 
 
-    // create on device:
     CLArrayFloat *two = cl.arrayFloat(10000);
-    two->createOnDevice();
 
     // pass to kernel:
-    kernel->input(one);
-    kernel->output(two);
+    kernel->in(one)->out(two);
 
 You can then take the 'two' CLArray object, and pass it as the 'input' to 
 a different kernel, or you can use operator[] to read values from it.
