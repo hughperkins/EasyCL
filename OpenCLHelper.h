@@ -181,7 +181,16 @@ static std::string errorMessage(cl_int error ) {
 
 static void checkError( cl_int error ) {
     if( error != CL_SUCCESS ) {
-        throw std::runtime_error( "error: " + toString( error ) );
+        std::string message = toString(error);
+        switch( error ) {
+            case CL_INVALID_ARG_SIZE:
+                message = "CL_INVALID_ARG_SIZE";
+                break;
+            case CL_INVALID_BUFFER_SIZE:
+                message = "CL_INVALID_BUFFER_SIZE";
+                break;
+        }
+        throw std::runtime_error( std::string("error: ") + message );
     }
 }
 
