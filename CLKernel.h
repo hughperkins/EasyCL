@@ -50,6 +50,7 @@ public:
 
     CLKernel *input( CLWrapper *wrapper );
     CLKernel *output( CLWrapper *wrapper );
+    CLKernel *inout( CLWrapper *wrapper );
 
     CLKernel *in( CLWrapper *wrapper ) { return input( wrapper ); }
     CLKernel *out( CLWrapper *wrapper ) { return output( wrapper ); }

@@ -31,6 +31,9 @@ public:
        }
        throw std::runtime_error("can't assign these...");
     }
+    inline float get( int index ) {
+        return hostarray[index];
+    }
     virtual ~CLFloatWrapper() {
     }
     virtual int getElementSize() {
