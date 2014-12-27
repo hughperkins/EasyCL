@@ -16,10 +16,10 @@ int main( int argc, char *argv[] ) {
       for( int n = 0; n < 5; n++) {
         (*in)[n] = i*n;
       }
-      cout << "i " << i << endl;
       kernel->in( in );
       kernel->out( out );
       kernel->run_1d( 5, 5 );
     }
+    cout << "finished" << endl;
 }
 
