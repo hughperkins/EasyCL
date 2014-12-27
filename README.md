@@ -24,7 +24,7 @@ Imagine we have a kernel with the following signature, in the file /tmp/foo.cl:
         cout << "opencl library not found" << endl;
         exit(-1);
     }
-    OpenCLHelper cl(0);
+    OpenCLHelper cl;
     CLKernel *kernel = cl.buildKernel("somekernelfile.cl", "test_function");
     int in[5];
     int out[5];
@@ -43,13 +43,23 @@ More generally, you can call on 2d and 3d workgroups by using the `kernel->run` 
     const size_t global_ws[1]; global_ws[0] = OpenCLHelper::roundUp(local_ws[0], size);
     kernel->run( 1, global_ws, local_ws ); // 1 is number of dimensions, could be 2, or 3
 
+You can choose a different gpu index, if you have more than one, eg for gpu index 1:
+
+    cl.gpu(1);
+
+'Fluent' style is also possible, eg:
+
+    kernel->in(10)->in(5)->out( 5, outarray )->run_1d( 5, 5 );
+
 There are some examples in the 'test' subdirectory.
 
 API
 ---
 
     // constructor:
-    OpenCLHelper::OpenCLHelper( int GPUIndex );
+    OpenCLHelper::OpenCLHelper();
+    // choose different gpu index
+    void OpenCLHelper::gpu( int gpuindex );
 
     // compile kernel
     CLKernel *OpenCLHelper::buildKernel( string kernelfilepath, string kernelname );
@@ -103,7 +113,7 @@ and `copyToHost()` yourself.
     }
     cout << "found opencl library" << endl;
 
-    OpenCLHelper cl(0);
+    OpenCLHelper cl;
     CLKernel *kernel = cl.buildKernel("../test/testopenclhelper.cl", "test_int");
     int in[5];
     for( int i = 0; i < 5; i++ ) {
@@ -132,20 +142,16 @@ CLArray objects
 Compared to CLWrapper objects, CLArray objects are more automated, but involve more 
 memory copying.
 
-    OpenCLHelper cl(0);
+    OpenCLHelper cl;
 
     CLArrayFloat *one = cl.arrayFloat(10000); // create CLArray object for 10,000 floats
-    one->createOnHost(); // allocate on the host
-    (*one)[0] = 5;
-    (*one)[1] = 7; // give some data...
+    (*one)[0] = 5; // give some data...
+    (*one)[1] = 7; 
 
-    // create on device:
     CLArrayFloat *two = cl.arrayFloat(10000);
-    two->createOnDevice();
 
     // pass to kernel:
-    kernel->input(one);
-    kernel->output(two);
+    kernel->in(one)->out(two);
 
 You can then take the 'two' CLArray object, and pass it as the 'input' to 
 a different kernel, or you can use operator[] to read values from it.
@@ -185,6 +191,12 @@ How to run self-tests
 
 ... will compile a kernel, pass in some data, run the kernel, and check the results
 are expected
+
+On linux you can do, from the `build` directory:
+
+    ../runtests.sh
+
+This will run the various available test files
 
 What if it doesn't run?
 -----------------------

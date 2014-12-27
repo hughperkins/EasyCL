@@ -20,14 +20,17 @@ class OpenCLHelper {
 public:
      cl_int error;  
 
-    cl_uint num_platforms;
-    cl_platform_id platform_id;
-    cl_context context;
-    cl_command_queue queue;
-    cl_device_id device;
-    cl_program program;
+    cl_device_id *device_ids;
 
+    cl_uint num_platforms;
     cl_uint num_devices;
+
+    cl_platform_id platform_id;
+    cl_device_id device;
+
+    cl_context *context;
+    cl_command_queue *queue;
+    cl_program *program;
 
     int gpuIndex;
 
@@ -35,6 +38,7 @@ public:
     class CLArrayInt *arrayInt(int N );
     class CLIntWrapper *wrap(int N, int *source );
     class CLFloatWrapper *wrap(int N, float *source );
+    class CLFloatWrapperConst *wrap(int N, float const*source );
 
     static bool isOpenCLAvailable() {
         return 0 == clewInit();
@@ -42,8 +46,14 @@ public:
 
     ~OpenCLHelper() {
 //        clReleaseProgram(program);
-        clReleaseCommandQueue(queue);
-        clReleaseContext(context);        
+        if( queue != 0 ) {
+            clReleaseCommandQueue(*queue);
+            delete queue;
+        }
+        if( context != 0 ) {
+            clReleaseContext(*context);        
+            delete context;
+        }
     }
 
     static int roundUp( int quantization, int minimum ) {
@@ -62,7 +72,44 @@ public:
         return upperbound;
     }
 
-    OpenCLHelper(int gpuindex ) {
+    void gpu( int gpuIndex ) {
+        if( gpuIndex >= num_devices ) {
+           throw std::runtime_error( "requested gpuindex " + toString( gpuIndex ) + " goes beyond number of available device " + toString( num_devices ) );
+        }
+        device = device_ids[gpuIndex];
+
+        if( queue != 0 ) {
+            clReleaseCommandQueue(*queue);
+            delete queue;
+        }
+        if( context != 0 ) {
+            clReleaseContext(*context);        
+            delete context;
+        }
+
+        // Context
+        context = new cl_context();
+        *context = clCreateContext(0, 1, &device, NULL, NULL, &error);
+        if (error != CL_SUCCESS) {
+           throw std::runtime_error( "Error creating context: " + errorMessage(error) );
+        }
+        // Command-queue
+        queue = new cl_command_queue;
+        *queue = clCreateCommandQueue(*context, device, 0, &error);
+        if (error != CL_SUCCESS) {
+           throw std::runtime_error( "Error creating command queue: " + errorMessage(error) );
+        }
+    }
+
+    OpenCLHelper(int gpu) {
+        init(gpu);
+    }
+
+    OpenCLHelper() {
+         init(0);
+    }
+
+    void init(int gpuindex) {
         bool clpresent = 0 == clewInit();
         if( !clpresent ) {
             throw std::runtime_error("OpenCL library not found");
@@ -72,62 +119,41 @@ public:
         this->gpuIndex = gpuindex;
         error = 0;
 
+        queue = 0;
+        context = 0;
+
         // Platform
         error = clGetPlatformIDs(1, &platform_id, &num_platforms);
 //        std::cout << "num platforms: " << num_platforms << std::endl;
 //        assert (num_platforms == 1);
         if (error != CL_SUCCESS) {
-           std::cout << "Error getting platforms ids: " << errorMessage(error) << std::endl;
-           exit(error);
+           throw std::runtime_error( "Error getting platforms ids: " + errorMessage(error) );
         }
         if( num_platforms == 0 ) {
-           std::cout << "Error: no platforms available" << std::endl;
-           exit(-1);
+           throw std::runtime_error( "Error: no platforms available" );
         }
 
         error = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_GPU, 1, &device, &num_devices);
         if (error != CL_SUCCESS) {
-           std::cout << "Error getting device ids: " << errorMessage(error) << std::endl;
-           exit(error);
+           throw std::runtime_error( "Error getting device ids: " + errorMessage(error) );
         }
   //      std::cout << "num devices: " << num_devices << std::endl;
-        cl_device_id *device_ids = new cl_device_id[num_devices];
+        device_ids = new cl_device_id[num_devices];
         error = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_GPU, num_devices, device_ids, &num_devices);
         if (error != CL_SUCCESS) {
-           std::cout << "Error getting device ids: " << errorMessage(error) << std::endl;
-           exit(error);
-        }
-        if( gpuindex >= num_devices ) {
-           std::cout << "requested gpuindex " << gpuindex << " goes beyond number of available device " << num_devices << std::endl;
-           exit(-1);
-        }
-        device = device_ids[gpuindex];
-//        std::cout << "using device: " << device << std::endl;
-        delete[] device_ids;
-
-        // Context
-        context = clCreateContext(0, 1, &device, NULL, NULL, &error);
-        if (error != CL_SUCCESS) {
-           std::cout << "Error creating context: " << errorMessage(error) << std::endl;
-           exit(error);
-        }
-        // Command-queue
-        queue = clCreateCommandQueue(context, device, 0, &error);
-        if (error != CL_SUCCESS) {
-           std::cout << "Error creating command queue: " << errorMessage(error) << std::endl;
-           exit(error);
+           throw std::runtime_error( "Error getting device ids: " + errorMessage(error) );
         }
 
+        gpu( gpuindex );
     }
 
     void finish() {
-        error = clFinish( queue );
+        error = clFinish( *queue );
         switch( error ) {
             case CL_SUCCESS:
                 break;
             case -36:
-                std::cout << "Invalid command queue: often indicates out of bounds memory access within kernel" << std::endl;
-                exit(-1);
+                throw std::runtime_error( "Invalid command queue: often indicates out of bounds memory access within kernel" );
             default:
                 checkError(error);                
         }
@@ -155,9 +181,7 @@ static std::string errorMessage(cl_int error ) {
 
 static void checkError( cl_int error ) {
     if( error != CL_SUCCESS ) {
-        std::cout << "error: " << error << std::endl;
-        //assert (false);
-        exit(-1);
+        throw std::runtime_error( "error: " + toString( error ) );
     }
 }
 
@@ -179,12 +203,10 @@ static std::string getFileContents( std::string filename ) {
       if (buffer) {
         int bytesread = fread (buffer, 1, length, f);
         if( bytesread != length ) {
-            std::cout << "Failed to read cl source file" << std::endl;
-            exit(-1);
+            throw std::runtime_error( "Failed to read cl source file" );
         }
       } else {
-        std::cout << "Failed to allocate memory for cl source" << std::endl;
-        exit(-1);
+        throw std::runtime_error( "Failed to allocate memory for cl source" );
        }
       fclose (f);
         buffer[length] = 0;
@@ -211,6 +233,7 @@ long getDeviceInfoInt( cl_device_info name ) {
 
 #include "CLIntWrapper.h"
 #include "CLFloatWrapper.h"
+#include "CLFloatWrapperConst.h"
 #include "CLWrapper.h"
 #include "CLKernel.h"
 

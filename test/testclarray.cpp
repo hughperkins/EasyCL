@@ -15,19 +15,14 @@ int main( int argc, char *argv[] ) {
     }
     cout << "found opencl library" << endl;
 
-    OpenCLHelper cl(0);
+    OpenCLHelper cl;
     CLKernel *kernel = cl.buildKernel("../test/testopenclhelper.cl", "test");
     CLArrayFloat *out = cl.arrayFloat(5);
     float in[5];
     for( int i = 0; i < 5; i++ ) {
         in[i] = i * 3;
     }
-    out->createOnDevice();
-    kernel->input( 5, in );
-    kernel->output( out );
-    size_t global = 5;
-    size_t local = 5;
-    kernel->run(1, &global, &local );
+    kernel->in( 5, in )->out( out )->run_1d( 5, 5 );
     assertEquals( (*out)[0] , 7 );
     assertEquals( (*out)[1] , 10 );
     assertEquals( (*out)[2] , 13 );

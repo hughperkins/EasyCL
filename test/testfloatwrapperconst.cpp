@@ -1,14 +1,14 @@
 #include <iostream>
 #include <cstdlib>
-using namespace std;
+// using namespace std;
 
 #include "OpenCLHelper.h"
-#include "CLKernel.h"
 
 #include "test/asserts.h"
 
+using namespace std;
+
 int main( int argc, char *argv[] ) {
-    cout << "start" << endl;
     if( !OpenCLHelper::isOpenCLAvailable() ) {
         cout << "opencl library not found" << endl;
         exit(-1);
@@ -22,11 +22,13 @@ int main( int argc, char *argv[] ) {
         in[i] = i * 3;
     }
     float out[5];
-    kernel->input( 5, in );
-    kernel->output( 5, out );
-    size_t global = 5;
-    size_t local = 5;
-    kernel->run(1, &global, &local );
+    CLWrapper *inwrapper = cl.wrap(5, (float const *)in);
+    CLWrapper *outwrapper = cl.wrap(5, out);
+    inwrapper->copyToDevice();
+    kernel->input( inwrapper );
+    kernel->output( outwrapper );
+    kernel->run_1d( 5, 5 );
+    outwrapper->copyToHost();
     assertEquals( out[0] , 7 );
     assertEquals( out[1] , 10 );
     assertEquals( out[2] , 13 );

@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 2.6)
 
-set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
+if (NOT CMAKE_BUILD_TYPE)
+    message("Setting build type to 'Release'")
+    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
+endif()
 
 # This is not used yet, but it will be soon ;-)
 include_directories(.)
@@ -26,11 +29,17 @@ target_link_libraries( testclarray OpenCLHelper )
 add_executable( testintarray test/testintarray.cpp )
 target_link_libraries( testintarray OpenCLHelper )
 
+add_executable( testfloatarray test/testfloatarray.cpp )
+target_link_libraries( testfloatarray OpenCLHelper )
+
 add_executable( testintwrapper test/testintwrapper.cpp )
 target_link_libraries( testintwrapper OpenCLHelper )
 
 add_executable( testfloatwrapper test/testfloatwrapper.cpp )
 target_link_libraries( testfloatwrapper OpenCLHelper )
+
+add_executable( testfloatwrapperconst test/testfloatwrapperconst.cpp )
+target_link_libraries( testfloatwrapperconst OpenCLHelper )
 
 add_executable( testscalars test/testscalars.cpp )
 target_link_libraries( testscalars OpenCLHelper )

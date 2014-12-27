@@ -44,20 +44,21 @@ public:
     }
     virtual int getElementSize() = 0;
     virtual void *getHostArray() = 0;
+    virtual void const *getHostArrayConst() = 0;
     virtual void createOnDevice() {
         assert( !onDevice);
-        devicearray = clCreateBuffer(openclhelper->context, CL_MEM_READ_WRITE, getElementSize() * N, 0, &error);
+        devicearray = clCreateBuffer(*(openclhelper->context), CL_MEM_READ_WRITE, getElementSize() * N, 0, &error);
         assert( error == CL_SUCCESS );        
         onDevice = true;        
     }
     virtual void copyToHost() {
         assert( onDevice );
-        error = clEnqueueReadBuffer(openclhelper->queue, devicearray, CL_TRUE, 0, getElementSize() * N, getHostArray(), 0, NULL, NULL);    
+        error = clEnqueueReadBuffer(*(openclhelper->queue), devicearray, CL_TRUE, 0, getElementSize() * N, getHostArray(), 0, NULL, NULL);    
         openclhelper->checkError( error );
     }
     virtual void copyToDevice() {
         assert( onHost && !onDevice );
-        devicearray = clCreateBuffer(openclhelper->context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, getElementSize() * N, getHostArray(), &error);
+        devicearray = clCreateBuffer(*(openclhelper->context), CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, getElementSize() * N, (void *)getHostArrayConst(), &error);
         openclhelper->checkError(error);
         onDevice = true;
     }

@@ -13,36 +13,33 @@
 
 // this wraps an existing array, which we wont free, rather than creating a new array
 // probably more efficient....
-class CLIntWrapper : public CLWrapper {
+class CLFloatWrapperConst : public CLWrapper {
 protected:
-    int *hostarray;  // NOT owned by this object, do NOT free :-)
+    float const*hostarray;  // NOT owned by this object, do NOT free :-)
 public:
-    CLIntWrapper( int N, int *_hostarray, OpenCLHelper *openclhelper ) : 
+    CLFloatWrapperConst( int N, float const *_hostarray, OpenCLHelper *openclhelper ) : 
              hostarray(_hostarray),
              CLWrapper( N, openclhelper) {
-        error = CL_SUCCESS;
-
-        onDevice = false;
     }
-    CLIntWrapper( const CLIntWrapper &source ) :
+    CLFloatWrapperConst( const CLFloatWrapperConst &source ) :
         hostarray(0), CLWrapper( 0, 0 ) { // copy constructor
         throw std::runtime_error("can't assign these...");
     }
-    CLIntWrapper &operator=( const CLIntWrapper &two ) { // assignment operator
+    CLFloatWrapperConst &operator=( const CLFloatWrapperConst &two ) { // assignment operator
        if( this == &two ) { // self-assignment
           return *this;
        }
        throw std::runtime_error("can't assign these...");
     }
-    virtual ~CLIntWrapper() {
+    virtual ~CLFloatWrapperConst() {
     }
     virtual int getElementSize() {
         return sizeof(hostarray[0]);
     }
     virtual void *getHostArray() {
-        return hostarray;
+        throw std::runtime_error("gethostarray() not implemented for clfloatwrapperconst");
     }
-    virtual void const*getHostArrayConst() {
+    virtual void const *getHostArrayConst() {
         return hostarray;
     }
 };

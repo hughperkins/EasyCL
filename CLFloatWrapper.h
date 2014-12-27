@@ -39,5 +39,8 @@ public:
     virtual void *getHostArray() {
         return hostarray;
     }
+    virtual void const*getHostArrayConst() {
+        return hostarray;
+    }
 };
 

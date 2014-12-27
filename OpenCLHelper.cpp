@@ -12,6 +12,7 @@ using namespace std;
 #include "CLArrayFloat.h"
 #include "CLArrayInt.h"
 #include "CLIntWrapper.h"
+#include "CLFloatWrapperConst.h"
 #include "CLWrapper.h"
 #include "CLKernel.h"
 
@@ -31,24 +32,29 @@ CLFloatWrapper *OpenCLHelper::wrap(int N, float *source ) {
     return new CLFloatWrapper( N, source, this );
 }
 
+CLFloatWrapperConst *OpenCLHelper::wrap(int N, float const*source ) {
+    return new CLFloatWrapperConst( N, source, this );
+}
+
 CLKernel *OpenCLHelper::buildKernel( string kernelfilepath, string kernelname ) {
     size_t src_size = 0;
     std::string path = kernelfilepath.c_str();
     std::string source = getFileContents(path);
     const char *source_char = source.c_str();
     src_size = strlen( source_char );
-    program = clCreateProgramWithSource(context, 1, &source_char, &src_size, &error);
+    program = new cl_program();
+    *program = clCreateProgramWithSource(*context, 1, &source_char, &src_size, &error);
     checkError(error);
 
 //    error = clBuildProgram(program, 1, &device, "-cl-opt-disable", NULL, NULL);
-    error = clBuildProgram(program, 1, &device, 0, NULL, NULL);
+    error = clBuildProgram(*program, 1, &device, 0, NULL, NULL);
 
     char* build_log;
     size_t log_size;
-    error = clGetProgramBuildInfo(program, device, CL_PROGRAM_BUILD_LOG, 0, NULL, &log_size);
+    error = clGetProgramBuildInfo(*program, device, CL_PROGRAM_BUILD_LOG, 0, NULL, &log_size);
     checkError(error);
     build_log = new char[log_size+1];
-    error = clGetProgramBuildInfo(program, device, CL_PROGRAM_BUILD_LOG, log_size, build_log, NULL);
+    error = clGetProgramBuildInfo(*program, device, CL_PROGRAM_BUILD_LOG, log_size, build_log, NULL);
     checkError(error);
     build_log[log_size] = '\0';
     if( log_size > 2 ) {
@@ -57,7 +63,7 @@ CLKernel *OpenCLHelper::buildKernel( string kernelfilepath, string kernelname ) 
     delete[] build_log;
     checkError(error);
 
-    cl_kernel kernel = clCreateKernel(program, kernelname.c_str(), &error);
+    cl_kernel kernel = clCreateKernel(*program, kernelname.c_str(), &error);
     switch( error ) {
         case CL_SUCCESS:
             break;

@@ -15,20 +15,18 @@ int main( int argc, char *argv[] ) {
     cout << "found opencl library" << endl;
 
     OpenCLHelper cl;
-    CLKernel *kernel = cl.buildKernel("../test/testintarray.cl", "test");
-    int in[5];
-    int inout[5];
-    int out[5];
+    CLKernel *kernel = cl.buildKernel("../test/testfloatarray.cl", "test");
+    float in[5];
+    float inout[5];
+    float out[5];
     for( int i = 0; i < 5; i++ ) {
         in[i] = i * 3;
         inout[i] = i * 3;
     }
-    kernel->input( 5, in );
-    kernel->output( 5, out );
+    kernel->in( 5, in );
+    kernel->out( 5, out );
     kernel->inout( 5, inout );
-    size_t global = 5;
-    size_t local = 5;
-    kernel->run( 1, &global, &local );
+    kernel->run_1d( 5, 5 );
 
     for( int i = 0; i < 5; i++ ) {
         cout << out[i] << " ";
