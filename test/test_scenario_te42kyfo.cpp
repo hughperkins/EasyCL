@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "OpenCLHelper.h"
+#include "test/asserts.h"
 
 using namespace std;
 
@@ -19,6 +20,8 @@ int main( int argc, char *argv[] ) {
       kernel->in( in );
       kernel->out( out );
       kernel->run_1d( 5, 5 );
+      assertEquals( i*2 + 5, (*out)[2] );
+      assertEquals( i*4 + 5, (*out)[4] );
     }
     cout << "finished" << endl;
 }
