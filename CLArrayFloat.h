@@ -39,14 +39,15 @@ public:
     }
     virtual void createOnHost() {
         assert(!onHost && !onDevice);
-        hostarray = new float[N];
-        onHost = true;
+        allocateHostArray(N);
     }
     virtual void allocateHostArray(int N) {
         hostarray = new float[N];
+        onHost = true;
     }
     virtual void deleteHostArray() {
         delete[] hostarray;
+        onHost = false;
     }
     virtual int getElementSize() {
         return sizeof( float );
@@ -54,12 +55,23 @@ public:
     virtual void *getHostArray() {
         return hostarray;
     }
+//    float const &operator[]( int n ) {
+//        if( !onHost ) {
+//            if( !onDevice ) {
+//                createOnHost();
+//            } else {
+//                copyToHost();
+//            }
+//        }
+//        return hostarray[n];
+//    }
     float &operator[]( int n ) {
         if( !onHost ) {
             if( !onDevice ) {
-                throw std::runtime_error("array not present either on host or device!");
+                createOnHost();
+            } else {
+                moveToHost();
             }
-            copyToHost();
         }
         return hostarray[n];
     }

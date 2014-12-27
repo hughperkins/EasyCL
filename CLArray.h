@@ -47,6 +47,10 @@ public:
         onDevice = true;
         onHost = false;
     }
+    void moveToHost() {
+       copyToHost();
+       deleteFromDevice();
+    }
     void copyToHost() {
         assert( onDevice );
         if( !onHost ) {

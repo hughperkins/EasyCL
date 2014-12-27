@@ -44,3 +44,8 @@ target_link_libraries( testfloatwrapperconst OpenCLHelper )
 add_executable( testscalars test/testscalars.cpp )
 target_link_libraries( testscalars OpenCLHelper )
 
+add_executable( test_scenario_te42kyfo test/test_scenario_te42kyfo.cpp )
+target_link_libraries( test_scenario_te42kyfo OpenCLHelper )
+
+
+
