@@ -36,6 +36,9 @@ public:
     virtual int getElementSize() {
         return sizeof(hostarray[0]);
     }
+    inline float get( int index ) {
+        return hostarray[index];
+    }
     virtual void *getHostArray() {
         throw std::runtime_error("gethostarray() not implemented for clfloatwrapperconst");
     }
