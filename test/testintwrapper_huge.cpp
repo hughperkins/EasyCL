@@ -16,13 +16,13 @@ int main( int argc, char *argv[] ) {
     cout << "found opencl library" << endl;
 
     OpenCLHelper cl;
-    CLKernel *kernel = cl.buildKernel("../test/testopenclhelper.cl", "test");
-    const int N = 30000;
-    float in[N];
+    CLKernel *kernel = cl.buildKernel("../test/testopenclhelper.cl", "test_stress");
+    const int N = 4500000;
+    int *in = new int[N];
     for( int i = 0; i < N; i++ ) {
         in[i] = i * 3;
     }
-    float out[N];
+    int *out = new int[N];
     CLWrapper *inwrapper = cl.wrap(N, in);
     CLWrapper *outwrapper = cl.wrap(N, out);
     inwrapper->copyToDevice();
@@ -34,12 +34,18 @@ int main( int argc, char *argv[] ) {
     cout << "globalsize: " << globalSize << " workgroupsize " << workgroupsize << endl;
     kernel->run_1d( globalSize, workgroupsize );
     outwrapper->copyToHost();
-    assertEquals( out[0] , 7 );
-    assertEquals( out[1] , 10 );
-    assertEquals( out[2] , 13 );
-    assertEquals( out[3] , 16 );
-    assertEquals( out[4] , 19 );
-    assertEquals( out[20000] , 20000*3+7 );
+    for( int i = 0; i < N; i++ ) {
+       if( out[i] != 500000 ) {
+           cout << "out[" << i << "] != 500000: " << out[i] << endl;
+           exit(-1);
+       }
+    }
+//    assertEquals( out[0] , 500000 );
+//    assertEquals( out[1] , 500000 );
+//    assertEquals( out[2] , 500000 );
+//    assertEquals( out[3] , 500000 );
+//    assertEquals( out[4] , 500000 );
+//    assertEquals( out[4000000] , 500000 );
     cout << "tests completed ok" << endl;
 }
 

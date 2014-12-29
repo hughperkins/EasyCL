@@ -38,8 +38,8 @@ target_link_libraries( testintwrapper OpenCLHelper )
 add_executable( testfloatwrapper test/testfloatwrapper.cpp )
 target_link_libraries( testfloatwrapper OpenCLHelper )
 
-add_executable( testfloatwrapper_huge test/testfloatwrapper_huge.cpp )
-target_link_libraries( testfloatwrapper_huge OpenCLHelper )
+add_executable( testintwrapper_huge test/testintwrapper_huge.cpp )
+target_link_libraries( testintwrapper_huge OpenCLHelper )
 
 add_executable( testfloatwrapperconst test/testfloatwrapperconst.cpp )
 target_link_libraries( testfloatwrapperconst OpenCLHelper )
