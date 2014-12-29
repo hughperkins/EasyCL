@@ -37,6 +37,10 @@ CLFloatWrapperConst *OpenCLHelper::wrap(int N, float const*source ) {
 }
 
 CLKernel *OpenCLHelper::buildKernel( string kernelfilepath, string kernelname ) {
+    return buildKernel( kernelfilepath, kernelname, "" );
+}
+
+CLKernel *OpenCLHelper::buildKernel( string kernelfilepath, string kernelname, string options ) {
     size_t src_size = 0;
     std::string path = kernelfilepath.c_str();
     std::string source = getFileContents(path);
@@ -47,7 +51,8 @@ CLKernel *OpenCLHelper::buildKernel( string kernelfilepath, string kernelname ) 
     checkError(error);
 
 //    error = clBuildProgram(program, 1, &device, "-cl-opt-disable", NULL, NULL);
-    error = clBuildProgram(*program, 1, &device, 0, NULL, NULL);
+    std::cout << "options: [" << options.c_str() << "]" << std::endl;
+    error = clBuildProgram(*program, 1, &device, options.c_str(), NULL, NULL);
 
     char* build_log;
     size_t log_size;
