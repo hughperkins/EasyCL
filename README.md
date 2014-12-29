@@ -62,7 +62,7 @@ API
     void OpenCLHelper::gpu( int gpuindex );
 
     // compile kernel
-    CLKernel *OpenCLHelper::buildKernel( string kernelfilepath, string kernelname );
+    CLKernel *OpenCLHelper::buildKernel( string kernelfilepath, string kernelname, string options = "" );
 
     // passing arguments to kernel:
 
