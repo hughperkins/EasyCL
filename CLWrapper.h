@@ -76,21 +76,25 @@ public:
         if(!onDevice) {
             throw std::runtime_error("copyToHost(): not on device");
         }
-//        std::cout << "copying buffer to host of " << N << " elements" << std::endl;
         error = clEnqueueReadBuffer(*(openclhelper->queue), devicearray, CL_TRUE, 0, getElementSize() * N, getHostArray(), 0, NULL, NULL);    
-        openclhelper->checkError( error );
+        openclhelper->checkError(error);
     }
     virtual void copyToDevice() {
         if(!onHost ) {
             throw std::runtime_error("copyToDevice(): not on host");
         }
+        if( onDevice ) {
+            error = clEnqueueWriteBuffer(*(openclhelper->queue), devicearray, CL_TRUE, 0, getElementSize() * N, getHostArray(), 0, NULL, NULL);    
+            openclhelper->checkError(error);               
+        } else {
 //        std::cout << "copying buffer to device of " << N << " elements" << std::endl;
 //        for( int i = 0; i < N; i++ ) { 
 //           std::cout << "i " << i << " " << ((float*)getHostArrayConst())[i] << std::endl;
 //        }
-        devicearray = clCreateBuffer(*(openclhelper->context), CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, getElementSize() * N, (void *)getHostArrayConst(), &error);
-        openclhelper->checkError(error);
-        onDevice = true;
+            devicearray = clCreateBuffer(*(openclhelper->context), CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, getElementSize() * N, (void *)getHostArrayConst(), &error);
+            openclhelper->checkError(error);
+            onDevice = true;
+        }
     }
 
     inline int size() {
