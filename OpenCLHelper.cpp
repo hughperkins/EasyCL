@@ -51,7 +51,7 @@ CLKernel *OpenCLHelper::buildKernel( string kernelfilepath, string kernelname, s
     checkError(error);
 
 //    error = clBuildProgram(program, 1, &device, "-cl-opt-disable", NULL, NULL);
-    std::cout << "options: [" << options.c_str() << "]" << std::endl;
+//    std::cout << "options: [" << options.c_str() << "]" << std::endl;
     error = clBuildProgram(*program, 1, &device, options.c_str(), NULL, NULL);
 
     char* build_log;
