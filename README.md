@@ -95,10 +95,13 @@ and forwards between each other, as required.  They can be passed as an 'input'
 and 'output' to a CLKernel object.  They can be reused between kernels.
 
 There are two 'flavors':
-- CLWrapper: wraps an existing host array, you'll need to call `copyToDevice()` and
-`copyToHost()` yourself
 - CLArray: more automated, but more memory copying, since creates a new array 
 on the host
+- CLWrapper: wraps an existing host array, you'll need to call `copyToDevice()` and
+`copyToHost()` yourself
+
+CLArray objects are the first implementation.  CLWrapper objects are the second implementation.
+You can use either, but CLWrapper objects are simpler, more transparent, probably run faster.
 
 CLWrapper objects
 -----------------
