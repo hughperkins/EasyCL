@@ -11,15 +11,17 @@
 
 class CLKernel {
     OpenCLHelper *openclhelper; // NOT owned by this object, dont delete!
+    cl_program program;
     cl_kernel kernel;
     cl_int error;
 
     int nextArg;
 public:
-    CLKernel( OpenCLHelper *openclhelper, cl_kernel kernel ) {
+    CLKernel( OpenCLHelper *openclhelper, cl_program program, cl_kernel kernel ) {
         this->openclhelper = openclhelper;
         nextArg = 0;
         error = CL_SUCCESS;
+        this->program = program;
         this->kernel = kernel;
     }
     CLKernel( const CLKernel &kernel ) {
@@ -29,6 +31,7 @@ public:
         throw std::runtime_error("can't assign CLKernel");
     }
     ~CLKernel() {
+        clReleaseProgram(program);
         clReleaseKernel(kernel);
     }
 

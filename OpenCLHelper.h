@@ -30,7 +30,7 @@ public:
 
     cl_context *context;
     cl_command_queue *queue;
-    cl_program *program;
+//    cl_program *program;
 
     int gpuIndex;
 

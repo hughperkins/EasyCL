@@ -46,20 +46,20 @@ CLKernel *OpenCLHelper::buildKernel( string kernelfilepath, string kernelname, s
     std::string source = getFileContents(path);
     const char *source_char = source.c_str();
     src_size = strlen( source_char );
-    program = new cl_program();
-    *program = clCreateProgramWithSource(*context, 1, &source_char, &src_size, &error);
+//    cl_program program = new cl_program();
+    cl_program program = clCreateProgramWithSource(*context, 1, &source_char, &src_size, &error);
     checkError(error);
 
 //    error = clBuildProgram(program, 1, &device, "-cl-opt-disable", NULL, NULL);
 //    std::cout << "options: [" << options.c_str() << "]" << std::endl;
-    error = clBuildProgram(*program, 1, &device, options.c_str(), NULL, NULL);
+    error = clBuildProgram(program, 1, &device, options.c_str(), NULL, NULL);
 
     char* build_log;
     size_t log_size;
-    error = clGetProgramBuildInfo(*program, device, CL_PROGRAM_BUILD_LOG, 0, NULL, &log_size);
+    error = clGetProgramBuildInfo(program, device, CL_PROGRAM_BUILD_LOG, 0, NULL, &log_size);
     checkError(error);
     build_log = new char[log_size+1];
-    error = clGetProgramBuildInfo(*program, device, CL_PROGRAM_BUILD_LOG, log_size, build_log, NULL);
+    error = clGetProgramBuildInfo(program, device, CL_PROGRAM_BUILD_LOG, log_size, build_log, NULL);
     checkError(error);
     build_log[log_size] = '\0';
     if( log_size > 2 ) {
@@ -68,7 +68,7 @@ CLKernel *OpenCLHelper::buildKernel( string kernelfilepath, string kernelname, s
     delete[] build_log;
     checkError(error);
 
-    cl_kernel kernel = clCreateKernel(*program, kernelname.c_str(), &error);
+    cl_kernel kernel = clCreateKernel(program, kernelname.c_str(), &error);
     switch( error ) {
         case CL_SUCCESS:
             break;
@@ -83,6 +83,6 @@ CLKernel *OpenCLHelper::buildKernel( string kernelfilepath, string kernelname, s
     }
     checkError(error);
 //    clReleaseProgram(program);
-    return new CLKernel(this, kernel);
+    return new CLKernel(this, program, kernel);
 }
 
