@@ -76,6 +76,7 @@ public:
         if(!onDevice) {
             throw std::runtime_error("copyToHost(): not on device");
         }
+        openclhelper->finish();
         error = clEnqueueReadBuffer(*(openclhelper->queue), devicearray, CL_TRUE, 0, getElementSize() * N, getHostArray(), 0, NULL, NULL);    
         openclhelper->checkError(error);
     }
