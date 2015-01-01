@@ -14,7 +14,7 @@
 #include <fstream>
 #include <stdexcept>
 
-#include "clew/include/clew.h"
+#include "clew.h"
 
 class OpenCLHelper {
 public:

@@ -9,7 +9,7 @@
 #include <cstdlib>
 using namespace std;
 
-#include "clew/include/clew.h"
+#include "clew.h"
 
 #include "deviceinfo_helper.h"
 

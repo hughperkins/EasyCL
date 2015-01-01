@@ -7,15 +7,15 @@ endif()
 
 # This is not used yet, but it will be soon ;-)
 include_directories(.)
-include_directories(clew/include)
+#include_directories(clew/include)
 #add_library( clew SHARED clew/src/clew.c )
 #target_link_libraries( clew dl )
 
-add_library( OpenCLHelper SHARED OpenCLHelper.cpp CLKernel.cpp clew/src/clew.c )
+add_library( OpenCLHelper SHARED OpenCLHelper.cpp CLKernel.cpp thirdparty/clew/src/clew.c )
 target_link_libraries( OpenCLHelper dl )
 
-add_executable( gpuinfo gpuinfo.cpp )
-target_link_libraries( gpuinfo OpenCLHelper )
+add_executable( gpuinfo gpuinfo.cpp thirdparty/clew/src/clew.c )
+target_link_libraries( gpuinfo dl )
 
 add_executable( testopenclhelper test/testopenclhelper.cpp )
 target_link_libraries( testopenclhelper OpenCLHelper )
@@ -44,11 +44,17 @@ target_link_libraries( testintwrapper_huge OpenCLHelper )
 add_executable( testfloatwrapperconst test/testfloatwrapperconst.cpp )
 target_link_libraries( testfloatwrapperconst OpenCLHelper )
 
-add_executable( testscalars test/testscalars.cpp )
-target_link_libraries( testscalars OpenCLHelper )
+#add_executable( testscalars test/testscalars.cpp )
+#target_link_libraries( testscalars OpenCLHelper )
 
 add_executable( test_scenario_te42kyfo test/test_scenario_te42kyfo.cpp )
 target_link_libraries( test_scenario_te42kyfo OpenCLHelper )
 
+add_library( gtest SHARED thirdparty/gtest/gtest-all.cc )
+target_link_libraries( gtest pthread)
+
+add_executable( unittests test/testscalars.cpp thirdparty/gtest/gtest_main.cc )
+target_link_libraries( unittests gtest OpenCLHelper )
+target_include_directories( unittests PRIVATE thirdparty/gtest )
 
 
