@@ -59,6 +59,8 @@ int main( int argc, char *argv[] ) {
         printDeviceInfo( "max workitem dimensions", device, CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS );
         printDeviceInfoArray( "max workitem sizes", device, CL_DEVICE_MAX_WORK_ITEM_SIZES, 3 );
         printDeviceInfoString( "device name", device, CL_DEVICE_NAME );
+        printDeviceInfoString( "opencl c version", device, CL_DEVICE_OPENCL_C_VERSION );
+        printDeviceInfoString( "opencl device version", device, CL_DEVICE_VERSION );
         printDeviceInfo( "frequency MHz", device, CL_DEVICE_MAX_CLOCK_FREQUENCY );
         cout << endl;
     }
