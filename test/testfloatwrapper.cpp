@@ -2,13 +2,15 @@
 #include <cstdlib>
 // using namespace std;
 
+#include "gtest/gtest.h"
+
 #include "OpenCLHelper.h"
 
 #include "test/asserts.h"
 
 using namespace std;
 
-int main( int argc, char *argv[] ) {
+TEST( testfloatwrapper, main ) {
     if( !OpenCLHelper::isOpenCLAvailable() ) {
         cout << "opencl library not found" << endl;
         exit(-1);

@@ -2,13 +2,15 @@
 #include <cstdlib>
 using namespace std;
 
+#include "gtest/gtest.h"
+
 #include "OpenCLHelper.h"
 #include "CLKernel.h"
 #include "CLArrayFloat.h"
 
 #include "test/asserts.h"
 
-int main( int argc, char *argv[] ) {
+TEST( testclarray, main ) {
     if( !OpenCLHelper::isOpenCLAvailable() ) {
         cout << "opencl library not found" << endl;
         exit(-1);

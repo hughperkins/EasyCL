@@ -2,12 +2,14 @@
 #include <cstdlib>
 using namespace std;
 
+#include "gtest/gtest.h"
+
 #include "OpenCLHelper.h"
 #include "CLKernel.h"
 
 #include "test/asserts.h"
 
-int main( int argc, char *argv[] ) {
+TEST( testinout, main ) {
     if( !OpenCLHelper::isOpenCLAvailable() ) {
         cout << "opencl library not found" << endl;
         exit(-1);

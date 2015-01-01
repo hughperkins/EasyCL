@@ -2,6 +2,8 @@
 #include <cstdlib>
 // using namespace std;
 
+#include "gtest/gtest.h"
+
 #include "OpenCLHelper.h"
 
 #include "unistd.h"
@@ -11,7 +13,7 @@
 
 using namespace std;
 
-void testreadnonwrapper() {
+TEST( testintwrapper_huge, testreadnonwrapper ) {
     OpenCLHelper cl;
     CLKernel *kernel = cl.buildKernel("../test/testopenclhelper.cl", "test_read");
 //    const int N = 4500000;
@@ -38,7 +40,7 @@ void testreadnonwrapper() {
     }
 }
 
-void testread() {
+TEST( testintwrapper_huge, testread ) {
     Timer timer;
     OpenCLHelper cl;
     CLKernel *kernel = cl.buildKernel("../test/testopenclhelper.cl", "test_read");
@@ -66,7 +68,7 @@ void testread() {
     }
 }
 
-void testreadwrite() {
+TEST( testintwrapper_huge, testreadwrite ) {
 
     OpenCLHelper cl;
     CLKernel *kernel = cl.buildKernel("../test/testopenclhelper.cl", "test_stress");
@@ -102,15 +104,15 @@ void testreadwrite() {
 //    assertEquals( out[4000000] , 500000 );
 }
 
-int main( int argc, char *argv[] ) {
-    if( !OpenCLHelper::isOpenCLAvailable() ) {
-        cout << "opencl library not found" << endl;
-        exit(-1);
-    }
-    cout << "found opencl library" << endl;
-    testreadnonwrapper();
-    testread();
-    testreadwrite();
-    cout << "tests completed ok" << endl;
-}
+//int main( int argc, char *argv[] ) {
+//    if( !OpenCLHelper::isOpenCLAvailable() ) {
+//        cout << "opencl library not found" << endl;
+//        exit(-1);
+//    }
+//    cout << "found opencl library" << endl;
+//    testreadnonwrapper();
+//    testread();
+//    testreadwrite();
+//    cout << "tests completed ok" << endl;
+//}
 

@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <iomanip>
+#include <sstream>
 
 template<typename T>
 std::string toString(T val ) { // not terribly efficient, but works...
@@ -17,15 +18,6 @@ void assertEquals( T one, T two ) {
     }
 }
 
-void assertEquals( float one, int two ) {
-    if( one != two ) {
-        throw std::runtime_error("FAIL " + toString(one) + " != " + toString(two ) );
-    }
-}
-
-void assertEquals( int one, float two ) {
-    if( one != two ) {
-        throw std::runtime_error("FAIL " + toString(one) + " != " + toString(two ) );
-    }
-}
+void assertEquals( float one, int two );
+void assertEquals( int one, float two );
 

@@ -183,36 +183,35 @@ How to build
     cmake ..
     make
 
+* Dont forget the `--recursive`, otherwise you will see odd errors about `clew/src/clew.c` missing!
+
 How to run self-tests
 ---------------------
+
+To check clew library is working ok (ie finding and loading the opencl library, etc):
 
     ./gpuinfo
 
 ... should print some information about your graphics card
 
-    ./testopenclhelper
+*Unit-tests:*
 
-... will compile a kernel, pass in some data, run the kernel, and check the results
-are expected
+To run:
+```
+make unittests
+./unittests
+```
 
-On linux you can do, from the `build` directory:
+* unit-tests are created using [googletest](https://code.google.com/p/googletest/wiki/V1_7_Primer)
+* you dont need to download/install googletest though, since the necessary files are included in the `thirdparty`
+directory.  Just build OpenCLHelper, and run `unittests`!
 
-    ../runtests.sh
-
-This will run the various available test files
-
-What if it doesn't run?
------------------------
+How to check my OpenCL installation/configuration?
+--------------------------------------------------
 
 - In Ubuntu, you can use `clinfo` (install via `sudo apt-get install clinfo`), to check the
 OpenCL installation itself is ok.  If this says 'no installations found', then it's an OpenCL
 configuration issue.
-
-What if it runs, but no results?
---------------------------------
-
-- check types, eg if you pass in int arrays, but the kernel expects floats, results might not
-  be what you were hoping to see
 
 License
 -------

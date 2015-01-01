@@ -5,11 +5,7 @@ if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
 endif()
 
-# This is not used yet, but it will be soon ;-)
 include_directories(.)
-#include_directories(clew/include)
-#add_library( clew SHARED clew/src/clew.c )
-#target_link_libraries( clew dl )
 
 add_library( OpenCLHelper SHARED OpenCLHelper.cpp CLKernel.cpp thirdparty/clew/src/clew.c )
 target_link_libraries( OpenCLHelper dl )
@@ -17,44 +13,20 @@ target_link_libraries( OpenCLHelper dl )
 add_executable( gpuinfo gpuinfo.cpp thirdparty/clew/src/clew.c )
 target_link_libraries( gpuinfo dl )
 
-add_executable( testopenclhelper test/testopenclhelper.cpp )
-target_link_libraries( testopenclhelper OpenCLHelper )
-
-add_executable( testinout test/testinout.cpp )
-target_link_libraries( testinout OpenCLHelper )
-
-add_executable( testclarray test/testclarray.cpp )
-target_link_libraries( testclarray OpenCLHelper )
-
-add_executable( testintarray test/testintarray.cpp )
-target_link_libraries( testintarray OpenCLHelper )
-
-add_executable( testfloatarray test/testfloatarray.cpp )
-target_link_libraries( testfloatarray OpenCLHelper )
-
-add_executable( testintwrapper test/testintwrapper.cpp )
-target_link_libraries( testintwrapper OpenCLHelper )
-
-add_executable( testfloatwrapper test/testfloatwrapper.cpp )
-target_link_libraries( testfloatwrapper OpenCLHelper )
-
-add_executable( testintwrapper_huge test/testintwrapper_huge.cpp )
-target_link_libraries( testintwrapper_huge OpenCLHelper )
-
-add_executable( testfloatwrapperconst test/testfloatwrapperconst.cpp )
-target_link_libraries( testfloatwrapperconst OpenCLHelper )
-
-#add_executable( testscalars test/testscalars.cpp )
-#target_link_libraries( testscalars OpenCLHelper )
-
-add_executable( test_scenario_te42kyfo test/test_scenario_te42kyfo.cpp )
-target_link_libraries( test_scenario_te42kyfo OpenCLHelper )
-
 add_library( gtest SHARED thirdparty/gtest/gtest-all.cc )
 target_link_libraries( gtest pthread)
 
-add_executable( unittests test/testscalars.cpp thirdparty/gtest/gtest_main.cc )
+add_executable( unittests test/testscalars.cpp test/testintarray.cpp test/testfloatwrapper.cpp
+    test/testclarray.cpp test/testfloatwrapperconst.cpp test/testintwrapper.cpp test/test_scenario_te42kyfo.cpp
+    test/testfloatarray.cpp test/testopenclhelper.cpp test/testinout.cpp test/testintwrapper_huge.cpp
+    test/asserts.cpp thirdparty/gtest/gtest_main.cc )
 target_link_libraries( unittests gtest OpenCLHelper )
 target_include_directories( unittests PRIVATE thirdparty/gtest )
+
+add_custom_target(
+    git-submodule-update
+    git submodule update --init --recursive
+)
+add_dependencies( OpenCLHelper git-submodule-update )
 
 

@@ -1,11 +1,13 @@
 #include <iostream>
 
+#include "gtest/gtest.h"
+
 #include "OpenCLHelper.h"
 #include "test/asserts.h"
 
 using namespace std;
 
-int main( int argc, char *argv[] ) {
+TEST( test_scenario_te42kyfo, main ) {
     OpenCLHelper cl;
     CLKernel *kernel = cl.buildKernel("../test/test_scenario_te42kyfo.cl", "test");
     CLArrayFloat *out = cl.arrayFloat(5);
