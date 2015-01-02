@@ -15,7 +15,9 @@ kernel void reduceViaScratch( global float *inout, local float *scratch ) {
     // simply going to reduce inout values into inout[0], via scratch, to test 'local'
     int localId = get_local_id(0);
     int workgroupSize = get_local_size(0);
+
     scratch[localId] = inout[localId];
+    barrier(CLK_LOCAL_MEM_FENCE);
 
     for( int offset = ( workgroupSize >> 1 ); offset > 0; offset >>= 1 ) {
         if( localId < offset ) {
