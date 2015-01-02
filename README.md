@@ -217,6 +217,23 @@ How to check my OpenCL installation/configuration?
 OpenCL installation itself is ok.  If this says 'no installations found', then it's an OpenCL
 configuration issue.
 
+What if I've found a bug?
+----------------
+
+* Ideally, create a *simple* test case, just 10-30 lines if possible, and either just paste it directly as an [issue](https://github.com/hughperkins/OpenCLHelper/issues), or else fork the repository, and ideally add it into the [test](https://github.com/hughperkins/OpenCLHelper/tree/master/test) directory, as an additional gtest-compliant test.
+* (and then, obviously post an [issue](https://github.com/hughperkins/OpenCLHelper/issues) to alert me)
+
+What if I want a new feature?
+-----------------------------
+
+* Post a request as an [issue](https://github.com/hughperkins/OpenCLHelper/issues)
+* Or, fork the repository, add the feature, and send me a [pull request](https://github.com/hughperkins/OpenCLHelper/pulls)
+
+What if I just have a question?
+-------------------------------
+
+* Post as an [issue](https://github.com/hughperkins/OpenCLHelper/issues)
+
 License
 -------
 
