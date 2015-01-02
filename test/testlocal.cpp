@@ -157,3 +157,185 @@ TEST( testlocal, reduceviascratch_multipleworkgroups_ints ) {
     delete[]myarray;
 }
 
+TEST( testlocal, reduce_multipleworkgroups_ints_noscratch ) {
+    OpenCLHelper cl;
+    CLKernel *kernel = cl.buildKernel("../test/testlocal.cl", "reduce_multipleworkgroups_ints_noscratch" );
+    int workgroupSize = cl.getMaxWorkgroupSize();
+    const int numWorkgroups = workgroupSize;
+    const int N = workgroupSize * numWorkgroups;
+    cout << "numworkgroups " << numWorkgroups << " workgroupsize " << workgroupSize << " N " << N << endl;
+    int *myarray = new int[N];
+    int sumViaCpu = 0;
+    int localSumViaCpu = 0;
+    int localSumViaCpu2 = 0;
+    int *localSumsViaCpu = new int[numWorkgroups];
+    memset( localSumsViaCpu, 0, sizeof(int)*numWorkgroups );
+    for( int i = 0; i < N; i++ ) {
+        myarray[i] = ( (i + 7) * 3 ) % 50;
+        sumViaCpu += myarray[i];
+        if( i < workgroupSize ) {
+            localSumViaCpu += myarray[i];
+        }
+        if( i >= workgroupSize && i < workgroupSize * 2 ) {
+            localSumViaCpu2 += myarray[i];
+        }
+        int workgroupId = i / workgroupSize;
+        localSumsViaCpu[workgroupId] += myarray[i];
+    }
+    ASSERT_EQ( localSumViaCpu, localSumsViaCpu[0] );
+    ASSERT_EQ( localSumViaCpu2, localSumsViaCpu[1] );
+    ASSERT_NE( myarray[0], sumViaCpu );
+
+    Timer timer;
+
+    CLWrapper *a1wrapper = cl.wrap( N, myarray );
+    a1wrapper->copyToDevice();
+    int *a2 = new int[numWorkgroups];
+    CLWrapper *a2wrapper = cl.wrap( numWorkgroups, a2 );
+    kernel->in( a1wrapper );
+    kernel->out( a2wrapper );
+    kernel->run_1d( N, workgroupSize );
+
+    int finalSum;
+    kernel->in( a2wrapper );
+    kernel->out( 1, &finalSum );
+    kernel->run_1d( numWorkgroups, workgroupSize );
+    timer.timeCheck("finished 2-way reduce");
+
+    EXPECT_EQ( sumViaCpu, finalSum );
+
+    delete a1wrapper;
+    delete a2wrapper;
+    delete[] a2;
+    delete[]myarray;
+}
+
+TEST( testlocal, reduce_noscratch_multipleworkgroups_ints_3levels ) {
+    OpenCLHelper cl;
+    CLKernel *kernel = cl.buildKernel("../test/testlocal.cl", "reduce_multipleworkgroups_ints_noscratch" );
+    int workgroupSize = cl.getMaxWorkgroupSize();
+    const int numWorkgroups = workgroupSize;
+    const int level3size = numWorkgroups / 4;
+    const int N = workgroupSize * numWorkgroups * level3size;
+    cout << "numworkgroups " << numWorkgroups << " workgroupsize " << workgroupSize << " N " << N << endl;
+    int *myarray = new int[N];
+    int sumViaCpu = 0;
+    int localSumViaCpu = 0;
+    int localSumViaCpu2 = 0;
+    int *localSumsViaCpu = new int[numWorkgroups * level3size];
+    memset( localSumsViaCpu, 0, sizeof(int)*numWorkgroups* level3size );
+    for( int i = 0; i < N; i++ ) {
+        myarray[i] = ( (i + 7) * 3 ) % 50;
+        sumViaCpu += myarray[i];
+        if( i < workgroupSize ) {
+            localSumViaCpu += myarray[i];
+        }
+        if( i >= workgroupSize && i < workgroupSize * 2 ) {
+            localSumViaCpu2 += myarray[i];
+        }
+        int workgroupId = i / workgroupSize;
+        localSumsViaCpu[workgroupId] += myarray[i];
+    }
+    ASSERT_EQ( localSumViaCpu, localSumsViaCpu[0] );
+    ASSERT_EQ( localSumViaCpu2, localSumsViaCpu[1] );
+    ASSERT_NE( myarray[0], sumViaCpu );
+
+    Timer timer;
+
+    CLWrapper *a1wrapper = cl.wrap( N, myarray );
+    a1wrapper->copyToDevice();
+    timer.timeCheck("copied array to device");
+    int *a2 = new int[numWorkgroups*level3size];
+    CLWrapper *a2wrapper = cl.wrap( numWorkgroups * level3size, a2 );
+    kernel->in( a1wrapper );
+    kernel->out( a2wrapper );
+    kernel->run_1d( N, workgroupSize );
+
+    int *a3 = new int[numWorkgroups];
+    CLWrapper *a3wrapper = cl.wrap( level3size, a3 );
+    kernel->in( a2wrapper );
+    kernel->out( a3wrapper );
+    kernel->run_1d( workgroupSize * level3size, workgroupSize );
+
+    int finalSum;
+    kernel->in( a3wrapper );
+    kernel->out( 1, &finalSum );
+    kernel->run_1d( level3size, level3size );
+    timer.timeCheck("finished 3-level reduce");
+
+    EXPECT_EQ( sumViaCpu, finalSum );
+
+    delete a1wrapper;
+    delete a2wrapper;
+    delete a3wrapper;
+    delete[] a3;
+    delete[] a2;
+    delete[]myarray;
+}
+
+TEST( testlocal, reduceviascratch_multipleworkgroups_ints_3levels ) {
+    OpenCLHelper cl;
+    CLKernel *kernel = cl.buildKernel("../test/testlocal.cl", "reduceViaScratch_multipleworkgroups_ints" );
+    int workgroupSize = cl.getMaxWorkgroupSize();
+    const int numWorkgroups = workgroupSize;
+    const int level3size = numWorkgroups / 4;
+    const int N = workgroupSize * numWorkgroups * level3size;
+    cout << "numworkgroups " << numWorkgroups << " workgroupsize " << workgroupSize << " N " << N << endl;
+    int *myarray = new int[N];
+    int sumViaCpu = 0;
+    int localSumViaCpu = 0;
+    int localSumViaCpu2 = 0;
+    int *localSumsViaCpu = new int[numWorkgroups * level3size];
+    memset( localSumsViaCpu, 0, sizeof(int)*numWorkgroups* level3size );
+    for( int i = 0; i < N; i++ ) {
+        myarray[i] = ( (i + 7) * 3 ) % 50;
+        sumViaCpu += myarray[i];
+        if( i < workgroupSize ) {
+            localSumViaCpu += myarray[i];
+        }
+        if( i >= workgroupSize && i < workgroupSize * 2 ) {
+            localSumViaCpu2 += myarray[i];
+        }
+        int workgroupId = i / workgroupSize;
+        localSumsViaCpu[workgroupId] += myarray[i];
+    }
+    ASSERT_EQ( localSumViaCpu, localSumsViaCpu[0] );
+    ASSERT_EQ( localSumViaCpu2, localSumsViaCpu[1] );
+    ASSERT_NE( myarray[0], sumViaCpu );
+
+    Timer timer;
+
+    CLWrapper *a1wrapper = cl.wrap( N, myarray );
+    a1wrapper->copyToDevice();
+    timer.timeCheck("copied array to device");
+    int *a2 = new int[numWorkgroups*level3size];
+    CLWrapper *a2wrapper = cl.wrap( numWorkgroups * level3size, a2 );
+    kernel->in( a1wrapper );
+    kernel->out( a2wrapper );
+    kernel->localInts( workgroupSize );
+    kernel->run_1d( N, workgroupSize );
+
+    int *a3 = new int[numWorkgroups];
+    CLWrapper *a3wrapper = cl.wrap( level3size, a3 );
+    kernel->in( a2wrapper );
+    kernel->out( a3wrapper );
+    kernel->localInts( workgroupSize );
+    kernel->run_1d( workgroupSize * level3size, workgroupSize );
+
+    int finalSum;
+    kernel->in( a3wrapper );
+    kernel->out( 1, &finalSum );
+    kernel->localInts( level3size );
+    kernel->run_1d( level3size, level3size );
+    timer.timeCheck("finished 3-level reduce");
+
+    EXPECT_EQ( sumViaCpu, finalSum );
+
+    delete a1wrapper;
+    delete a2wrapper;
+    delete a3wrapper;
+    delete[] a3;
+    delete[] a2;
+    delete[]myarray;
+}
+
