@@ -58,10 +58,26 @@ public:
     CLKernel *in( CLWrapper *wrapper ) { return input( wrapper ); }
     CLKernel *out( CLWrapper *wrapper ) { return output( wrapper ); }
 
+    CLKernel *localFloats( int count ) {
+        error = clSetKernelArg( kernel, nextArg, count * sizeof(cl_float), 0 );
+        openclhelper->checkError( error );
+        nextArg++;
+        return this;
+    }
+    CLKernel *localInts( int count ) {
+        error = clSetKernelArg( kernel, nextArg, count * sizeof(cl_int), 0 );
+        openclhelper->checkError( error );
+        nextArg++;
+        return this;
+    }
+    CLKernel *local( int N ) {
+        return localFloats( N );
+    }
+
     template<typename T>
     CLKernel *input( int N, const T *data ) {
         cl_mem buffer = clCreateBuffer(*(openclhelper->context), CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(T) * N, (void *)data, &error);
-        assert(error == CL_SUCCESS);
+        openclhelper->checkError(error);
         error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), &buffer);
         openclhelper->checkError(error);
         buffers.push_back(buffer);
@@ -92,15 +108,10 @@ public:
     CLKernel *in( float value ) {
         return input( value );
     }
-    void local( int N ) {
-        error = clSetKernelArg(kernel, nextArg, sizeof(float) * N, 0);
-        openclhelper->checkError(error);
-        nextArg++;
-    }
     template<typename T>
     CLKernel *output( int N, T *data ) {
         cl_mem buffer = clCreateBuffer(*(openclhelper->context), CL_MEM_WRITE_ONLY, sizeof(T) * N, 0, &error);
-        assert( error == CL_SUCCESS );
+        openclhelper->checkError(error);
         error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), &buffer);
         buffers.push_back(buffer);
         //outputArgNums.push_back(nextArg);
@@ -117,7 +128,7 @@ public:
     template<typename T>
     CLKernel *inout( int N, T *data ) {
         cl_mem buffer = clCreateBuffer(*(openclhelper->context), CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(T) * N, (void *)data, &error);
-        assert(error == CL_SUCCESS);
+        openclhelper->checkError(error);
         error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), &buffer);
         openclhelper->checkError(error);
         buffers.push_back(buffer);

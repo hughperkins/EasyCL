@@ -31,8 +31,8 @@ Imagine we have a kernel with the following signature, in the file /tmp/foo.cl:
     for( int i = 0; i < 5; i++ ) {
         in[i] = i * 3;
     }
-    kernel->input( 5, in );
-    kernel->output( 5, out );
+    kernel->in( 5, in );
+    kernel->out( 5, out );
     kernel->run_1d( 5, 5 ); // global workgroup size = 5, local workgroup size = 5
     delete kernel;
     // use the results in 'out' array here
@@ -68,16 +68,18 @@ API
 
     // passing arguments to kernel:
 
-    CLKernel::input( int integerinput );
+    CLKernel::in( int integerinput );
 
-    CLKernel::input( int arraysize, const float *inputarray ); // size in number of floats
-    CLKernel::input( int arraysize, const int *inputarray ); // size in number of ints
-    CLKernel::output( int arraysize, float *outputarray ); // size in number of floats
-    CLKernel::output( int arraysize, int *outputarray ); // size in number of ints
+    CLKernel::in( int arraysize, const float *inputarray ); // size in number of floats
+    CLKernel::in( int arraysize, const int *inputarray ); // size in number of ints
+    CLKernel::out( int arraysize, float *outputarray ); // size in number of floats
+    CLKernel::out( int arraysize, int *outputarray ); // size in number of ints
     CLKernel::inout( int arraysize, float *inoutarray ); // size in number of floats
     CLKernel::inout( int arraysize, int *inoutarray ); // size in number of ints
 
-    CLKernel::local( int localarraysize ); // size in number of floats
+    // to allocate local arrays, as passed-in kernel parameters:
+    CLKernel::localFloats( int localarraysize ); // size in number of floats
+    CLKernel::localInts( int localarraysize ); // size in number of ints
 
     // running kernel, getting result back, and cleaning up:
     CLKernel::run_1d( int global_ws, int local_ws );
@@ -128,8 +130,8 @@ and `copyToHost()` yourself.
     CLWrapper *inwrapper = cl.wrap(5, in);
     CLWrapper *outwrapper = cl.wrap(5, out);
     inwrapper->copyToDevice();
-    kernel->input( inwrapper );
-    kernel->output( outwrapper );
+    kernel->in( inwrapper );
+    kernel->out( outwrapper );
     kernel->run_1d( 5, 5 );
     outwrapper->copyToHost();
     assertEquals( out[0] , 7 );
