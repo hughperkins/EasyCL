@@ -64,6 +64,8 @@ API
     // compile kernel
     CLKernel *OpenCLHelper::buildKernel( string kernelfilepath, string kernelname, string options = "" );
 
+    // Note that you pass `#define`s in through the `options` parameters, like `-D TANH`, or `-D TANH -D BIASED`
+
     // passing arguments to kernel:
 
     CLKernel::input( int integerinput );
