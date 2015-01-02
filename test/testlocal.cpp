@@ -62,12 +62,13 @@ TEST( testlocal, reduceviascratch_multipleworkgroups ) {
     float sumViaCpu = 0;
     float localSumViaCpu = 0;
     for( int i = 0; i < N; i++ ) {
-        myarray[i] = ( (i + 7) * 3 ) % 50;
+        myarray[i] = ( (i + 7) * 3 ) % 10;
         sumViaCpu += myarray[i];
         if( i < workgroupSize ) {
             localSumViaCpu += myarray[i];
         }
     }
+    cout << "expected sum, calc'd via cpu, : " << sumViaCpu << endl;
     EXPECT_NE( myarray[0], sumViaCpu );
 
     Timer timer;
@@ -80,13 +81,6 @@ TEST( testlocal, reduceviascratch_multipleworkgroups ) {
     kernel->out( a2wrapper );
     kernel->localFloats( workgroupSize );
     kernel->run_1d( N, workgroupSize );
-//    a2wrapper->copyToHost();
-//    timer.timeCheck("after kernel");
-//    a1wrapper->copyToHost();
-    
-//    cout << "localSumViaCpu " << localSumViaCpu << endl;    
-//    EXPECT_EQ( localSumViaCpu, myarray[0] );
-//    EXPECT_EQ( sumViaCpu, a2[0] );
 
     float finalSum;
     kernel->in( a2wrapper );
