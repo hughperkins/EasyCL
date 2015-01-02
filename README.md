@@ -51,7 +51,7 @@ You can choose a different gpu index, if you have more than one, eg for gpu inde
 
     kernel->in(10)->in(5)->out( 5, outarray )->run_1d( 5, 5 );
 
-There are some examples in the 'test' subdirectory.
+There are some examples in the [test](https://github.com/hughperkins/OpenCLHelper/tree/master/test) subdirectory.
 
 API
 ---
