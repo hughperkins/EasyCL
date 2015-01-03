@@ -64,6 +64,15 @@ public:
         return size;
     }
 
+    static int getNextPower2( int value ) { // eg pass in 320, it will return: 512
+        int power2 = 0;
+        while( value > 0 ) {
+            value >>= 1;
+            power2++;
+        }
+        return 1 << power2;
+    }
+
     static int getPower2Upperbound( int value ) {
         int upperbound = 1;
         while( upperbound < value ) {
