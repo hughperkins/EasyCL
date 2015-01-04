@@ -39,3 +39,28 @@ TEST( testfloatwrapper, main ) {
     cout << "tests completed ok" << endl;
 }
 
+TEST( testfloatwrapper, singlecopytodevice ) {
+    OpenCLHelper cl;
+    float hostarray[1];
+    hostarray[0] = 3.56f;
+    CLWrapper *wrapper = cl.wrap(1, hostarray );
+    wrapper->copyToDevice();
+    hostarray[0] = 7.14f;
+    wrapper->copyToHost();
+    ASSERT_FLOAT_NEAR( 3.56f, hostarray[0] );
+}
+
+TEST( testfloatwrapper, doublecopytodevice ) {
+    OpenCLHelper cl;
+    float hostarray[1];
+    hostarray[0] = 3.56f;
+    CLWrapper *wrapper = cl.wrap(1, hostarray );
+    wrapper->copyToDevice();
+    hostarray[0] = 4.12f;
+    wrapper->copyToDevice();
+    hostarray[0] = 7.14f;
+    wrapper->copyToHost();
+    ASSERT_FLOAT_NEAR( 4.12f, hostarray[0] );
+}
+
+
