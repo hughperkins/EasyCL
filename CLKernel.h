@@ -9,8 +9,6 @@
 #include "CLArrayInt.h"
 #include "CLArrayFloat.h"
 
-#include "stringhelper.h"
-
 class CLKernel {
     OpenCLHelper *openclhelper; // NOT owned by this object, dont delete!
     cl_program program;
@@ -19,6 +17,13 @@ class CLKernel {
 
     int nextArg;
 public:
+    template<typename T>
+    static std::string toString(T val ) {
+       std::ostringstream myostringstream;
+       myostringstream << val;
+       return myostringstream.str();
+    }
+
     CLKernel( OpenCLHelper *openclhelper, cl_program program, cl_kernel kernel ) {
         this->openclhelper = openclhelper;
         nextArg = 0;

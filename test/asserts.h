@@ -6,7 +6,12 @@
 
 #include "gtest/gtest.h"
 
-#include "stringhelper.h"
+template<typename T>
+std::string toString(T val ) { // not terribly efficient, but works...
+   std::ostringstream myostringstream;
+   myostringstream << std::fixed << std::setprecision(4) << val;
+   return myostringstream.str();
+}
 
 template<typename T>
 void assertEquals( T one, T two ) {

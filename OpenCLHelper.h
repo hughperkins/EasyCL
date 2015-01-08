@@ -16,8 +16,6 @@
 
 #include "clew.h"
 
-#include "stringhelper.h"
-
 class OpenCLHelper {
 public:
      cl_int error;  
@@ -44,6 +42,13 @@ public:
 
     static bool isOpenCLAvailable() {
         return 0 == clewInit();
+    }
+
+    template<typename T>
+    static std::string toString(T val ) {
+       std::ostringstream myostringstream;
+       myostringstream << val;
+       return myostringstream.str();
     }
 
     ~OpenCLHelper() {
