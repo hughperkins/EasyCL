@@ -9,6 +9,8 @@
 #include "CLArrayInt.h"
 #include "CLArrayFloat.h"
 
+#include "stringhelper.h"
+
 class CLKernel {
     OpenCLHelper *openclhelper; // NOT owned by this object, dont delete!
     cl_program program;
@@ -151,32 +153,25 @@ public:
             case 0:
                 break;
             case -4:
-                std::cout << "Memory object allocation failure, code -4" << std::endl;
-                exit(-1);
+                throw std::runtime_error( "Memory object allocation failure, code -4" );
                 break;
             case -5:
-                std::cout << "Out of resources, code -5" << std::endl;
-                exit(-1);
+                throw std::runtime_error( "Out of resources, code -5" );
                 break;
             case -11:
-                std::cout << "Program build failure, code -11" << std::endl;
-                exit(-1);
+                throw std::runtime_error( "Program build failure, code -11" );
                 break;
             case -46:
-                std::cout << "Invalid kernel name, code -46" << std::endl;
-                exit(-1);
+                throw std::runtime_error( "Invalid kernel name, code -46" );
                 break;
             case -52:
-                std::cout << "Invalid kernel args, code -52" << std::endl;
-                exit(-1);
+                throw std::runtime_error( "Invalid kernel args, code -52" );
                 break;
             case -54:
-                std::cout << "Invalid work group size, code -54" << std::endl;
-                exit(-1);
+                throw std::runtime_error( "Invalid work group size, code -54" );
                 break;
             default:
-                std::cout << "Something went wrong, code " << error << std::endl;
-                exit(-1);
+                throw std::runtime_error( "Something went wrong, code " + toString( error ) );
         }
         openclhelper->checkError(error);
 //        error = clFinish(openclhelper->queue);

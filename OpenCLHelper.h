@@ -16,6 +16,8 @@
 
 #include "clew.h"
 
+#include "stringhelper.h"
+
 class OpenCLHelper {
 public:
      cl_int error;  
@@ -234,13 +236,6 @@ static std::string getFileContents( std::string filename ) {
       delete[] buffer;
     }
     return returnstring;
-}
-
-template<typename T>
-static std::string toString(T val ) {
-   std::ostringstream myostringstream;
-   myostringstream << val;
-   return myostringstream.str();
 }
 
 long getDeviceInfoInt( cl_device_info name ) {
