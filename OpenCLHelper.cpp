@@ -5,6 +5,7 @@
 // obtain one at http://mozilla.org/MPL/2.0/.
 
 #include <cstring>
+#include <stdexcept>
 using namespace std;
 
 #include "OpenCLHelper.h"
@@ -41,9 +42,13 @@ CLKernel *OpenCLHelper::buildKernel( string kernelfilepath, string kernelname ) 
 }
 
 CLKernel *OpenCLHelper::buildKernel( string kernelfilepath, string kernelname, string options ) {
-    size_t src_size = 0;
     std::string path = kernelfilepath.c_str();
     std::string source = getFileContents(path);
+    return buildKernelFromString( source, kernelname, options );
+}
+
+CLKernel *OpenCLHelper::buildKernelFromString( string source, string kernelname, string options ) {
+    size_t src_size = 0;
     const char *source_char = source.c_str();
     src_size = strlen( source_char );
 //    cl_program program = new cl_program();
@@ -73,12 +78,10 @@ CLKernel *OpenCLHelper::buildKernel( string kernelfilepath, string kernelname, s
         case CL_SUCCESS:
             break;
         case -46:
-            cout << "Invalid kernel name, code -46 " << kernelfilepath << " " << kernelname << endl;
-            exit(-1);
+            throw std::runtime_error( "Invalid kernel name, code -46, kernel " + kernelname );
             break;
         default:
-            cout << "Something went wrong with clCreateKernel, code " << error << endl;
-            exit(-1);
+            throw std::runtime_error( "Something went wrong with clCreateKernel, code " + toString( error ) );
             break;
     }
     checkError(error);
