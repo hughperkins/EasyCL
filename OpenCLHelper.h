@@ -177,7 +177,7 @@ public:
 
     class CLKernel *buildKernel( std::string kernelfilepath, std::string kernelname );
     class CLKernel *buildKernel( std::string kernelfilepath, std::string kernelname, std::string options );
-    class CLKernel *buildKernelFromString( std::string source, std::string kernelname, std::string options );
+    class CLKernel *buildKernelFromString( std::string source, std::string kernelname, std::string options, std::string sourcefilename = "" );
 
     int getComputeUnits() {
         return (int)getDeviceInfoInt(CL_DEVICE_MAX_COMPUTE_UNITS);

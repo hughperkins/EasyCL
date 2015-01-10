@@ -1,0 +1,4 @@
+kernel void foo( ) {
+   someerrorxyz;
+}
+

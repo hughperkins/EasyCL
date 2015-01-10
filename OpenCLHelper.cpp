@@ -44,10 +44,10 @@ CLKernel *OpenCLHelper::buildKernel( string kernelfilepath, string kernelname ) 
 CLKernel *OpenCLHelper::buildKernel( string kernelfilepath, string kernelname, string options ) {
     std::string path = kernelfilepath.c_str();
     std::string source = getFileContents(path);
-    return buildKernelFromString( source, kernelname, options );
+    return buildKernelFromString( source, kernelname, options, kernelfilepath );
 }
 
-CLKernel *OpenCLHelper::buildKernelFromString( string source, string kernelname, string options ) {
+CLKernel *OpenCLHelper::buildKernelFromString( string source, string kernelname, string options, string sourcefilename ) {
     size_t src_size = 0;
     const char *source_char = source.c_str();
     src_size = strlen( source_char );
@@ -67,8 +67,10 @@ CLKernel *OpenCLHelper::buildKernelFromString( string source, string kernelname,
     error = clGetProgramBuildInfo(program, device, CL_PROGRAM_BUILD_LOG, log_size, build_log, NULL);
     checkError(error);
     build_log[log_size] = '\0';
+    string buildLogMessage = "";
     if( log_size > 2 ) {
-        cout << "build log: " << build_log << endl;
+        buildLogMessage = "build log: " + sourcefilename + "\n" + build_log;
+        cout << buildLogMessage << endl;
     }
     delete[] build_log;
     checkError(error);
@@ -78,10 +80,10 @@ CLKernel *OpenCLHelper::buildKernelFromString( string source, string kernelname,
         case CL_SUCCESS:
             break;
         case -46:
-            throw std::runtime_error( "Invalid kernel name, code -46, kernel " + kernelname );
+            throw std::runtime_error( "Invalid kernel name, code -46, kernel " + kernelname + "\n" + buildLogMessage );
             break;
         default:
-            throw std::runtime_error( "Something went wrong with clCreateKernel, code " + toString( error ) );
+            throw std::runtime_error( "Something went wrong with clCreateKernel, code " + toString( error ) + "\n" + buildLogMessage );
             break;
     }
     checkError(error);
