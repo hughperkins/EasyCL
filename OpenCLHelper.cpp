@@ -69,7 +69,7 @@ CLKernel *OpenCLHelper::buildKernelFromString( string source, string kernelname,
     build_log[log_size] = '\0';
     string buildLogMessage = "";
     if( log_size > 2 ) {
-        buildLogMessage = "build log: " + sourcefilename + "\n" + build_log;
+        buildLogMessage = sourcefilename + " build log: "  + "\n" + build_log;
         cout << buildLogMessage << endl;
     }
     delete[] build_log;
