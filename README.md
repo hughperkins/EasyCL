@@ -1,3 +1,24 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [OpenCLHelper](#openclhelper)
+  - [Example Usage](#example-usage)
+  - [API](#api)
+  - [CLArray and CLWrapper objects](#clarray-and-clwrapper-objects)
+  - [CLWrapper objects](#clwrapper-objects)
+  - [CLArray objects](#clarray-objects)
+  - [Pre-requisites](#pre-requisites)
+  - [How to build](#how-to-build)
+  - [How to run self-tests](#how-to-run-self-tests)
+  - [How to check my OpenCL installation/configuration?](#how-to-check-my-opencl-installationconfiguration)
+  - [What if I've found a bug?](#what-if-ive-found-a-bug)
+  - [What if I want a new feature?](#what-if-i-want-a-new-feature)
+  - [What if I just have a question?](#what-if-i-just-have-a-question)
+  - [License](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 OpenCLHelper
 ============
 
