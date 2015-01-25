@@ -91,3 +91,11 @@ CLKernel *OpenCLHelper::buildKernelFromString( string source, string kernelname,
     return new CLKernel(this, program, kernel);
 }
 
+int OpenCLHelper::getPower2Upperbound( int value ) {
+    int upperbound = 1;
+    while( upperbound < value ) {
+        upperbound <<= 1;
+    }
+    return upperbound;
+}
+
