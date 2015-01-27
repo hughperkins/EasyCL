@@ -16,6 +16,10 @@
 
 #include "clew.h"
 
+#ifdef _WIN32
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+
 class OpenCLHelper {
 public:
      cl_int error;  
@@ -77,7 +81,7 @@ public:
     static int getPower2Upperbound( int value );
 
     void gpu( int gpuIndex ) {
-        if( gpuIndex >= num_devices ) {
+        if( gpuIndex >= static_cast<int>( num_devices ) ) {
            throw std::runtime_error( "requested gpuindex " + toString( gpuIndex ) + " goes beyond number of available device " + toString( num_devices ) );
         }
         device = device_ids[gpuIndex];
@@ -216,7 +220,7 @@ static std::string getFileContents( std::string filename ) {
       fseek (f, 0, SEEK_SET);
       buffer = new char[length + 1];
       if (buffer) {
-        int bytesread = fread (buffer, 1, length, f);
+        int bytesread = static_cast<int>( fread (buffer, 1, length, f) );
         if( bytesread != length ) {
             throw std::runtime_error( "Failed to read cl source file" );
         }
@@ -234,7 +238,7 @@ static std::string getFileContents( std::string filename ) {
 long getDeviceInfoInt( cl_device_info name ) {
     cl_ulong value = 0;
     clGetDeviceInfo(device, name, sizeof(cl_ulong), &value, 0);
-    return value;
+    return static_cast<long>( value );
 }
 
 };
