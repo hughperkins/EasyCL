@@ -209,6 +209,7 @@ How to build
     make
 
 * Dont forget the `--recursive`, otherwise you will see odd errors about `clew/src/clew.c` missing!
+  * If this happens, you can try `git submodule init` and then `git submodule update`.
 
 How to run self-tests
 ---------------------
