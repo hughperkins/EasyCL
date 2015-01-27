@@ -18,18 +18,10 @@
 
 #include "clew.h"
 
+#include "OpenCLHelper_export.h"
+
 #ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS
-#endif
-
-#if defined(_WIN32) 
-# if defined(OpenCLHelper_EXPORTS)
-#  define OpenCLHelper_EXPORT __declspec(dllexport)
-# else
-#  define OpenCLHelper_EXPORT __declspec(dllimport)
-# endif 
-#else 
-# define OpenCLHelper_EXPORT
 #endif
 
 class OpenCLHelper_EXPORT OpenCLHelper {

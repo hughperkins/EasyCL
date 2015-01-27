@@ -9,6 +9,8 @@
 #include "CLArrayInt.h"
 #include "CLArrayFloat.h"
 
+#include "OpenCLHelper_export.h"
+
 class OpenCLHelper_EXPORT CLKernel {
     OpenCLHelper *openclhelper; // NOT owned by this object, dont delete!
     cl_program program;

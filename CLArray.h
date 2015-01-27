@@ -1,5 +1,7 @@
 #pragma once
 
+#include "OpenCLHelper_export.h"
+
 class OpenCLHelper_EXPORT CLArray {
 public:
     int N;

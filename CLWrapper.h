@@ -8,6 +8,8 @@
 
 #include "OpenCLHelper.h"
 
+#include "OpenCLHelper_export.h"
+
 class OpenCLHelper_EXPORT CLWrapper {
 protected:
     const int N;
