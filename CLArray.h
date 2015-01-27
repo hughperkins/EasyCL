@@ -1,6 +1,6 @@
 #pragma once
 
-class CLArray {
+class OpenCLHelper_EXPORT CLArray {
 public:
     int N;
     bool onHost;

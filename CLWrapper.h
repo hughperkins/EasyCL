@@ -8,7 +8,7 @@
 
 #include "OpenCLHelper.h"
 
-class CLWrapper {
+class OpenCLHelper_EXPORT CLWrapper {
 protected:
     const int N;
     const bool onHost;
