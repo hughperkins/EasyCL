@@ -9,6 +9,8 @@
 #include <cstdlib>
 #include <cassert>
 #include <iostream>
+#include <algorithm>
+#include <string>
 #include <vector>
 #include <sstream>
 #include <fstream>
