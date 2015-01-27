@@ -1,5 +1,8 @@
 #pragma once
 
+#include <algorithm>
+#include <string>
+
 void printDeviceInfoKB( string valuename, cl_device_id deviceId, cl_device_info name ) {
     cl_ulong somelong = 0;
     clGetDeviceInfo(deviceId, name, sizeof(cl_ulong), &somelong, 0);

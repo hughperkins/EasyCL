@@ -210,31 +210,36 @@ private:
 
 
 static std::string getFileContents( std::string filename ) {
-    char * buffer = 0;
-    long length;
-    FILE * f = fopen (filename.c_str(), "rb");
+    std::ifstream t(filename);
+    std::stringstream buffer;
+    buffer << t.rdbuf();
+    return buffer.str();
 
-    std::string returnstring = "";
-    if (f)
-    {
-      fseek (f, 0, SEEK_END);
-      length = ftell (f);
-      fseek (f, 0, SEEK_SET);
-      buffer = new char[length + 1];
-      if (buffer) {
-        int bytesread = static_cast<int>( fread (buffer, 1, length, f) );
-        if( bytesread != length ) {
-            throw std::runtime_error( "Failed to read cl source file" );
-        }
-      } else {
-        throw std::runtime_error( "Failed to allocate memory for cl source" );
-       }
-      fclose (f);
-        buffer[length] = 0;
-      returnstring = std::string( buffer );
-      delete[] buffer;
-    }
-    return returnstring;
+//    char * buffer = 0;
+//    long length;
+//    FILE * f = fopen (filename.c_str(), "rb");
+
+//    std::string returnstring = "";
+//    if (f)
+//    {
+//      fseek (f, 0, SEEK_END);
+//      length = ftell (f);
+//      fseek (f, 0, SEEK_SET);
+//      buffer = new char[length + 1];
+//      if (buffer) {
+//        int bytesread = static_cast<int>( fread (buffer, 1, length, f) );
+//        if( bytesread != length ) {
+//            throw std::runtime_error( "Failed to read cl source file" );
+//        }
+//      } else {
+//        throw std::runtime_error( "Failed to allocate memory for cl source" );
+//       }
+//      fclose (f);
+//        buffer[length] = 0;
+//      returnstring = std::string( buffer );
+//      delete[] buffer;
+//    }
+//    return returnstring;
 }
 
 long getDeviceInfoInt( cl_device_info name ) {

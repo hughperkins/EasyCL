@@ -6,7 +6,7 @@
 
 #include "OpenCLHelper.h"
 
-#include "unistd.h"
+//#include "unistd.h"
 
 #include "test/asserts.h"
 #include "test/Timer.h"
