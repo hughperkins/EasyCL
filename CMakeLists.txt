@@ -13,6 +13,7 @@ include_directories(.)
 
 add_library( OpenCLHelper SHARED OpenCLHelper.cpp CLKernel.cpp thirdparty/clew/src/clew.c )
 if( ON_LINUX )
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 target_link_libraries( OpenCLHelper dl )
 endif()
 
