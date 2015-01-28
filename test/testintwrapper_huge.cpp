@@ -15,7 +15,7 @@ using namespace std;
 
 TEST( testintwrapper_huge, testreadnonwrapper ) {
     OpenCLHelper cl;
-    CLKernel *kernel = cl.buildKernel("../test/testopenclhelper.cl", "test_read");
+    CLKernel *kernel = cl.buildKernel("testopenclhelper.cl", "test_read");
 //    const int N = 4500000;
 //    const int N = (4500000/512)*512;
     int N = 100000;
@@ -43,7 +43,7 @@ TEST( testintwrapper_huge, testreadnonwrapper ) {
 TEST( testintwrapper_huge, testread ) {
     Timer timer;
     OpenCLHelper cl;
-    CLKernel *kernel = cl.buildKernel("../test/testopenclhelper.cl", "test_read");
+    CLKernel *kernel = cl.buildKernel("testopenclhelper.cl", "test_read");
 //    const int N = 4500000;
 //    const int N = (4500000/512)*512;
     int N = 100000;
@@ -71,7 +71,7 @@ TEST( testintwrapper_huge, testread ) {
 TEST( testintwrapper_huge, testreadwrite ) {
 
     OpenCLHelper cl;
-    CLKernel *kernel = cl.buildKernel("../test/testopenclhelper.cl", "test_stress");
+    CLKernel *kernel = cl.buildKernel("testopenclhelper.cl", "test_stress");
     const int N = 1000000;
     int *in = new int[N];
     for( int i = 0; i < N; i++ ) {

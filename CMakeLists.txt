@@ -68,7 +68,7 @@ add_custom_target(
 else()
 add_custom_target( 
     clfiles
-    copy ${CMAKE_CURRENT_SOURCE_DIR}\\test\\*.cl ${CMAKE_BINARY_DIR}
+    copy ${CMAKE_CURRENT_SOURCE_DIR}\\tests\\*.cl ${CMAKE_BINARY_DIR}\\Release
 )
 endif()
 add_dependencies( unittests clfiles )

@@ -17,7 +17,7 @@ TEST( testintarray, main ) {
     cout << "found opencl library" << endl;
 
     OpenCLHelper cl;
-    CLKernel *kernel = cl.buildKernel("../test/testintarray.cl", "test");
+    CLKernel *kernel = cl.buildKernel("testintarray.cl", "test");
     int in[5];
     int inout[5];
     int out[5];

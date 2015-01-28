@@ -17,7 +17,7 @@ TEST( testfloatarray, main ) {
     cout << "found opencl library" << endl;
 
     OpenCLHelper cl;
-    CLKernel *kernel = cl.buildKernel("../test/testfloatarray.cl", "test");
+    CLKernel *kernel = cl.buildKernel("testfloatarray.cl", "test");
     float in[5];
     float inout[5];
     float out[5];

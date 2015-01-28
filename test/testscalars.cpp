@@ -17,7 +17,7 @@ TEST( testscalars, test1 ) {
     cout << "found opencl library" << endl;
 
     OpenCLHelper cl;
-    CLKernel *kernel = cl.buildKernel("../test/testscalars.cl", "test");
+    CLKernel *kernel = cl.buildKernel("testscalars.cl", "test");
     int intout[5];
     float floatout[5];
     kernel->in( 37 )->in( 1.234f)->out( 5, intout )->out( 5, floatout );

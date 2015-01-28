@@ -18,7 +18,7 @@ TEST( testclarray, main ) {
     cout << "found opencl library" << endl;
 
     OpenCLHelper cl;
-    CLKernel *kernel = cl.buildKernel("../test/testopenclhelper.cl", "test");
+    CLKernel *kernel = cl.buildKernel("testopenclhelper.cl", "test");
     CLArrayFloat *out = cl.arrayFloat(5);
     float in[5];
     for( int i = 0; i < 5; i++ ) {

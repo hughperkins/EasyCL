@@ -9,7 +9,7 @@ using namespace std;
 
 TEST( test_scenario_te42kyfo, main ) {
     OpenCLHelper cl;
-    CLKernel *kernel = cl.buildKernel("../test/test_scenario_te42kyfo.cl", "test");
+    CLKernel *kernel = cl.buildKernel("test_scenario_te42kyfo.cl", "test");
     CLArrayFloat *out = cl.arrayFloat(5);
     CLArrayFloat *in = cl.arrayFloat(5);
     for( int i = 0; i < 5; i++ ) {

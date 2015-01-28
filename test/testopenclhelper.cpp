@@ -18,7 +18,7 @@ TEST( testopenclhelper, main ) {
     cout << "found opencl library" << endl;
 
     OpenCLHelper cl;
-    CLKernel *kernel = cl.buildKernel("../test/testopenclhelper.cl", "test");
+    CLKernel *kernel = cl.buildKernel("testopenclhelper.cl", "test");
     float in[5];
     for( int i = 0; i < 5; i++ ) {
         in[i] = i * 3;

@@ -8,7 +8,7 @@ using namespace std;
 
 TEST( testlocal, globalreduce ) {
     OpenCLHelper cl;
-    CLKernel *kernel = cl.buildKernel("../test/testlocal.cl", "reduceGlobal" );
+    CLKernel *kernel = cl.buildKernel("testlocal.cl", "reduceGlobal" );
     int workgroupSize = min( 512, cl.getMaxWorkgroupSize() );
     float *myarray = new float[workgroupSize];
     Timer timer;
@@ -31,7 +31,7 @@ TEST( testlocal, globalreduce ) {
 
 TEST( testlocal, localreduce ) {
     OpenCLHelper cl;
-    CLKernel *kernel = cl.buildKernel("../test/testlocal.cl", "reduceViaScratch" );
+    CLKernel *kernel = cl.buildKernel("testlocal.cl", "reduceViaScratch" );
     int workgroupSize = min( 512, cl.getMaxWorkgroupSize() );
     float *myarray = new float[workgroupSize];
     Timer timer;
@@ -54,7 +54,7 @@ TEST( testlocal, localreduce ) {
 
 TEST( testlocal, reduceviascratch_multipleworkgroups ) {
     OpenCLHelper cl;
-    CLKernel *kernel = cl.buildKernel("../test/testlocal.cl", "reduceViaScratch_multipleworkgroups" );
+    CLKernel *kernel = cl.buildKernel("testlocal.cl", "reduceViaScratch_multipleworkgroups" );
     int workgroupSize = min( 512, cl.getMaxWorkgroupSize() );
     const int numWorkgroups = workgroupSize;
     const int N = workgroupSize * numWorkgroups;
@@ -98,7 +98,7 @@ TEST( testlocal, reduceviascratch_multipleworkgroups ) {
 
 TEST( testlocal, reduceviascratch_multipleworkgroups_ints ) {
     OpenCLHelper cl;
-    CLKernel *kernel = cl.buildKernel("../test/testlocal.cl", "reduceViaScratch_multipleworkgroups_ints" );
+    CLKernel *kernel = cl.buildKernel("testlocal.cl", "reduceViaScratch_multipleworkgroups_ints" );
     int workgroupSize = min( 512, cl.getMaxWorkgroupSize() );
     const int numWorkgroups = workgroupSize;
     const int N = workgroupSize * numWorkgroups;
@@ -153,7 +153,7 @@ TEST( testlocal, reduceviascratch_multipleworkgroups_ints ) {
 
 TEST( testlocal, reduce_multipleworkgroups_ints_noscratch ) {
     OpenCLHelper cl;
-    CLKernel *kernel = cl.buildKernel("../test/testlocal.cl", "reduce_multipleworkgroups_ints_noscratch" );
+    CLKernel *kernel = cl.buildKernel("testlocal.cl", "reduce_multipleworkgroups_ints_noscratch" );
     int workgroupSize = min( 512, cl.getMaxWorkgroupSize() );
     const int numWorkgroups = workgroupSize;
     const int N = workgroupSize * numWorkgroups;
@@ -206,7 +206,7 @@ TEST( testlocal, reduce_multipleworkgroups_ints_noscratch ) {
 
 TEST( testlocal, reduce_noscratch_multipleworkgroups_ints_3levels ) {
     OpenCLHelper cl;
-    CLKernel *kernel = cl.buildKernel("../test/testlocal.cl", "reduce_multipleworkgroups_ints_noscratch" );
+    CLKernel *kernel = cl.buildKernel("testlocal.cl", "reduce_multipleworkgroups_ints_noscratch" );
     int workgroupSize = min( 512, cl.getMaxWorkgroupSize() );
     const int numWorkgroups = workgroupSize;
     const int level3size = numWorkgroups / 4;
@@ -269,7 +269,7 @@ TEST( testlocal, reduce_noscratch_multipleworkgroups_ints_3levels ) {
 
 TEST( testlocal, reduceviascratch_multipleworkgroups_ints_3levels ) {
     OpenCLHelper cl;
-    CLKernel *kernel = cl.buildKernel("../test/testlocal.cl", "reduceViaScratch_multipleworkgroups_ints" );
+    CLKernel *kernel = cl.buildKernel("testlocal.cl", "reduceViaScratch_multipleworkgroups_ints" );
     int workgroupSize = min( 512, cl.getMaxWorkgroupSize() );
     const int numWorkgroups = workgroupSize;
     const int level3size = numWorkgroups / 4;
@@ -335,7 +335,7 @@ TEST( testlocal, reduceviascratch_multipleworkgroups_ints_3levels ) {
 
 TEST( testlocal, selfdot_3levels_withscratch ) {
     OpenCLHelper cl;
-    CLKernel *kernel = cl.buildKernel("../test/testlocal.cl", "selfdot_ints_withscratch" );
+    CLKernel *kernel = cl.buildKernel("testlocal.cl", "selfdot_ints_withscratch" );
     int workgroupSize = min( 512, cl.getMaxWorkgroupSize() );
     const int numWorkgroups = workgroupSize;
     const int level3size = numWorkgroups / 4;
@@ -389,7 +389,7 @@ TEST( testlocal, selfdot_3levels_withscratch ) {
 
 TEST( testlocal, selfdot_3levels_withoutscratch ) {
     OpenCLHelper cl;
-    CLKernel *kernel = cl.buildKernel("../test/testlocal.cl", "selfdot_ints_withoutscratch" );
+    CLKernel *kernel = cl.buildKernel("testlocal.cl", "selfdot_ints_withoutscratch" );
     int workgroupSize = min( 512, cl.getMaxWorkgroupSize() );
     const int numWorkgroups = workgroupSize;
     const int level3size = numWorkgroups / 4;
