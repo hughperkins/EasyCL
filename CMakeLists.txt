@@ -60,3 +60,16 @@ add_custom_target(
 add_dependencies( OpenCLHelper git-submodule-update )
 endif()
 
+if( ON_LINUX )
+add_custom_target( 
+    clfiles
+    cp ${CMAKE_CURRENT_SOURCE_DIR}/test/*.cl ${CMAKE_BINARY_DIR}
+)
+else()
+add_custom_target( 
+    clfiles
+    copy ${CMAKE_CURRENT_SOURCE_DIR}\\test\\*.cl ${CMAKE_BINARY_DIR}
+)
+endif()
+add_dependencies( unittests clfiles )
+
