@@ -11,7 +11,11 @@ endif()
 
 include_directories(.)
 
-add_library( CLEW SHARED thirdparty/clew/src/clew.c )
+add_library( CLEW thirdparty/clew/src/clew.c )
+IF( CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" )
+  SET_TARGET_PROPERTIES( CLEW PROPERTIES COMPILE_FLAGS "-fPIC")
+ENDIF( CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" )
+
 add_library( OpenCLHelper SHARED OpenCLHelper.cpp CLKernel.cpp )
 target_link_libraries( OpenCLHelper CLEW )
 if( ON_LINUX )
