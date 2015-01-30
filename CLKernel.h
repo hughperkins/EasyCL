@@ -18,6 +18,15 @@ class OpenCLHelper_EXPORT CLKernel {
     cl_int error;
 
     int nextArg;
+
+    std::vector<cl_mem> buffers;
+
+    std::vector<int> inputArgInts;
+    std::vector<float> inputArgFloats;
+
+    std::vector<cl_mem> outputArgBuffers;
+    std::vector<void *> outputArgPointers;
+    std::vector<size_t> outputArgSizes;
 public:
     template<typename T>
     static std::string toString(T val ) {
@@ -43,15 +52,6 @@ public:
         clReleaseProgram(program);
         clReleaseKernel(kernel);
     }
-
-    std::vector<cl_mem> buffers;
-
-    std::vector<int> inputArgInts;
-    std::vector<float> inputArgFloats;
-
-    std::vector<cl_mem> outputArgBuffers;
-    std::vector<void *> outputArgPointers;
-    std::vector<size_t> outputArgSizes;
 
     CLKernel *input( CLArray *clarray1d );
     CLKernel *inout( CLArray *clarray1d );
