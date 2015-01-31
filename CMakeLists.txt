@@ -11,7 +11,10 @@ endif()
 
 include_directories(.)
 
-add_library( OpenCLHelper SHARED OpenCLHelper.cpp CLKernel.cpp thirdparty/clew/src/clew.c )
+add_library( CLEW thirdparty/clew/src/clew.c )
+
+add_library( OpenCLHelper SHARED OpenCLHelper.cpp CLKernel.cpp )
+target_link_libraries( OpenCLHelper CLEW )
 if( ON_LINUX )
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 target_link_libraries( OpenCLHelper dl )
@@ -34,7 +37,7 @@ add_executable( unittests test/testscalars.cpp test/testintarray.cpp test/testfl
     test/testfloatarray.cpp test/testopenclhelper.cpp test/testinout.cpp test/testintwrapper_huge.cpp
     test/testlocal.cpp ../test/testdefines.cpp test/testbuildlog.cpp
     test/asserts.cpp thirdparty/gtest/gtest_main.cc )
-target_link_libraries( unittests gtest OpenCLHelper )
+target_link_libraries( unittests gtest OpenCLHelper CLEW )
 target_include_directories( unittests PRIVATE thirdparty/gtest )
 
 execute_process( COMMAND gitx --version RESULT_VARIABLE git_test ERROR_QUIET )
