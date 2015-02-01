@@ -19,6 +19,9 @@ class OpenCLHelper_EXPORT CLKernel {
 
     int nextArg;
 
+#ifdef _WIN32
+#pragma warning(disable: 4251)
+#endif
 	std::vector<cl_mem> buffers;
 
 	std::vector<int> inputArgInts;
@@ -30,6 +33,9 @@ class OpenCLHelper_EXPORT CLKernel {
 
 	template<typename T>
 	static std::string toString(T val);
+#ifdef _WIN32
+#pragma warning(enable: 4251)
+#endif
 
 public:
 
