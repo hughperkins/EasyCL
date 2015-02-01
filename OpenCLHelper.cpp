@@ -206,12 +206,12 @@ void OpenCLHelper::init(int gpuIndex ) {
 OpenCLHelper::~OpenCLHelper() {
 //        clReleaseProgram(program);
     if( queue != 0 ) {
-        cout << "releasing OpenCL command queue" << endl;
+//        cout << "releasing OpenCL command queue" << endl;
         clReleaseCommandQueue(*queue);
         delete queue;
     }
     if( context != 0 ) {
-        cout << "releasing OpenCL context" << endl;
+//        cout << "releasing OpenCL context" << endl;
         clReleaseContext(*context);        
         delete context;
     }
