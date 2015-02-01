@@ -1,41 +1,21 @@
+// Copyright Hugh Perkins 2013 hughperkins at gmail
+//
+// This Source Code Form is subject to the terms of the Mozilla Public License, 
+// v. 2.0. If a copy of the MPL was not distributed with this file, You can 
+// obtain one at http://mozilla.org/MPL/2.0/.
+
 #pragma once
 
 #include <algorithm>
 #include <string>
 
-void printDeviceInfoKB( string valuename, cl_device_id deviceId, cl_device_info name ) {
-    cl_ulong somelong = 0;
-    clGetDeviceInfo(deviceId, name, sizeof(cl_ulong), &somelong, 0);
-    cout << valuename << ": " << ( somelong/1024 ) << "KB" << endl;    
-}
+#include "clew.h"
 
-void printDeviceInfoMB( string valuename, cl_device_id deviceId, cl_device_info name ) {
-    cl_ulong somelong = 0;
-    clGetDeviceInfo(deviceId, name, sizeof(cl_ulong), &somelong, 0);
-    cout << valuename << ": " << ( somelong/1024/1024 ) << "MB" << endl;    
-}
+void printDeviceInfoKB( std::string valuename, cl_device_id deviceId, cl_device_info name );
+void printDeviceInfoMB( std::string valuename, cl_device_id deviceId, cl_device_info name );
+void printDeviceInfo( std::string valuename, cl_device_id deviceId, cl_device_info name );
+void printDeviceInfoArray( std::string valuename, cl_device_id deviceId, cl_device_info name, int length );
+void printDeviceInfoString( std::string valuename, cl_device_id deviceId, cl_device_info name );
 
-void printDeviceInfo( string valuename, cl_device_id deviceId, cl_device_info name ) {
-    cl_ulong somelong = 0;
-    clGetDeviceInfo(deviceId, name, sizeof(cl_ulong), &somelong, 0);
-    cout << valuename << ": " << somelong << endl;    
-}
-
-void printDeviceInfoArray( string valuename, cl_device_id deviceId, cl_device_info name, int length ) {
-    cl_ulong *array = new cl_ulong[length];
-    clGetDeviceInfo(deviceId, name, sizeof(cl_ulong)*length, array, 0);
-    cout << valuename << ":";
-    for( int i = 0; i < length; i++ ) {
-        cout << " " << array[i];   
-    }
-    cout << endl;
-    delete[] array;
-}
-
-void printDeviceInfoString( string valuename, cl_device_id deviceId, cl_device_info name ) {
-    char buffer[256];
-    clGetDeviceInfo(deviceId, name, 256, buffer, 0);
-    cout << valuename << ": " << buffer << endl;    
-}
-
+std::string getDeviceInfoString( cl_device_id deviceId, cl_device_info name );
 
