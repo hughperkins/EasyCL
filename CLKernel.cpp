@@ -237,12 +237,12 @@ void CLKernel::run(int ND, const size_t *global_ws, const size_t *local_ws) {
 	//}
 
 	//void retrieveresultsandcleanup() {
-	for (int i = 0; i < outputArgBuffers.size(); i++) {
+	for (int i = 0; i < (int)outputArgBuffers.size(); i++) {
 		clEnqueueReadBuffer(*(openclhelper->queue), outputArgBuffers[i], CL_TRUE, 0, outputArgSizes[i], outputArgPointers[i], 0, NULL, NULL);
 	}
 	//        std::cout << "done" << std::endl;
 
-	for (int i = 0; i < buffers.size(); i++) {
+	for (int i = 0; i < (int)buffers.size(); i++) {
 		clReleaseMemObject(buffers[i]);
 	}
 	buffers.clear();
