@@ -275,6 +275,12 @@ How to check my OpenCL installation/configuration?
 - In Ubuntu, you can use `clinfo` (install via `sudo apt-get install clinfo`), to check the
 OpenCL installation itself is ok.  If this says 'no installations found', then it's an OpenCL
 configuration issue.
+  - note that `clinfo` is broken on CUDA, I think?  But OpenCL will still work ok: try `gpuinfo` instead
+- Run `gpuinfo` to list available platforms and devices
+- If no gpu-capabable devices found, you probably want to check things like:
+  - do you have an OpenCL-capable GPU installed?
+  - are the drivers installed?
+  - is the ICD setup?
 
 What if I've found a bug?
 ----------------
