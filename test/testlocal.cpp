@@ -7,9 +7,9 @@ using namespace std;
 #include "Timer.h"
 
 TEST( testlocal, globalreduce ) {
-    OpenCLHelper cl;
-    CLKernel *kernel = cl.buildKernel("testlocal.cl", "reduceGlobal" );
-    int workgroupSize = min( 512, cl.getMaxWorkgroupSize() );
+    OpenCLHelper *cl = OpenCLHelper::createForFirstGpuOtherwiseCpu();
+    CLKernel *kernel = cl->buildKernel("testlocal.cl", "reduceGlobal" );
+    int workgroupSize = min( 512, cl->getMaxWorkgroupSize() );
     float *myarray = new float[workgroupSize];
     Timer timer;
     for( int i = 0; i < 2000; i++ ) {
@@ -30,9 +30,9 @@ TEST( testlocal, globalreduce ) {
 }
 
 TEST( testlocal, localreduce ) {
-    OpenCLHelper cl;
-    CLKernel *kernel = cl.buildKernel("testlocal.cl", "reduceViaScratch" );
-    int workgroupSize = min( 512, cl.getMaxWorkgroupSize() );
+    OpenCLHelper *cl = OpenCLHelper::createForFirstGpuOtherwiseCpu();
+    CLKernel *kernel = cl->buildKernel("testlocal.cl", "reduceViaScratch" );
+    int workgroupSize = min( 512, cl->getMaxWorkgroupSize() );
     float *myarray = new float[workgroupSize];
     Timer timer;
     for( int i = 0; i < 2000; i++ ) {
@@ -53,9 +53,9 @@ TEST( testlocal, localreduce ) {
 }
 
 TEST( testlocal, reduceviascratch_multipleworkgroups ) {
-    OpenCLHelper cl;
-    CLKernel *kernel = cl.buildKernel("testlocal.cl", "reduceViaScratch_multipleworkgroups" );
-    int workgroupSize = min( 512, cl.getMaxWorkgroupSize() );
+    OpenCLHelper *cl = OpenCLHelper::createForFirstGpuOtherwiseCpu();
+    CLKernel *kernel = cl->buildKernel("testlocal.cl", "reduceViaScratch_multipleworkgroups" );
+    int workgroupSize = min( 512, cl->getMaxWorkgroupSize() );
     const int numWorkgroups = workgroupSize;
     const int N = workgroupSize * numWorkgroups;
     float *myarray = new float[N];
@@ -73,10 +73,10 @@ TEST( testlocal, reduceviascratch_multipleworkgroups ) {
 
     Timer timer;
 
-    CLWrapper *a1wrapper = cl.wrap( N, myarray );
+    CLWrapper *a1wrapper = cl->wrap( N, myarray );
     a1wrapper->copyToDevice();
     float *a2 = new float[numWorkgroups];
-    CLWrapper *a2wrapper = cl.wrap( numWorkgroups, a2 );
+    CLWrapper *a2wrapper = cl->wrap( numWorkgroups, a2 );
     kernel->in( a1wrapper );
     kernel->out( a2wrapper );
     kernel->localFloats( workgroupSize );
@@ -97,9 +97,9 @@ TEST( testlocal, reduceviascratch_multipleworkgroups ) {
 }
 
 TEST( testlocal, reduceviascratch_multipleworkgroups_ints ) {
-    OpenCLHelper cl;
-    CLKernel *kernel = cl.buildKernel("testlocal.cl", "reduceViaScratch_multipleworkgroups_ints" );
-    int workgroupSize = min( 512, cl.getMaxWorkgroupSize() );
+    OpenCLHelper *cl = OpenCLHelper::createForFirstGpuOtherwiseCpu();
+    CLKernel *kernel = cl->buildKernel("testlocal.cl", "reduceViaScratch_multipleworkgroups_ints" );
+    int workgroupSize = min( 512, cl->getMaxWorkgroupSize() );
     const int numWorkgroups = workgroupSize;
     const int N = workgroupSize * numWorkgroups;
     cout << "numworkgroups " << numWorkgroups << " workgroupsize " << workgroupSize << " N " << N << endl;
@@ -127,10 +127,10 @@ TEST( testlocal, reduceviascratch_multipleworkgroups_ints ) {
 
     Timer timer;
 
-    CLWrapper *a1wrapper = cl.wrap( N, myarray );
+    CLWrapper *a1wrapper = cl->wrap( N, myarray );
     a1wrapper->copyToDevice();
     int *a2 = new int[numWorkgroups];
-    CLWrapper *a2wrapper = cl.wrap( numWorkgroups, a2 );
+    CLWrapper *a2wrapper = cl->wrap( numWorkgroups, a2 );
     kernel->in( a1wrapper );
     kernel->out( a2wrapper );
     kernel->localInts( workgroupSize );
@@ -152,9 +152,9 @@ TEST( testlocal, reduceviascratch_multipleworkgroups_ints ) {
 }
 
 TEST( testlocal, reduce_multipleworkgroups_ints_noscratch ) {
-    OpenCLHelper cl;
-    CLKernel *kernel = cl.buildKernel("testlocal.cl", "reduce_multipleworkgroups_ints_noscratch" );
-    int workgroupSize = min( 512, cl.getMaxWorkgroupSize() );
+    OpenCLHelper *cl = OpenCLHelper::createForFirstGpuOtherwiseCpu();
+    CLKernel *kernel = cl->buildKernel("testlocal.cl", "reduce_multipleworkgroups_ints_noscratch" );
+    int workgroupSize = min( 512, cl->getMaxWorkgroupSize() );
     const int numWorkgroups = workgroupSize;
     const int N = workgroupSize * numWorkgroups;
     cout << "numworkgroups " << numWorkgroups << " workgroupsize " << workgroupSize << " N " << N << endl;
@@ -182,10 +182,10 @@ TEST( testlocal, reduce_multipleworkgroups_ints_noscratch ) {
 
     Timer timer;
 
-    CLWrapper *a1wrapper = cl.wrap( N, myarray );
+    CLWrapper *a1wrapper = cl->wrap( N, myarray );
     a1wrapper->copyToDevice();
     int *a2 = new int[numWorkgroups];
-    CLWrapper *a2wrapper = cl.wrap( numWorkgroups, a2 );
+    CLWrapper *a2wrapper = cl->wrap( numWorkgroups, a2 );
     kernel->in( a1wrapper );
     kernel->out( a2wrapper );
     kernel->run_1d( N, workgroupSize );
@@ -204,10 +204,10 @@ TEST( testlocal, reduce_multipleworkgroups_ints_noscratch ) {
     delete[]myarray;
 }
 
-TEST( testlocal, reduce_noscratch_multipleworkgroups_ints_3levels ) {
-    OpenCLHelper cl;
-    CLKernel *kernel = cl.buildKernel("testlocal.cl", "reduce_multipleworkgroups_ints_noscratch" );
-    int workgroupSize = min( 512, cl.getMaxWorkgroupSize() );
+TEST( SLOW_testlocal, reduce_noscratch_multipleworkgroups_ints_3levels ) {
+    OpenCLHelper *cl = OpenCLHelper::createForFirstGpuOtherwiseCpu();
+    CLKernel *kernel = cl->buildKernel("testlocal.cl", "reduce_multipleworkgroups_ints_noscratch" );
+    int workgroupSize = min( 512, cl->getMaxWorkgroupSize() );
     const int numWorkgroups = workgroupSize;
     const int level3size = numWorkgroups / 4;
     const int N = workgroupSize * numWorkgroups * level3size;
@@ -236,17 +236,17 @@ TEST( testlocal, reduce_noscratch_multipleworkgroups_ints_3levels ) {
 
     Timer timer;
 
-    CLWrapper *a1wrapper = cl.wrap( N, myarray );
+    CLWrapper *a1wrapper = cl->wrap( N, myarray );
     a1wrapper->copyToDevice();
     timer.timeCheck("copied array to device");
     int *a2 = new int[numWorkgroups*level3size];
-    CLWrapper *a2wrapper = cl.wrap( numWorkgroups * level3size, a2 );
+    CLWrapper *a2wrapper = cl->wrap( numWorkgroups * level3size, a2 );
     kernel->in( a1wrapper );
     kernel->out( a2wrapper );
     kernel->run_1d( N, workgroupSize );
 
     int *a3 = new int[numWorkgroups];
-    CLWrapper *a3wrapper = cl.wrap( level3size, a3 );
+    CLWrapper *a3wrapper = cl->wrap( level3size, a3 );
     kernel->in( a2wrapper );
     kernel->out( a3wrapper );
     kernel->run_1d( workgroupSize * level3size, workgroupSize );
@@ -267,10 +267,10 @@ TEST( testlocal, reduce_noscratch_multipleworkgroups_ints_3levels ) {
     delete[]myarray;
 }
 
-TEST( testlocal, reduceviascratch_multipleworkgroups_ints_3levels ) {
-    OpenCLHelper cl;
-    CLKernel *kernel = cl.buildKernel("testlocal.cl", "reduceViaScratch_multipleworkgroups_ints" );
-    int workgroupSize = min( 512, cl.getMaxWorkgroupSize() );
+TEST( SLOW_testlocal, reduceviascratch_multipleworkgroups_ints_3levels ) {
+    OpenCLHelper *cl = OpenCLHelper::createForFirstGpuOtherwiseCpu();
+    CLKernel *kernel = cl->buildKernel("testlocal.cl", "reduceViaScratch_multipleworkgroups_ints" );
+    int workgroupSize = min( 512, cl->getMaxWorkgroupSize() );
     const int numWorkgroups = workgroupSize;
     const int level3size = numWorkgroups / 4;
     const int N = workgroupSize * numWorkgroups * level3size;
@@ -299,18 +299,18 @@ TEST( testlocal, reduceviascratch_multipleworkgroups_ints_3levels ) {
 
     Timer timer;
 
-    CLWrapper *a1wrapper = cl.wrap( N, myarray );
+    CLWrapper *a1wrapper = cl->wrap( N, myarray );
     a1wrapper->copyToDevice();
     timer.timeCheck("copied array to device");
     int *a2 = new int[numWorkgroups*level3size];
-    CLWrapper *a2wrapper = cl.wrap( numWorkgroups * level3size, a2 );
+    CLWrapper *a2wrapper = cl->wrap( numWorkgroups * level3size, a2 );
     kernel->in( a1wrapper );
     kernel->out( a2wrapper );
     kernel->localInts( workgroupSize );
     kernel->run_1d( N, workgroupSize );
 
     int *a3 = new int[numWorkgroups];
-    CLWrapper *a3wrapper = cl.wrap( level3size, a3 );
+    CLWrapper *a3wrapper = cl->wrap( level3size, a3 );
     kernel->in( a2wrapper );
     kernel->out( a3wrapper );
     kernel->localInts( workgroupSize );
@@ -333,10 +333,10 @@ TEST( testlocal, reduceviascratch_multipleworkgroups_ints_3levels ) {
     delete[]myarray;
 }
 
-TEST( testlocal, selfdot_3levels_withscratch ) {
-    OpenCLHelper cl;
-    CLKernel *kernel = cl.buildKernel("testlocal.cl", "selfdot_ints_withscratch" );
-    int workgroupSize = min( 512, cl.getMaxWorkgroupSize() );
+TEST( SLOW_testlocal, selfdot_3levels_withscratch ) {
+    OpenCLHelper *cl = OpenCLHelper::createForFirstGpuOtherwiseCpu();
+    CLKernel *kernel = cl->buildKernel("testlocal.cl", "selfdot_ints_withscratch" );
+    int workgroupSize = min( 512, cl->getMaxWorkgroupSize() );
     const int numWorkgroups = workgroupSize;
     const int level3size = numWorkgroups / 4;
     const int N = workgroupSize * numWorkgroups * level3size;
@@ -348,26 +348,26 @@ TEST( testlocal, selfdot_3levels_withscratch ) {
 
     Timer timer;
 
-    CLWrapper *a1wrapper = cl.wrap( N, myarray );
+    CLWrapper *a1wrapper = cl->wrap( N, myarray );
     a1wrapper->copyToDevice();
     timer.timeCheck("copied array to device");
     int *a2 = new int[numWorkgroups*level3size];
-    CLWrapper *a2wrapper = cl.wrap( numWorkgroups * level3size, a2 );
+    CLWrapper *a2wrapper = cl->wrap( numWorkgroups * level3size, a2 );
     kernel->in( a1wrapper );
     kernel->out( a2wrapper );
     kernel->localInts( workgroupSize );
     kernel->localInts( workgroupSize );
     kernel->run_1d( N, workgroupSize );
-    cl.finish();
+    cl->finish();
 
     int *a3 = new int[numWorkgroups];
-    CLWrapper *a3wrapper = cl.wrap( level3size, a3 );
+    CLWrapper *a3wrapper = cl->wrap( level3size, a3 );
     kernel->in( a2wrapper );
     kernel->out( a3wrapper );
     kernel->localInts( workgroupSize );
     kernel->localInts( workgroupSize );
     kernel->run_1d( workgroupSize * level3size, workgroupSize );
-    cl.finish();
+    cl->finish();
 
     int finalSum;
     kernel->in( a3wrapper );
@@ -387,10 +387,10 @@ TEST( testlocal, selfdot_3levels_withscratch ) {
     delete[]myarray;
 }
 
-TEST( testlocal, selfdot_3levels_withoutscratch ) {
-    OpenCLHelper cl;
-    CLKernel *kernel = cl.buildKernel("testlocal.cl", "selfdot_ints_withoutscratch" );
-    int workgroupSize = min( 512, cl.getMaxWorkgroupSize() );
+TEST( SLOW_testlocal, selfdot_3levels_withoutscratch ) {
+    OpenCLHelper *cl = OpenCLHelper::createForFirstGpuOtherwiseCpu();
+    CLKernel *kernel = cl->buildKernel("testlocal.cl", "selfdot_ints_withoutscratch" );
+    int workgroupSize = min( 512, cl->getMaxWorkgroupSize() );
     const int numWorkgroups = workgroupSize;
     const int level3size = numWorkgroups / 4;
     const int N = workgroupSize * numWorkgroups * level3size;
@@ -402,26 +402,26 @@ TEST( testlocal, selfdot_3levels_withoutscratch ) {
 
     Timer timer;
 
-    CLWrapper *a1wrapper = cl.wrap( N, myarray );
+    CLWrapper *a1wrapper = cl->wrap( N, myarray );
     a1wrapper->copyToDevice();
     timer.timeCheck("copied array to device");
     int *second = new int[N];
-    CLWrapper *secondwrapper = cl.wrap( N, second );
+    CLWrapper *secondwrapper = cl->wrap( N, second );
     int *a2 = new int[numWorkgroups*level3size];
-    CLWrapper *a2wrapper = cl.wrap( numWorkgroups * level3size, a2 );
+    CLWrapper *a2wrapper = cl->wrap( numWorkgroups * level3size, a2 );
     kernel->in( a1wrapper );
     kernel->out( secondwrapper );
     kernel->out( a2wrapper );
     kernel->run_1d( N, workgroupSize );
-    cl.finish();
+    cl->finish();
 
     int *a3 = new int[numWorkgroups];
-    CLWrapper *a3wrapper = cl.wrap( level3size, a3 );
+    CLWrapper *a3wrapper = cl->wrap( level3size, a3 );
     kernel->in( a2wrapper );
     kernel->out( secondwrapper );
     kernel->out( a3wrapper );
     kernel->run_1d( workgroupSize * level3size, workgroupSize );
-    cl.finish();
+    cl->finish();
 
     int finalSum;
     kernel->in( a3wrapper );
