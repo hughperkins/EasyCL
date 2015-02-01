@@ -71,6 +71,7 @@ More generally, you can call on 2d and 3d workgroups by using the `kernel->run` 
 If you use `OpenCLHelper::createForFirstGpu()`, OpenCLHelper will bind to the first OpenCL-enabled GPU (or accelerator), that it finds.  If you want to use a different device, or an OpenCL-enabled GPU, you can use one of the following method:
 ```c++
 OpenCLHelper::createForIndexedGpu( int gpuindex ); // looks for opencl-enabled gpus, and binds to the (gpuindex+1)th one
+OpenCLHelper::createForFirstGpuOtherwiseCpu();
 OpenCLHelper::createForPlatformDeviceIndexes( int platformIndex, int deviceIndex );
 OpenCLHelper::createForPlatformDeviceIds( int platformId, int deviceId ); // you can get these ids by running `gpuinfo` first
 ```

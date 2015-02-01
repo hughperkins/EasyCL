@@ -38,5 +38,9 @@ TEST( testnewinstantiations, one ) {
     cl = OpenCLHelper::createForPlatformDeviceIndexes(0, 0);
     simpleTest( cl );
     delete cl;
+
+    cl = OpenCLHelper::createForFirstGpuOtherwiseCpu();
+    simpleTest( cl );
+    delete cl;
 }
 

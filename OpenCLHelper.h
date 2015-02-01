@@ -132,6 +132,14 @@ public:
         return createForIndexedGpu( 0 );
     }
 
+    static OpenCLHelper *createForFirstGpuOtherwiseCpu() {
+        try {
+            return createForIndexedGpu( 0 );
+        } catch( std::runtime_error error ) {
+        }
+        return createForPlatformDeviceIndexes( 0, 0 );
+    }
+
     static OpenCLHelper *createForIndexedGpu( int gpu ) {
         bool clpresent = 0 == clewInit();
         if( !clpresent ) {
