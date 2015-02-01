@@ -69,9 +69,9 @@ add_dependencies( unittests clfiles )
 else()
 # No idea how to do this on visual studio/windows
 # If you have any ideas :-)
-#add_custom_target( 
-#    clfiles
-#    copy ${CMAKE_CURRENT_SOURCE_DIR}\\tests\\*.cl ${CMAKE_BINARY_DIR}\\Release
-#)
+add_custom_target( 
+    clfiles
+    copy ${CMAKE_CURRENT_SOURCE_DIR}\\tests\\*.cl ${CMAKE_BINARY_DIR}
+)
 endif()
 
