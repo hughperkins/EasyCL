@@ -267,3 +267,4 @@ template OpenCLHelper_EXPORT CLKernel *CLKernel::out(int N, float *data);
 template OpenCLHelper_EXPORT CLKernel *CLKernel::out(int N, int *data);
 template OpenCLHelper_EXPORT CLKernel *CLKernel::inout(int N, float *data);
 template OpenCLHelper_EXPORT CLKernel *CLKernel::inout(int N, int *data);
+

@@ -12,6 +12,7 @@ using namespace std;
 #include "clew.h"
 
 #include "deviceinfo_helper.h"
+#include "platforminfo_helper.h"
 
 int main( int argc, char *argv[] ) {
     bool clpresent = 0 == clewInit();
@@ -35,8 +36,12 @@ int main( int argc, char *argv[] ) {
     cout << endl;
 
     for( int i = 0; i < num_platforms; i++ ) {
-        cout << "platform " << i << ":" << endl;
+        cout << "platform index: " << i << ":" << endl;
         cl_platform_id platform_id = platform_ids[i];
+        cout << "platform id: " << platform_id << endl;
+//        printPlatformInfo( "platform id", platform_id, CL_PLATFORM_ID );
+        printPlatformInfoString( "platform vendor", platform_id, CL_PLATFORM_VENDOR );
+        printPlatformInfoString( "platform name", platform_id, CL_PLATFORM_NAME );
         // Device
         cl_uint num_devices;
         error = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_ALL, 1, &device, &num_devices);
@@ -44,7 +49,8 @@ int main( int argc, char *argv[] ) {
            cout << "Error getting device ids: " << error << endl;
            exit(error);
         }
-        cout << "num devices: " << num_devices << endl;
+        cout << "platform num devices: " << num_devices << endl;
+        cout << endl;
         cl_device_id *device_ids = new cl_device_id[num_devices];
         error = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_ALL, num_devices, device_ids, &num_devices);
         if (error != CL_SUCCESS) {
@@ -53,23 +59,23 @@ int main( int argc, char *argv[] ) {
         }
         for( int i = 0; i < num_devices; i++ ) {
             device = device_ids[i];
-            cout << "device " << i << " id " << device << endl;
-            printDeviceInfo( "device type", device, CL_DEVICE_TYPE );
-            printDeviceInfoMB( "global memory size", device, CL_DEVICE_GLOBAL_MEM_SIZE );
-            printDeviceInfoKB( "local memory size", device, CL_DEVICE_LOCAL_MEM_SIZE );
-            printDeviceInfoKB( "global cache size", device, CL_DEVICE_GLOBAL_MEM_CACHE_SIZE );
-            printDeviceInfo( "global cacheline size", device, CL_DEVICE_GLOBAL_MEM_CACHELINE_SIZE );
-            printDeviceInfo( "max compute units", device, CL_DEVICE_MAX_COMPUTE_UNITS );
-            printDeviceInfo( "max workgroup size", device, CL_DEVICE_MAX_WORK_GROUP_SIZE );
-            printDeviceInfo( "max workitem dimensions", device, CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS );
-            printDeviceInfoArray( "max workitem sizes", device, CL_DEVICE_MAX_WORK_ITEM_SIZES, 3 );
-            printDeviceInfoString( "device name", device, CL_DEVICE_NAME );
-            printDeviceInfoString( "opencl c version", device, CL_DEVICE_OPENCL_C_VERSION );
-            printDeviceInfoString( "opencl device version", device, CL_DEVICE_VERSION );
-            printDeviceInfo( "frequency MHz", device, CL_DEVICE_MAX_CLOCK_FREQUENCY );
+            cout << "   device index: " << i << endl;
+            cout << "   device id: " << device << endl;
+            printDeviceInfo( "   device type", device, CL_DEVICE_TYPE );
+            printDeviceInfoMB( "   global memory size", device, CL_DEVICE_GLOBAL_MEM_SIZE );
+            printDeviceInfoKB( "   local memory size", device, CL_DEVICE_LOCAL_MEM_SIZE );
+            printDeviceInfoKB( "   global cache size", device, CL_DEVICE_GLOBAL_MEM_CACHE_SIZE );
+            printDeviceInfo( "   global cacheline size", device, CL_DEVICE_GLOBAL_MEM_CACHELINE_SIZE );
+            printDeviceInfo( "   max compute units", device, CL_DEVICE_MAX_COMPUTE_UNITS );
+            printDeviceInfo( "   max workgroup size", device, CL_DEVICE_MAX_WORK_GROUP_SIZE );
+            printDeviceInfo( "   max workitem dimensions", device, CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS );
+            printDeviceInfoArray( "   max workitem sizes", device, CL_DEVICE_MAX_WORK_ITEM_SIZES, 3 );
+            printDeviceInfoString( "   device name", device, CL_DEVICE_NAME );
+            printDeviceInfoString( "   opencl c version", device, CL_DEVICE_OPENCL_C_VERSION );
+            printDeviceInfoString( "   opencl device version", device, CL_DEVICE_VERSION );
+            printDeviceInfo( "   frequency MHz", device, CL_DEVICE_MAX_CLOCK_FREQUENCY );
             cout << endl;
         }
-        cout << endl;
     }
     return 0;
 }
