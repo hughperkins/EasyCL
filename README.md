@@ -8,8 +8,13 @@
   - [CLArray and CLWrapper objects](#clarray-and-clwrapper-objects)
   - [CLWrapper objects](#clwrapper-objects)
   - [CLArray objects](#clarray-objects)
-  - [Pre-requisites](#pre-requisites)
   - [How to build](#how-to-build)
+    - [Building on linux](#building-on-linux)
+      - [Pre-requisites](#pre-requisites)
+      - [Procedure](#procedure)
+    - [Building on Windows](#building-on-windows)
+      - [Pre-requisites](#pre-requisites-1)
+      - [Procedure](#procedure-1)
   - [How to run self-tests](#how-to-run-self-tests)
   - [How to check my OpenCL installation/configuration?](#how-to-check-my-opencl-installationconfiguration)
   - [What if I've found a bug?](#what-if-ive-found-a-bug)
@@ -241,7 +246,7 @@ make
   * open any of the projects in the `build-win32` or `build-win64` build directory
   * change build type from `Debug` to `Release`
   * from `build` menu, choose `build solution`
-* after building, you will need to copy the *.cl files from the `cl` directory into the directory where you will run the tests or library from (if you can figure out a way to automate this, please send a pull request :-) )
+* after building, you will need to copy the *.cl files from the `test` directory into the directory where you will run the tests from (if you can figure out a way to automate this, please send a pull request :-) )
 
 How to run self-tests
 ---------------------
