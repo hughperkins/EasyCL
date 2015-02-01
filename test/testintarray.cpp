@@ -16,8 +16,8 @@ TEST( testintarray, main ) {
     }
     cout << "found opencl library" << endl;
 
-    OpenCLHelper cl;
-    CLKernel *kernel = cl.buildKernel("testintarray.cl", "test");
+    OpenCLHelper *cl = OpenCLHelper::createForFirstGpuOtherwiseCpu();
+    CLKernel *kernel = cl->buildKernel("testintarray.cl", "test");
     int in[5];
     int inout[5];
     int out[5];
@@ -52,5 +52,8 @@ TEST( testintarray, main ) {
     assertEquals( out[3] , 14 );
     assertEquals( out[4] , 17 );
     cout << "tests completed ok" << endl;
+
+    delete kernel;
+    delete cl;
 }
 

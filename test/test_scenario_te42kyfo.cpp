@@ -8,10 +8,10 @@
 using namespace std;
 
 TEST( test_scenario_te42kyfo, main ) {
-    OpenCLHelper cl;
-    CLKernel *kernel = cl.buildKernel("test_scenario_te42kyfo.cl", "test");
-    CLArrayFloat *out = cl.arrayFloat(5);
-    CLArrayFloat *in = cl.arrayFloat(5);
+    OpenCLHelper *cl = OpenCLHelper::createForFirstGpuOtherwiseCpu();
+    CLKernel *kernel = cl->buildKernel("test_scenario_te42kyfo.cl", "test");
+    CLArrayFloat *out = cl->arrayFloat(5);
+    CLArrayFloat *in = cl->arrayFloat(5);
     for( int i = 0; i < 5; i++ ) {
        (*out)[i] = 0;
     }
@@ -26,5 +26,10 @@ TEST( test_scenario_te42kyfo, main ) {
       assertEquals( i*4 + 5, (*out)[4] );
     }
     cout << "finished" << endl;
+
+    delete in;
+    delete out;
+    delete kernel;
+    delete cl;
 }
 

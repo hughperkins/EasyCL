@@ -16,8 +16,8 @@ TEST( testscalars, test1 ) {
     }
     cout << "found opencl library" << endl;
 
-    OpenCLHelper cl;
-    CLKernel *kernel = cl.buildKernel("testscalars.cl", "test");
+    OpenCLHelper *cl = OpenCLHelper::createForFirstGpuOtherwiseCpu();
+    CLKernel *kernel = cl->buildKernel("testscalars.cl", "test");
     int intout[5];
     float floatout[5];
     kernel->in( 37 )->in( 1.234f)->out( 5, intout )->out( 5, floatout );
@@ -43,5 +43,8 @@ TEST( testscalars, test1 ) {
     assertEquals( floatout[3] , 4.234f );
     assertEquals( floatout[4] , 5.234f );
     cout << "tests completed ok" << endl;
+
+    delete kernel;
+    delete cl;
 }
 

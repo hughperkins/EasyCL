@@ -17,9 +17,9 @@ TEST( testclarray, main ) {
     }
     cout << "found opencl library" << endl;
 
-    OpenCLHelper cl;
-    CLKernel *kernel = cl.buildKernel("testopenclhelper.cl", "test");
-    CLArrayFloat *out = cl.arrayFloat(5);
+    OpenCLHelper *cl = OpenCLHelper::createForFirstGpuOtherwiseCpu();
+    CLKernel *kernel = cl->buildKernel("testopenclhelper.cl", "test");
+    CLArrayFloat *out = cl->arrayFloat(5);
     float in[5];
     for( int i = 0; i < 5; i++ ) {
         in[i] = i * 3;
@@ -31,5 +31,9 @@ TEST( testclarray, main ) {
     assertEquals( (*out)[3] , 16 );
     assertEquals( (*out)[4] , 19 );
     cout << "tests completed ok" << endl;
+
+    delete out;
+    delete kernel;
+    delete cl;
 }
 

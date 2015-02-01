@@ -16,8 +16,8 @@ TEST( testinout, main ) {
     }
     cout << "found opencl library" << endl;
 
-    OpenCLHelper cl;
-    CLKernel *kernel = cl.buildKernel("testinout.cl", "test");
+    OpenCLHelper *cl = OpenCLHelper::createForFirstGpuOtherwiseCpu();
+    CLKernel *kernel = cl->buildKernel("testinout.cl", "test");
     float inout[5];
     for( int i = 0; i < 5; i++ ) {
         inout[i] = i * 3;
@@ -32,5 +32,8 @@ TEST( testinout, main ) {
     assertEquals( inout[3] , 16 );
     assertEquals( inout[4] , 19 );
     cout << "tests completed ok" << endl;
+
+    delete kernel;
+    delete cl;
 }
 

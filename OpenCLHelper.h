@@ -156,7 +156,7 @@ public:
         if( num_platforms == 0 ) {
            throw std::runtime_error( "Error: no platforms available" );
         }
-        for( int platform =  0; platform < num_platforms; platform++ ) {
+        for( int platform =  0; platform < (int)num_platforms; platform++ ) {
             cl_platform_id platform_id = platform_ids[platform];
             cl_device_id device_ids[100];
             cl_uint num_devices;
@@ -164,7 +164,7 @@ public:
             if (error != CL_SUCCESS) {
                throw std::runtime_error( "Error getting device ids for platform " + toString( platform ) + ": " + errorMessage(error) );
             }
-            if( ( gpu - currentGpuIndex ) < num_devices ) {
+            if( ( gpu - currentGpuIndex ) < (int)num_devices ) {
                 return new OpenCLHelper( platform_id, device_ids[( gpu - currentGpuIndex )] );
             } else {
                 currentGpuIndex += num_devices;
@@ -193,7 +193,7 @@ public:
         if( num_platforms == 0 ) {
            throw std::runtime_error( "Error: no platforms available" );
         }
-        if( platformIndex >= num_platforms ) {
+        if( platformIndex >= (int)num_platforms ) {
            throw std::runtime_error( "Error: platform index " + toString( platformIndex ) + " not available. There are only: " + toString( num_platforms ) + " platforms available" );
         }
         cl_platform_id platform_id = platform_ids[platformIndex];
@@ -206,7 +206,7 @@ public:
         if( num_devices == 0 ) {
            throw std::runtime_error( "Error: no devices available for platform index " + toString( platformIndex ) );
         }
-        if( deviceIndex >= num_devices ) {
+        if( deviceIndex >= (int)num_devices ) {
            throw std::runtime_error( "Error: device index " + toString(deviceIndex) + " goes beyond the available devices on platform index " + toString( platformIndex ) + ", which has " + toString( num_devices ) + " devices" );
         }
         return new OpenCLHelper( platform_id, device_ids[deviceIndex] );
