@@ -39,7 +39,7 @@ endif()
 add_executable( unittests test/testscalars.cpp test/testintarray.cpp test/testfloatwrapper.cpp
     test/testclarray.cpp test/testfloatwrapperconst.cpp test/testintwrapper.cpp test/test_scenario_te42kyfo.cpp
     test/testfloatarray.cpp test/testopenclhelper.cpp test/testinout.cpp test/testintwrapper_huge.cpp
-    test/testlocal.cpp ../test/testdefines.cpp test/testbuildlog.cpp
+    test/testlocal.cpp ../test/testdefines.cpp test/testbuildlog.cpp test/testnewinstantiations.cpp
     test/asserts.cpp thirdparty/gtest/gtest_main.cc )
 target_link_libraries( unittests gtest OpenCLHelper CLEW )
 target_include_directories( unittests PRIVATE thirdparty/gtest )
@@ -69,9 +69,9 @@ add_dependencies( unittests clfiles )
 else()
 # No idea how to do this on visual studio/windows
 # If you have any ideas :-)
-#add_custom_target( 
-#    clfiles
-#    copy ${CMAKE_CURRENT_SOURCE_DIR}\\tests\\*.cl ${CMAKE_BINARY_DIR}\\Release
-#)
+add_custom_target( 
+    clfiles
+    copy ${CMAKE_CURRENT_SOURCE_DIR}\\tests\\*.cl ${CMAKE_BINARY_DIR}
+)
 endif()
 

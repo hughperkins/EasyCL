@@ -45,8 +45,8 @@ Imagine we have a kernel with the following signature, in the file /tmp/foo.cl:
         cout << "opencl library not found" << endl;
         exit(-1);
     }
-    OpenCLHelper cl;
-    CLKernel *kernel = cl.buildKernel("somekernelfile.cl", "test_function");
+    OpenCLHelper *cl = OpenCLHelper::createForFirstGpu();
+    CLKernel *kernel = cl->buildKernel("somekernelfile.cl", "test_function");
     int in[5];
     int out[5];
     for( int i = 0; i < 5; i++ ) {
@@ -64,15 +64,21 @@ More generally, you can call on 2d and 3d workgroups by using the `kernel->run` 
     const size_t global_ws[1]; global_ws[0] = OpenCLHelper::roundUp(local_ws[0], size);
     kernel->run( 1, global_ws, local_ws ); // 1 is number of dimensions, could be 2, or 3
 
-You can choose a different gpu index, if you have more than one, eg for gpu index 1:
-
-    cl.gpu(1);
-
 'Fluent' style is also possible, eg:
 
     kernel->in(10)->in(5)->out( 5, outarray )->run_1d( 5, 5 );
 
-There are some examples in the [test](https://github.com/hughperkins/OpenCLHelper/tree/master/test) subdirectory.
+If you use `OpenCLHelper::createForFirstGpu()`, OpenCLHelper will bind to the first OpenCL-enabled GPU (or accelerator), that it finds.  If you want to use a different device, or an OpenCL-enabled GPU, you can use one of the following method:
+```c++
+OpenCLHelper::createForIndexedGpu( int gpuindex ); // looks for opencl-enabled gpus, and binds to the (gpuindex+1)th one
+OpenCLHelper::createForFirstGpuOtherwiseCpu();
+OpenCLHelper::createForPlatformDeviceIndexes( int platformIndex, int deviceIndex );
+OpenCLHelper::createForPlatformDeviceIds( int platformId, int deviceId ); // you can get these ids by running `gpuinfo` first
+```
+
+You can run `gpuinfo` to get a list of platforms and devices on your system.
+
+There are some examples in the [test](test) subdirectory.
 
 API
 ---

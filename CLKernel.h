@@ -18,40 +18,31 @@ class OpenCLHelper_EXPORT CLKernel {
     cl_int error;
 
     int nextArg;
+
+#ifdef _WIN32
+#pragma warning(disable: 4251)
+#endif
+	std::vector<cl_mem> buffers;
+
+	std::vector<int> inputArgInts;
+	std::vector<float> inputArgFloats;
+
+	std::vector<cl_mem> outputArgBuffers;
+	std::vector<void *> outputArgPointers;
+	std::vector<size_t> outputArgSizes;
+
+	template<typename T>
+	static std::string toString(T val);
+#ifdef _WIN32
+#pragma warning(default: 4251)
+#endif
+
 public:
-    template<typename T>
-    static std::string toString(T val ) {
-       std::ostringstream myostringstream;
-       myostringstream << val;
-       return myostringstream.str();
-    }
 
-    CLKernel( OpenCLHelper *openclhelper, cl_program program, cl_kernel kernel ) {
-        this->openclhelper = openclhelper;
-        nextArg = 0;
-        error = CL_SUCCESS;
-        this->program = program;
-        this->kernel = kernel;
-    }
-    CLKernel( const CLKernel &kernel ) {
-        throw std::runtime_error("can't assign CLKernel");
-    }
-    CLKernel &operator=( const CLKernel &kernel ) {
-        throw std::runtime_error("can't assign CLKernel");
-    }
-    ~CLKernel() {
-        clReleaseProgram(program);
-        clReleaseKernel(kernel);
-    }
-
-    std::vector<cl_mem> buffers;
-
-    std::vector<int> inputArgInts;
-    std::vector<float> inputArgFloats;
-
-    std::vector<cl_mem> outputArgBuffers;
-    std::vector<void *> outputArgPointers;
-    std::vector<size_t> outputArgSizes;
+	CLKernel(OpenCLHelper *openclhelper, cl_program program, cl_kernel kernel);
+	CLKernel(const CLKernel &kernel);
+	CLKernel &operator=(const CLKernel &kernel);
+	~CLKernel();
 
     CLKernel *input( CLArray *clarray1d );
     CLKernel *inout( CLArray *clarray1d );
@@ -67,140 +58,20 @@ public:
     CLKernel *in( CLWrapper *wrapper ) { return input( wrapper ); }
     CLKernel *out( CLWrapper *wrapper ) { return output( wrapper ); }
 
-    CLKernel *localFloats( int count ) {
-        error = clSetKernelArg( kernel, nextArg, count * sizeof(cl_float), 0 );
-        openclhelper->checkError( error );
-        nextArg++;
-        return this;
-    }
-    CLKernel *localInts( int count ) {
-        error = clSetKernelArg( kernel, nextArg, count * sizeof(cl_int), 0 );
-        openclhelper->checkError( error );
-        nextArg++;
-        return this;
-    }
-    CLKernel *local( int N ) {
-        return localFloats( N );
-    }
+	CLKernel *localFloats(int count);
+	CLKernel *localInts(int count);
+	CLKernel *local(int N);
 
-    template<typename T>
-    CLKernel *input( int N, const T *data ) {
-        cl_mem buffer = clCreateBuffer(*(openclhelper->context), CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(T) * N, (void *)data, &error);
-        openclhelper->checkError(error);
-        error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), &buffer);
-        openclhelper->checkError(error);
-        buffers.push_back(buffer);
-        nextArg++;
-        return this;
-    }
-    template<typename T>
-    CLKernel *in( int N, const T *data ) {
-        return input( N, data );
-    }
-    CLKernel *input( int value ) {
-        inputArgInts.push_back(value);
-        error = clSetKernelArg(kernel, nextArg, sizeof(int), &(inputArgInts[inputArgInts.size()-1]));
-        openclhelper->checkError(error);
-        nextArg++;
-        return this;
-    }
-    CLKernel *in( int value ) {
-        return input( value );
-    }
-    CLKernel *input( float value ) {
-        inputArgFloats.push_back(value);
-        error = clSetKernelArg(kernel, nextArg, sizeof(float), &(inputArgFloats[inputArgFloats.size()-1]));
-        openclhelper->checkError(error);
-        nextArg++;
-        return this;
-    }
-    CLKernel *in( float value ) {
-        return input( value );
-    }
-    template<typename T>
-    CLKernel *output( int N, T *data ) {
-        cl_mem buffer = clCreateBuffer(*(openclhelper->context), CL_MEM_WRITE_ONLY, sizeof(T) * N, 0, &error);
-        openclhelper->checkError(error);
-        error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), &buffer);
-        buffers.push_back(buffer);
-        //outputArgNums.push_back(nextArg);
-        outputArgBuffers.push_back(buffer);
-        outputArgPointers.push_back(data);
-        outputArgSizes.push_back(sizeof(T) * N );
-        nextArg++;
-        return this;
-    }
-    template<typename T>
-    CLKernel *out( int N, T *data ) {
-        return output( N, data );
-    }
-    template<typename T>
-    CLKernel *inout( int N, T *data ) {
-        cl_mem buffer = clCreateBuffer(*(openclhelper->context), CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(T) * N, (void *)data, &error);
-        openclhelper->checkError(error);
-        error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), &buffer);
-        openclhelper->checkError(error);
-        buffers.push_back(buffer);
-        outputArgBuffers.push_back(buffer);
-        outputArgPointers.push_back(data);
-        outputArgSizes.push_back(sizeof(T) * N );
-        nextArg++;
-        return this;
-    }
-    void run_1d( int global_worksize, int local_worksize ) {
-        size_t global_ws = global_worksize;
-        size_t local_ws = local_worksize;
-        run( 1, &global_ws, &local_ws );
-    }
-
-    void run(int ND, const size_t *global_ws, const size_t *local_ws ) {
-        //cout << "running kernel" << std::endl;
-        error = clEnqueueNDRangeKernel(*(openclhelper->queue), kernel, ND, NULL, global_ws, local_ws, 0, NULL, NULL);
-        switch( error ) {
-            case 0:
-                break;
-            case -4:
-                throw std::runtime_error( "Memory object allocation failure, code -4" );
-                break;
-            case -5:
-                throw std::runtime_error( "Out of resources, code -5" );
-                break;
-            case -11:
-                throw std::runtime_error( "Program build failure, code -11" );
-                break;
-            case -46:
-                throw std::runtime_error( "Invalid kernel name, code -46" );
-                break;
-            case -52:
-                throw std::runtime_error( "Invalid kernel args, code -52" );
-                break;
-            case -54:
-                throw std::runtime_error( "Invalid work group size, code -54" );
-                break;
-            default:
-                throw std::runtime_error( "Something went wrong, code " + toString( error ) );
-        }
-        openclhelper->checkError(error);
-//        error = clFinish(openclhelper->queue);
-//        openclhelper->checkError(error);
-    //}
-
-    //void retrieveresultsandcleanup() {
-        for( int i = 0; i < outputArgBuffers.size(); i++ ) {
-            clEnqueueReadBuffer(*(openclhelper->queue), outputArgBuffers[i], CL_TRUE, 0, outputArgSizes[i], outputArgPointers[i], 0, NULL, NULL);            
-        }
-//        std::cout << "done" << std::endl;
-       
-        for(int i = 0; i < buffers.size(); i++ ) {
-            clReleaseMemObject(buffers[i]);
-        }
-        buffers.clear();
-        outputArgBuffers.clear();
-        outputArgPointers.clear();
-        outputArgSizes.clear();
-        inputArgInts.clear();
-        inputArgFloats.clear();
-        nextArg = 0;
-    }
+    template<typename T> CLKernel *input(int N, const T *data);
+    template<typename T> CLKernel *in(int N, const T *data);
+	CLKernel *input(int value);
+	CLKernel *in(int value);
+	CLKernel *input(float value);
+	CLKernel *in(float value);
+    template<typename T> CLKernel *output(int N, T *data);
+    template<typename T> CLKernel *out(int N, T *data);
+    template<typename T> CLKernel *inout(int N, T *data);
+	void run_1d(int global_worksize, int local_worksize);
+	void run(int ND, const size_t *global_ws, const size_t *local_ws);
 };
 

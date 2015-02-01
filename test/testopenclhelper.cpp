@@ -17,8 +17,8 @@ TEST( testopenclhelper, main ) {
     }
     cout << "found opencl library" << endl;
 
-    OpenCLHelper cl;
-    CLKernel *kernel = cl.buildKernel("testopenclhelper.cl", "test");
+    OpenCLHelper *cl = OpenCLHelper::createForFirstGpuOtherwiseCpu();
+    CLKernel *kernel = cl->buildKernel("testopenclhelper.cl", "test");
     float in[5];
     for( int i = 0; i < 5; i++ ) {
         in[i] = i * 3;
