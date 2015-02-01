@@ -192,30 +192,56 @@ a different kernel, or you can use operator[] to read values from it.
 
 Currently, CLArray is available as 'CLArrayFloat' and 'CLArrayInt'.
 
-Pre-requisites
---------------
+## How to build
+
+### Building on linux
+
+#### Pre-requisites
 
 - OpenCL needs to be installed, which means things like:
   - in linux, you'll need a libOpenCL.so installed, and 
   - an OpenCL implementation, ie some kind of .so file, and
   - an appropriate text file at /etc/OpenCL/vendors/somename.icd , containing the full path to the Open
 CL implementation .so file
-- CMake
-- C++ compiler
-- git
+- git  (only needed to obtain the source-code)
+- cmake
+- g++
 
-How to build
-------------
+#### Procedure
 
-    git clone --recursive https://github.com/hughperkins/OpenCLHelper.git
-    cd OpenCLHelper
-    mkdir build
-    cd build
-    cmake ..
-    make
-
+```bash
+git clone --recursive https://github.com/hughperkins/OpenCLHelper.git
+cd OpenCLHelper
+mkdir build
+cd build
+cmake ..
+make
+```
 * Dont forget the `--recursive`, otherwise you will see odd errors about `clew/src/clew.c` missing!
   * If this happens, you can try `git submodule init` and then `git submodule update`.
+
+### Building on Windows
+
+#### Pre-requisites
+
+- OpenCL-enabled GPU and driver
+- git  (only needed to obtain the source-code)
+- cmake
+- Visual Studio (tested with Visual Studio 2013 Community Edition)
+
+#### Procedure
+
+* Open git bash, and run `git clone --recursive https://github.com/hughperkins/OpenCLHelper.git`
+* Open cmake:
+  * set source directory to the git-cloned directory from previous step
+  * Set build directory to a subdirectory `build-win32`, or `build-win64`, according to which platform you are building for
+  * click `configure`, choose appropriate build platform, eg visual studio 2013, or visual studio 2013 win64
+  * click `generate`
+* Open visual studio
+  * open any of the projects in the `build-win32` or `build-win64` build directory
+  * change build type from `Debug` to `Release`
+  * from `build` menu, choose `build solution`
+* after building, you will need to copy the *.cl files from the `cl` directory into the directory where you will run the tests or library from (if you can figure out a way to automate this, please send a pull request :-) )
 
 How to run self-tests
 ---------------------
