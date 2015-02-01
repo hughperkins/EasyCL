@@ -24,22 +24,26 @@ void simpleTest( OpenCLHelper *cl ) {
     delete kernel;
 }
 
-TEST( testnewinstantiations, one ) {
-    OpenCLHelper *cl = 0;
-
-    cl = OpenCLHelper::createForFirstGpu();
+TEST( testnewinstantiations, createForFirstGpu ) {
+    OpenCLHelper *cl = OpenCLHelper::createForFirstGpu();
     simpleTest( cl );
     delete cl;
+}
 
-    cl = OpenCLHelper::createForIndexedGpu(0);
+TEST( testnewinstantiations, createForIndexedGpu ) {
+    OpenCLHelper *cl = OpenCLHelper::createForIndexedGpu(0);
     simpleTest( cl );
     delete cl;
+}
 
-    cl = OpenCLHelper::createForPlatformDeviceIndexes(0, 0);
+TEST( testnewinstantiations, createForPlatformDeviceIndexes ) {
+    OpenCLHelper *cl = OpenCLHelper::createForPlatformDeviceIndexes(0, 0);
     simpleTest( cl );
     delete cl;
+}
 
-    cl = OpenCLHelper::createForFirstGpuOtherwiseCpu();
+TEST( testnewinstantiations, createForFirstGpuOtherwiseCpu ) {
+    OpenCLHelper *cl = OpenCLHelper::createForFirstGpuOtherwiseCpu();
     simpleTest( cl );
     delete cl;
 }
