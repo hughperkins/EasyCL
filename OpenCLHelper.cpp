@@ -345,13 +345,17 @@ void OpenCLHelper::finish() {
 int OpenCLHelper::getComputeUnits() {
     return (int)getDeviceInfoInt(CL_DEVICE_MAX_COMPUTE_UNITS);
 }
-
 int OpenCLHelper::getLocalMemorySize() {
     return (int)getDeviceInfoInt(CL_DEVICE_LOCAL_MEM_SIZE);
 }
-
+int OpenCLHelper::getLocalMemorySizeKB() {
+    return (int)( getDeviceInfoInt(CL_DEVICE_LOCAL_MEM_SIZE) / 1024 );
+}
 int OpenCLHelper::getMaxWorkgroupSize() {
     return (int)getDeviceInfoInt(CL_DEVICE_MAX_WORK_GROUP_SIZE);
+}
+int OpenCLHelper::getMaxAllocSizeMB() {
+    return (int)(getDeviceInfoInt(CL_DEVICE_MAX_MEM_ALLOC_SIZE ) / 1024 / 1024 );
 }
 
 std::string OpenCLHelper::errorMessage(cl_int error ) {

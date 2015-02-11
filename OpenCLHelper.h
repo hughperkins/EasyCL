@@ -85,7 +85,9 @@ public:
 
     int getComputeUnits();
     int getLocalMemorySize();
+    int getLocalMemorySizeKB();
     int getMaxWorkgroupSize();
+    int getMaxAllocSizeMB();
 
     CLArrayFloat *arrayFloat(int N );
     CLArrayInt *arrayInt(int N );

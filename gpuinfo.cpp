@@ -66,6 +66,7 @@ int main( int argc, char *argv[] ) {
             printDeviceInfoKB( "   local memory size", device, CL_DEVICE_LOCAL_MEM_SIZE );
             printDeviceInfoKB( "   global cache size", device, CL_DEVICE_GLOBAL_MEM_CACHE_SIZE );
             printDeviceInfo( "   global cacheline size", device, CL_DEVICE_GLOBAL_MEM_CACHELINE_SIZE );
+            printDeviceInfoMB( "   max memory alloc size", device, CL_DEVICE_MAX_MEM_ALLOC_SIZE );
             printDeviceInfo( "   max compute units", device, CL_DEVICE_MAX_COMPUTE_UNITS );
             printDeviceInfo( "   max workgroup size", device, CL_DEVICE_MAX_WORK_GROUP_SIZE );
             printDeviceInfo( "   max workitem dimensions", device, CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS );
@@ -79,4 +80,5 @@ int main( int argc, char *argv[] ) {
     }
     return 0;
 }
+
 
