@@ -19,6 +19,7 @@
   - [How to check my OpenCL installation/configuration?](#how-to-check-my-opencl-installationconfiguration)
   - [What if I've found a bug?](#what-if-ive-found-a-bug)
   - [What if I want a new feature?](#what-if-i-want-a-new-feature)
+  - [How does it compare with OpenCL C++ Wrapper API?](#how-does-it-compare-with-opencl-c-wrapper-api)
   - [What if I just have a question?](#what-if-i-just-have-a-question)
   - [License](#license)
 
@@ -293,6 +294,14 @@ What if I want a new feature?
 
 * Post a request as an [issue](https://github.com/hughperkins/OpenCLHelper/issues)
 * Or, fork the repository, add the feature, and send me a [pull request](https://github.com/hughperkins/OpenCLHelper/pulls)
+
+How does it compare with OpenCL C++ Wrapper API?
+------------------------------------------------
+
+The [C++ Wrapper API](https://www.khronos.org/registry/cl/specs/opencl-cplusplus-1.2.pdf) will plausibly replace OpenCLHelper sooner or later
+* the 1.2 version looks very good, eg [Quest for the smallest opencl program](http://arrayfire.com/quest-for-the-smallest-opencl-program/)
+* note that for NVidia, the highest OpenCL version typically available is 1.1, which means we might want to use [C++ Wrapper API 1.1](https://www.khronos.org/registry/cl/specs/opencl-cplusplus-1.1.pdf) for cross-platform OpenCL applications?
+* this lacks some of the great features used in [Quest for the smallest opencl program](http://arrayfire.com/quest-for-the-smallest-opencl-program/), eg `make_kernel`, which returns a functor in [C++ Wrapper API 1.2]((https://www.khronos.org/registry/cl/specs/opencl-cplusplus-1.2.pdf), but is missing in [C++ Wrapper API 1.1](https://www.khronos.org/registry/cl/specs/opencl-cplusplus-1.1.pdf)
 
 What if I just have a question?
 -------------------------------
