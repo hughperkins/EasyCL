@@ -308,6 +308,7 @@ The [C++ Wrapper API](https://www.khronos.org/registry/cl/specs/opencl-cplusplus
 #define __CL_ENABLE_EXCEPTIONS
 #include "cl-1.2.hpp"
 ```
+* the functor syntax provided by make_kernel looks pretty cool :-)
 
 What if I just have a question?
 -------------------------------
