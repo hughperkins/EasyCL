@@ -298,10 +298,16 @@ What if I want a new feature?
 How does it compare with OpenCL C++ Wrapper API?
 ------------------------------------------------
 
-The [C++ Wrapper API](https://www.khronos.org/registry/cl/specs/opencl-cplusplus-1.2.pdf) will plausibly replace OpenCLHelper sooner or later
+The [C++ Wrapper API](https://www.khronos.org/registry/cl/specs/opencl-cplusplus-1.2.pdf) might plausibly replace OpenCLHelper sooner or later.
 * the 1.2 version looks very good, eg [Quest for the smallest opencl program](http://arrayfire.com/quest-for-the-smallest-opencl-program/)
-* note that for NVidia, the highest OpenCL version typically available is 1.1, which means we might want to use [C++ Wrapper API 1.1](https://www.khronos.org/registry/cl/specs/opencl-cplusplus-1.1.pdf) for cross-platform OpenCL applications?
-* this lacks some of the great features used in [Quest for the smallest opencl program](http://arrayfire.com/quest-for-the-smallest-opencl-program/), eg `make_kernel`, which returns a functor in [C++ Wrapper API 1.2](https://www.khronos.org/registry/cl/specs/opencl-cplusplus-1.2.pdf), but is missing in [C++ Wrapper API 1.1](https://www.khronos.org/registry/cl/specs/opencl-cplusplus-1.1.pdf)
+* note that for NVidia, the highest OpenCL version typically available is 1.1, which means we might want to use [C++ Wrapper API 1.1](https://www.khronos.org/registry/cl/specs/opencl-cplusplus-1.1.pdf) for cross-platform OpenCL applications?  eg see [OpenCL 1.2 C++ Wrapper - undefined reference to clReleaseDevice](http://stackoverflow.com/questions/15855759/opencl-1-2-c-wrapper-undefined-reference-to-clreleasedevice) , although I seem to be able to compile and run against nvidia ok by doing:
+```c++
+#define CL_USE_DEPRECATED_OPENCL_1_1_APIS
+#include "CL/cl.h"
+#undef CL_VERSION_1_2
+#define __CL_ENABLE_EXCEPTIONS
+#include "cl-1.2.hpp"
+```
 
 What if I just have a question?
 -------------------------------
