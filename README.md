@@ -19,7 +19,6 @@
   - [How to check my OpenCL installation/configuration?](#how-to-check-my-opencl-installationconfiguration)
   - [What if I've found a bug?](#what-if-ive-found-a-bug)
   - [What if I want a new feature?](#what-if-i-want-a-new-feature)
-  - [How does it compare with OpenCL C++ Wrapper API?](#how-does-it-compare-with-opencl-c-wrapper-api)
   - [What if I just have a question?](#what-if-i-just-have-a-question)
   - [License](#license)
 
@@ -294,21 +293,6 @@ What if I want a new feature?
 
 * Post a request as an [issue](https://github.com/hughperkins/OpenCLHelper/issues)
 * Or, fork the repository, add the feature, and send me a [pull request](https://github.com/hughperkins/OpenCLHelper/pulls)
-
-How does it compare with OpenCL C++ Wrapper API?
-------------------------------------------------
-
-The [C++ Wrapper API](https://www.khronos.org/registry/cl/specs/opencl-cplusplus-1.2.pdf) might plausibly replace OpenCLHelper sooner or later.
-* the 1.2 version looks very good, eg [Quest for the smallest opencl program](http://arrayfire.com/quest-for-the-smallest-opencl-program/)
-* note that for NVidia, the highest OpenCL version typically available is 1.1, which means we might want to use [C++ Wrapper API 1.1](https://www.khronos.org/registry/cl/specs/opencl-cplusplus-1.1.pdf) for cross-platform OpenCL applications?  eg see [OpenCL 1.2 C++ Wrapper - undefined reference to clReleaseDevice](http://stackoverflow.com/questions/15855759/opencl-1-2-c-wrapper-undefined-reference-to-clreleasedevice) , although I seem to be able to compile and run against nvidia ok by doing:
-```c++
-#define CL_USE_DEPRECATED_OPENCL_1_1_APIS
-#include "CL/cl.h"
-#undef CL_VERSION_1_2
-#define __CL_ENABLE_EXCEPTIONS
-#include "cl-1.2.hpp"
-```
-* the functor syntax provided by make_kernel looks pretty cool :-)
 
 What if I just have a question?
 -------------------------------
