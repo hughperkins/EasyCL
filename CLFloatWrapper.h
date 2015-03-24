@@ -18,11 +18,12 @@ protected:
     float *hostarray;  // NOT owned by this object, do NOT free :-)
 public:
     CLFloatWrapper( int N, float *_hostarray, OpenCLHelper *openclhelper ) : 
-             hostarray(_hostarray),
-             CLWrapper( N, openclhelper) {
+             CLWrapper( N, openclhelper),
+             hostarray(_hostarray)
+              {
     }
     CLFloatWrapper( const CLFloatWrapper &source ) :
-        hostarray(0), CLWrapper( 0, 0 ) { // copy constructor
+        CLWrapper( 0, 0 ), hostarray(0) { // copy constructor
         throw std::runtime_error("can't assign these...");
     }
     CLFloatWrapper &operator=( const CLFloatWrapper &two ) { // assignment operator

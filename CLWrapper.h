@@ -22,7 +22,7 @@ protected:
     cl_int error;
 
 public:
-    CLWrapper( int N, OpenCLHelper *openclhelper ) : N(N), openclhelper(openclhelper), onHost(true) {
+    CLWrapper( int N, OpenCLHelper *openclhelper ) : N(N), onHost(true), openclhelper(openclhelper) {
         error = CL_SUCCESS;
         onDevice = false;
     }

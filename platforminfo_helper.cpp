@@ -26,7 +26,7 @@ string getPlatformInfoString( cl_platform_id platformId, cl_platform_info name )
     char buffer[257];
     buffer[0] = 0;
     size_t namesize;
-    cl_uint error = clGetPlatformInfo(platformId, name, 256, buffer, &namesize );
+    cl_int error = clGetPlatformInfo(platformId, name, 256, buffer, &namesize );
     if( error != CL_SUCCESS ) {
         if( error == CL_INVALID_PLATFORM ) {
             throw runtime_error("Failed to obtain platform info for platform id " + OpenCLHelper::toString( platformId ) + ": invalid platform" );

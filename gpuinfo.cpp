@@ -23,8 +23,8 @@ int main( int argc, char *argv[] ) {
 
     cl_int error = 0;   // Used to handle error codes
     cl_platform_id platform_ids[10];
-    cl_context context;
-    cl_command_queue queue;
+//    cl_context context;
+//    cl_command_queue queue;
     cl_device_id device;
 
     // Platform
@@ -35,7 +35,7 @@ int main( int argc, char *argv[] ) {
     assert (error == CL_SUCCESS);
     cout << endl;
 
-    for( int i = 0; i < num_platforms; i++ ) {
+    for( int i = 0; i < (int)num_platforms; i++ ) {
         cout << "platform index: " << i << ":" << endl;
         cl_platform_id platform_id = platform_ids[i];
         cout << "platform id: " << platform_id << endl;
@@ -57,7 +57,7 @@ int main( int argc, char *argv[] ) {
            cout << "Error getting device ids: " << error << endl;
            exit(error);
         }
-        for( int i = 0; i < num_devices; i++ ) {
+        for( int i = 0; i < (int)num_devices; i++ ) {
             device = device_ids[i];
             cout << "   device index: " << i << endl;
             cout << "   device id: " << device << endl;

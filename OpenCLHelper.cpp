@@ -113,7 +113,7 @@ OpenCLHelper *OpenCLHelper::createForPlatformDeviceIndexes(int platformIndex, in
         throw std::runtime_error("OpenCL library not found");
     }
     cl_int error;
-    int currentGpuIndex = 0;
+//    int currentGpuIndex = 0;
     cl_platform_id platform_ids[10];
     cl_uint num_platforms;
     error = clGetPlatformIDs(10, platform_ids, &num_platforms);

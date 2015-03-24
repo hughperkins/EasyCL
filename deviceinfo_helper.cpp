@@ -53,7 +53,7 @@ void printDeviceInfoString( string valuename, cl_device_id deviceId, cl_device_i
 string getDeviceInfoString( cl_device_id deviceId, cl_device_info name ) {
     char buffer[256];
     buffer[0] = 0;
-    cl_uint error = clGetDeviceInfo(deviceId, name, 256, buffer, 0);
+    cl_int error = clGetDeviceInfo(deviceId, name, 256, buffer, 0);
     if( error != CL_SUCCESS ) {
         if( error == CL_INVALID_DEVICE ) {
             throw runtime_error("Failed to obtain info for device id " + OpenCLHelper::toString( deviceId ) + ": invalid device" );
