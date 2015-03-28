@@ -378,7 +378,7 @@ void OpenCLHelper::checkError( cl_int error ) {
 }
 
 std::string OpenCLHelper::getFileContents( std::string filename ) {
-    std::ifstream t(filename);
+    std::ifstream t(filename.c_str());
     std::stringstream buffer;
     buffer << t.rdbuf();
     return buffer.str();
