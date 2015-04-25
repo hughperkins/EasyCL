@@ -8,6 +8,10 @@ if( ON_LINUX )
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 endif()
 
+if( ON_LINUX )
+    set(TEST_CLBLAS "No" CACHE BOOL "Run the clBLAS GEMM test?  clBlas should be at ../clBLAS, and built into ../clBLAS/src/build")
+endif()
+
 if (NOT CMAKE_BUILD_TYPE)
     message("Setting build type to 'Release'")
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
@@ -40,13 +44,22 @@ else()
 add_library( gtest thirdparty/gtest/gtest-all.cc )
 endif()
 
+if( TEST_CLBLAS )
+    set( CLBLAS_TEST_SOURCES test/testclblas.cpp )
+endif()
+
 add_executable( unittests test/testscalars.cpp test/testintarray.cpp test/testfloatwrapper.cpp
     test/testclarray.cpp test/testfloatwrapperconst.cpp test/testintwrapper.cpp test/test_scenario_te42kyfo.cpp
     test/testfloatarray.cpp test/testopenclhelper.cpp test/testinout.cpp test/testintwrapper_huge.cpp
     test/testlocal.cpp ../test/testdefines.cpp test/testbuildlog.cpp test/testnewinstantiations.cpp
-    test/asserts.cpp thirdparty/gtest/gtest_main.cc )
+    test/asserts.cpp thirdparty/gtest/gtest_main.cc ${CLBLAS_TEST_SOURCES} )
 target_link_libraries( unittests gtest OpenCLHelper CLEW )
 target_include_directories( unittests PRIVATE thirdparty/gtest )
+
+if( TEST_CLBLAS )
+    target_include_directories( unittests PRIVATE ../clBLAS/src )
+    target_link_libraries( unittests ${CMAKE_CURRENT_SOURCE_DIR}/../clBLAS/src/build/library/libclBLAS.so)
+endif()
 
 execute_process( COMMAND gitx --version RESULT_VARIABLE git_test ERROR_QUIET )
 if( ${git_test} EQUAL 0 )
@@ -78,4 +91,5 @@ add_custom_target(
     copy ${CMAKE_CURRENT_SOURCE_DIR}\\tests\\*.cl ${CMAKE_BINARY_DIR}
 )
 endif()
+
 
