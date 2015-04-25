@@ -82,6 +82,9 @@ public:
         error = clEnqueueReadBuffer(*(openclhelper->queue), devicearray, CL_TRUE, 0, getElementSize() * N, getHostArray(), 0, NULL, NULL);    
         openclhelper->checkError(error);
     }
+    virtual cl_mem getBuffer() { // be careful!
+        return devicearray;
+    }
     virtual void copyToDevice() {
         if(!onHost ) {
             throw std::runtime_error("copyToDevice(): not on host");
