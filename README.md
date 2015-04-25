@@ -4,6 +4,7 @@
 
 - [OpenCLHelper](#openclhelper)
   - [Example Usage](#example-usage)
+  - [Examples](#examples)
   - [API](#api)
   - [CLArray and CLWrapper objects](#clarray-and-clwrapper-objects)
   - [CLWrapper objects](#clwrapper-objects)
