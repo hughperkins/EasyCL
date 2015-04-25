@@ -85,6 +85,13 @@ You can run `gpuinfo` to get a list of platforms and devices on your system.
 
 There are some examples in the [test](test) subdirectory.
 
+Examples
+--------
+
+There are some examples in the [test](test) subdirectory.
+- create a couple of Wrapper objects, pass them into a kernel, look at the results, see method ` testfloatwrapper, main )` of [testfloatwrapper.cpp](test/testfloatwrapper.cpp)
+- (New!) to use with clBLAS, see [testclblas.cpp](test/testclblas.cpp)
+
 API
 ---
 
