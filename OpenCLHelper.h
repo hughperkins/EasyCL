@@ -34,6 +34,7 @@ class CLArrayInt;
 class CLIntWrapper;
 class CLFloatWrapper;
 class CLFloatWrapperConst;
+class CLUCharWrapper;
 
 class OpenCLHelper_EXPORT OpenCLHelper {
 public:
@@ -92,6 +93,7 @@ public:
     CLArrayFloat *arrayFloat(int N );
     CLArrayInt *arrayInt(int N );
     CLIntWrapper *wrap(int N, int *source );
+    CLUCharWrapper *wrap(int N, unsigned char *source );
     CLFloatWrapper *wrap(int N, float *source );
     CLFloatWrapperConst *wrap(int N, float const*source );
     CLKernel *buildKernel( std::string kernelfilepath, std::string kernelname );
@@ -106,6 +108,7 @@ private:
 #include "CLIntWrapper.h"
 #include "CLFloatWrapper.h"
 #include "CLFloatWrapperConst.h"
+#include "CLUCharWrapper.h"
 #include "CLWrapper.h"
 #include "CLKernel.h"
 

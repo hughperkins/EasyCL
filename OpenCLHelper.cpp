@@ -229,6 +229,10 @@ CLIntWrapper *OpenCLHelper::wrap(int N, int *source ) {
     return new CLIntWrapper( N, source, this );
 }
 
+CLUCharWrapper *OpenCLHelper::wrap(int N, unsigned char*source ) {
+    return new CLUCharWrapper( N, source, this );
+}
+
 CLFloatWrapper *OpenCLHelper::wrap(int N, float *source ) {
     return new CLFloatWrapper( N, source, this );
 }
