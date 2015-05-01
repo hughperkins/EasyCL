@@ -25,7 +25,7 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-EasyCL
+EasyCL (was OpenCLHelper)
 ============
 
 Easy to run kernels using OpenCL.
