@@ -25,10 +25,10 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-EasyCL (was OpenCLHelper)
+EasyCL 
 ============
 
-Easy to run kernels using OpenCL.
+Easy to run kernels using OpenCL.  (renamed from OpenCLHelper)
 
 - makes it easy to pass input and output arguments
 - handles much of the boilerplate
@@ -306,6 +306,12 @@ What if I just have a question?
 -------------------------------
 
 * Post as an [issue](https://github.com/hughperkins/EasyCL/issues)
+
+# Recent changes
+
+* Renamed from OpenCLHelper to EasyCL (easier to type, and remember)
+* Added getBuffer to CLWrapper, to give access to the underlying buffer, eg can use this for using with clBLAS
+* Added CLWrapper instantiation for unsigned char
 
 License
 -------
