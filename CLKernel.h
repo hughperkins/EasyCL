@@ -9,10 +9,10 @@
 #include "CLArrayInt.h"
 #include "CLArrayFloat.h"
 
-#include "OpenCLHelper_export.h"
+#include "EasyCL_export.h"
 
-class OpenCLHelper_EXPORT CLKernel {
-    OpenCLHelper *openclhelper; // NOT owned by this object, dont delete!
+class EasyCL_EXPORT CLKernel {
+    EasyCL *easycl; // NOT owned by this object, dont delete!
     cl_program program;
     cl_kernel kernel;
     cl_int error;
@@ -39,7 +39,7 @@ class OpenCLHelper_EXPORT CLKernel {
 
 public:
 
-	CLKernel(OpenCLHelper *openclhelper, cl_program program, cl_kernel kernel);
+	CLKernel(EasyCL *easycl, cl_program program, cl_kernel kernel);
 	CLKernel(const CLKernel &kernel);
 	CLKernel &operator=(const CLKernel &kernel);
 	~CLKernel();

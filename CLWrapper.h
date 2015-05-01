@@ -6,23 +6,23 @@
 
 #pragma once
 
-#include "OpenCLHelper.h"
+#include "EasyCL.h"
 
-#include "OpenCLHelper_export.h"
+#include "EasyCL_export.h"
 
-class OpenCLHelper_EXPORT CLWrapper {
+class EasyCL_EXPORT CLWrapper {
 protected:
     const int N;
     const bool onHost;
     bool onDevice;
 
     cl_mem devicearray;
-    OpenCLHelper *openclhelper; // NOT owned by this object, so dont free!
+    EasyCL *easycl; // NOT owned by this object, so dont free!
 
     cl_int error;
 
 public:
-    CLWrapper( int N, OpenCLHelper *openclhelper ) : N(N), onHost(true), openclhelper(openclhelper) {
+    CLWrapper( int N, EasyCL *easycl ) : N(N), onHost(true), easycl(easycl) {
         error = CL_SUCCESS;
         onDevice = false;
     }
@@ -69,8 +69,8 @@ public:
             throw std::runtime_error("createOnDevice(): already on device");
         }
 //        std::cout << "creating buffer on device of " << N << " elements" << std::endl;
-        devicearray = clCreateBuffer(*(openclhelper->context), CL_MEM_READ_WRITE, getElementSize() * N, 0, &error);
-        openclhelper->checkError(error);
+        devicearray = clCreateBuffer(*(easycl->context), CL_MEM_READ_WRITE, getElementSize() * N, 0, &error);
+        easycl->checkError(error);
         onDevice = true;        
 //        std::cout << "... created ok" << std::endl;
     }
@@ -78,9 +78,9 @@ public:
         if(!onDevice) {
             throw std::runtime_error("copyToHost(): not on device");
         }
-        openclhelper->finish();
-        error = clEnqueueReadBuffer(*(openclhelper->queue), devicearray, CL_TRUE, 0, getElementSize() * N, getHostArray(), 0, NULL, NULL);    
-        openclhelper->checkError(error);
+        easycl->finish();
+        error = clEnqueueReadBuffer(*(easycl->queue), devicearray, CL_TRUE, 0, getElementSize() * N, getHostArray(), 0, NULL, NULL);    
+        easycl->checkError(error);
     }
     virtual cl_mem getBuffer() { // be careful!
         return devicearray;
@@ -90,15 +90,15 @@ public:
             throw std::runtime_error("copyToDevice(): not on host");
         }
         if( onDevice ) {
-            error = clEnqueueWriteBuffer(*(openclhelper->queue), devicearray, CL_TRUE, 0, getElementSize() * N, getHostArray(), 0, NULL, NULL);    
-            openclhelper->checkError(error);               
+            error = clEnqueueWriteBuffer(*(easycl->queue), devicearray, CL_TRUE, 0, getElementSize() * N, getHostArray(), 0, NULL, NULL);    
+            easycl->checkError(error);               
         } else {
 //        std::cout << "copying buffer to device of " << N << " elements" << std::endl;
 //        for( int i = 0; i < N; i++ ) { 
 //           std::cout << "i " << i << " " << ((float*)getHostArrayConst())[i] << std::endl;
 //        }
-            devicearray = clCreateBuffer(*(openclhelper->context), CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, getElementSize() * N, (void *)getHostArrayConst(), &error);
-            openclhelper->checkError(error);
+            devicearray = clCreateBuffer(*(easycl->context), CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, getElementSize() * N, (void *)getHostArrayConst(), &error);
+            easycl->checkError(error);
             onDevice = true;
         }
     }

@@ -8,7 +8,7 @@
 #include <string>
 #include <iostream>
 
-#include "OpenCLHelper.h"
+#include "EasyCL.h"
 
 #include "deviceinfo_helper.h"
 
@@ -56,11 +56,11 @@ string getDeviceInfoString( cl_device_id deviceId, cl_device_info name ) {
     cl_int error = clGetDeviceInfo(deviceId, name, 256, buffer, 0);
     if( error != CL_SUCCESS ) {
         if( error == CL_INVALID_DEVICE ) {
-            throw runtime_error("Failed to obtain info for device id " + OpenCLHelper::toString( deviceId ) + ": invalid device" );
+            throw runtime_error("Failed to obtain info for device id " + EasyCL::toString( deviceId ) + ": invalid device" );
         } else if( error == CL_INVALID_VALUE ) {
-            throw runtime_error("Failed to obtain device info " + OpenCLHelper::toString( name ) + " for device id " + OpenCLHelper::toString( deviceId ) + ": invalid value" );
+            throw runtime_error("Failed to obtain device info " + EasyCL::toString( name ) + " for device id " + EasyCL::toString( deviceId ) + ": invalid value" );
         } else {
-            throw runtime_error("Failed to obtain device info " + OpenCLHelper::toString( name ) + " for device id " + OpenCLHelper::toString( deviceId ) + ": unknown error code: " + OpenCLHelper::toString( error ) );
+            throw runtime_error("Failed to obtain device info " + EasyCL::toString( name ) + " for device id " + EasyCL::toString( deviceId ) + ": unknown error code: " + EasyCL::toString( error ) );
         }
     }
     return string( buffer );

@@ -2,7 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [OpenCLHelper](#openclhelper)
+- [EasyCL](#easycl)
   - [Example Usage](#example-usage)
   - [Examples](#examples)
   - [API](#api)
@@ -25,7 +25,7 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-OpenCLHelper
+EasyCL
 ============
 
 Easy to run kernels using OpenCL.
@@ -45,13 +45,13 @@ Imagine we have a kernel with the following signature, in the file /tmp/foo.cl:
 
 ... then we can call it like:
 
-    #include "OpenCLHelper.h"
+    #include "EasyCL.h"
 
-    if( !OpenCLHelper::isOpenCLAvailable() ) {
+    if( !EasyCL::isOpenCLAvailable() ) {
         cout << "opencl library not found" << endl;
         exit(-1);
     }
-    OpenCLHelper *cl = OpenCLHelper::createForFirstGpu();
+    EasyCL *cl = EasyCL::createForFirstGpu();
     CLKernel *kernel = cl->buildKernel("somekernelfile.cl", "test_function");
     int in[5];
     int out[5];
@@ -67,19 +67,19 @@ Imagine we have a kernel with the following signature, in the file /tmp/foo.cl:
 More generally, you can call on 2d and 3d workgroups by using the `kernel->run` method:
 
     const size_t local_ws[1]; local_ws[0] = 512;
-    const size_t global_ws[1]; global_ws[0] = OpenCLHelper::roundUp(local_ws[0], size);
+    const size_t global_ws[1]; global_ws[0] = EasyCL::roundUp(local_ws[0], size);
     kernel->run( 1, global_ws, local_ws ); // 1 is number of dimensions, could be 2, or 3
 
 'Fluent' style is also possible, eg:
 
     kernel->in(10)->in(5)->out( 5, outarray )->run_1d( 5, 5 );
 
-If you use `OpenCLHelper::createForFirstGpu()`, OpenCLHelper will bind to the first OpenCL-enabled GPU (or accelerator), that it finds.  If you want to use a different device, or an OpenCL-enabled CPU, you can use one of the following method:
+If you use `EasyCL::createForFirstGpu()`, EasyCL will bind to the first OpenCL-enabled GPU (or accelerator), that it finds.  If you want to use a different device, or an OpenCL-enabled CPU, you can use one of the following method:
 ```c++
-OpenCLHelper::createForIndexedGpu( int gpuindex ); // looks for opencl-enabled gpus, and binds to the (gpuindex+1)th one
-OpenCLHelper::createForFirstGpuOtherwiseCpu();
-OpenCLHelper::createForPlatformDeviceIndexes( int platformIndex, int deviceIndex );
-OpenCLHelper::createForPlatformDeviceIds( int platformId, int deviceId ); // you can get these ids by running `gpuinfo` first
+EasyCL::createForIndexedGpu( int gpuindex ); // looks for opencl-enabled gpus, and binds to the (gpuindex+1)th one
+EasyCL::createForFirstGpuOtherwiseCpu();
+EasyCL::createForPlatformDeviceIndexes( int platformIndex, int deviceIndex );
+EasyCL::createForPlatformDeviceIds( int platformId, int deviceId ); // you can get these ids by running `gpuinfo` first
 ```
 
 You can run `gpuinfo` to get a list of platforms and devices on your system.
@@ -97,12 +97,12 @@ API
 ---
 
     // constructor:
-    OpenCLHelper::OpenCLHelper();
+    EasyCL::EasyCL();
     // choose different gpu index
-    void OpenCLHelper::gpu( int gpuindex );
+    void EasyCL::gpu( int gpuindex );
 
     // compile kernel
-    CLKernel *OpenCLHelper::buildKernel( string kernelfilepath, string kernelname, string options = "" );
+    CLKernel *EasyCL::buildKernel( string kernelfilepath, string kernelname, string options = "" );
 
     // Note that you pass `#define`s in through the `options` parameters, like `-D TANH`, or `-D TANH -D BIASED`
 
@@ -126,7 +126,7 @@ API
     CLKernel::run( int number_dimensions, size_t *global_ws, size_t *local_ws );
 
     // helper function:
-    OpenCLHelper::roundUp( int quantizationSize, int desiredTotalSize );
+    EasyCL::roundUp( int quantizationSize, int desiredTotalSize );
 
 CLArray and CLWrapper objects
 -----------------------------
@@ -154,14 +154,14 @@ Compared to CLArray objects, CLWrapper objects need less memory copying,
 since they wrap an existing native array, but you will need to call `copyToDevice()`
 and `copyToHost()` yourself.
 
-    if( !OpenCLHelper::isOpenCLAvailable() ) {
+    if( !EasyCL::isOpenCLAvailable() ) {
         cout << "opencl library not found" << endl;
         exit(-1);
     }
     cout << "found opencl library" << endl;
 
-    OpenCLHelper cl;
-    CLKernel *kernel = cl.buildKernel("../test/testopenclhelper.cl", "test_int");
+    EasyCL cl;
+    CLKernel *kernel = cl.buildKernel("../test/testeasycl.cl", "test_int");
     int in[5];
     for( int i = 0; i < 5; i++ ) {
         in[i] = i * 3;
@@ -189,7 +189,7 @@ CLArray objects
 Compared to CLWrapper objects, CLArray objects are more automated, but involve more 
 memory copying.
 
-    OpenCLHelper cl;
+    EasyCL cl;
 
     CLArrayFloat *one = cl.arrayFloat(10000); // create CLArray object for 10,000 floats
     (*one)[0] = 5; // give some data...
@@ -223,8 +223,8 @@ CL implementation .so file
 #### Procedure
 
 ```bash
-git clone --recursive https://github.com/hughperkins/OpenCLHelper.git
-cd OpenCLHelper
+git clone --recursive https://github.com/hughperkins/EasyCL.git
+cd EasyCL
 mkdir build
 cd build
 cmake ..
@@ -244,7 +244,7 @@ make
 
 #### Procedure
 
-* Open git bash, and run `git clone --recursive https://github.com/hughperkins/OpenCLHelper.git`
+* Open git bash, and run `git clone --recursive https://github.com/hughperkins/EasyCL.git`
 * Open cmake:
   * set source directory to the git-cloned directory from previous step
   * Set build directory to a subdirectory `build-win32`, or `build-win64`, according to which platform you are building for
@@ -275,7 +275,7 @@ make unittests
 
 * unit-tests are created using [googletest](https://code.google.com/p/googletest/wiki/V1_7_Primer)
 * you dont need to download/install googletest though, since the necessary files are included in the `thirdparty`
-directory.  Just build OpenCLHelper, and run `unittests`!
+directory.  Just build EasyCL, and run `unittests`!
 
 How to check my OpenCL installation/configuration?
 --------------------------------------------------
@@ -293,22 +293,22 @@ configuration issue.
 What if I've found a bug?
 ----------------
 
-* Ideally, create a *simple* test case, just 10-30 lines if possible, and either just paste it directly as an [issue](https://github.com/hughperkins/OpenCLHelper/issues), or else fork the repository, and ideally add it into the [test](https://github.com/hughperkins/OpenCLHelper/tree/master/test) directory, as an additional gtest-compliant test.
-* (and then, obviously post an [issue](https://github.com/hughperkins/OpenCLHelper/issues) to alert me)
+* Ideally, create a *simple* test case, just 10-30 lines if possible, and either just paste it directly as an [issue](https://github.com/hughperkins/EasyCL/issues), or else fork the repository, and ideally add it into the [test](https://github.com/hughperkins/EasyCL/tree/master/test) directory, as an additional gtest-compliant test.
+* (and then, obviously post an [issue](https://github.com/hughperkins/EasyCL/issues) to alert me)
 
 What if I want a new feature?
 -----------------------------
 
-* Post a request as an [issue](https://github.com/hughperkins/OpenCLHelper/issues)
-* Or, fork the repository, add the feature, and send me a [pull request](https://github.com/hughperkins/OpenCLHelper/pulls)
+* Post a request as an [issue](https://github.com/hughperkins/EasyCL/issues)
+* Or, fork the repository, add the feature, and send me a [pull request](https://github.com/hughperkins/EasyCL/pulls)
 
 What if I just have a question?
 -------------------------------
 
-* Post as an [issue](https://github.com/hughperkins/OpenCLHelper/issues)
+* Post as an [issue](https://github.com/hughperkins/EasyCL/issues)
 
 License
 -------
 
-OpenCLHelper is available under MPL v2 license, http://mozilla.org/MPL/2.0/
+EasyCL is available under MPL v2 license, http://mozilla.org/MPL/2.0/
 

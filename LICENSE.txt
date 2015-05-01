@@ -1,4 +1,4 @@
-OpenCLHelper's Copyright and License
+EasyCL's Copyright and License
 ====================================
 
 Copyright (c) Hugh Perkins 2013, hughperkins at gmail

@@ -8,7 +8,7 @@
 
 #include <stdexcept>
 
-#include "OpenCLHelper.h"
+#include "EasyCL.h"
 #include "CLWrapper.h"
 
 // this wraps an existing array, which we wont free, rather than creating a new array
@@ -17,8 +17,8 @@ class CLUCharWrapper : public CLWrapper {
 protected:
     unsigned char *hostarray;  // NOT owned by this object, do NOT free :-)
 public:
-    CLUCharWrapper( int N, unsigned char *_hostarray, OpenCLHelper *openclhelper ) : 
-             CLWrapper( N, openclhelper),
+    CLUCharWrapper( int N, unsigned char *_hostarray, EasyCL *easycl ) : 
+             CLWrapper( N, easycl),
              hostarray(_hostarray) 
               {
         error = CL_SUCCESS;

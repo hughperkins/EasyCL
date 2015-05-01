@@ -11,15 +11,15 @@
 
 //#include "clcc/clew.h"
 
-#include "OpenCLHelper.h"
+#include "EasyCL.h"
 #include "CLArray.h"
 
 class CLArrayFloat : public CLArray {
 protected:
     float *hostarray;
 public:
-    CLArrayFloat( int N, OpenCLHelper *openclhelper ) :
-            CLArray( N, openclhelper ) {
+    CLArrayFloat( int N, EasyCL *easycl ) :
+            CLArray( N, easycl ) {
         hostarray = 0;
     }
     CLArrayFloat( const CLArrayFloat &source ) :

@@ -22,7 +22,7 @@
 
 #include "deprecated.h"
 
-#include "OpenCLHelper_export.h"
+#include "EasyCL_export.h"
 
 #ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS
@@ -36,7 +36,7 @@ class CLFloatWrapper;
 class CLFloatWrapperConst;
 class CLUCharWrapper;
 
-class OpenCLHelper_EXPORT OpenCLHelper {
+class EasyCL_EXPORT EasyCL {
 public:
      cl_int error;  // easier than constantly declaring it in each method...
 
@@ -61,10 +61,10 @@ public:
        return myostringstream.str();
     }
 
-    OpenCLHelper(int gpu );
-    OpenCLHelper();
-    OpenCLHelper( cl_platform_id platformId, cl_device_id deviceId );
-    ~OpenCLHelper();
+    EasyCL(int gpu );
+    EasyCL();
+    EasyCL( cl_platform_id platformId, cl_device_id deviceId );
+    ~EasyCL();
 
     static bool isOpenCLAvailable();
     static int roundUp( int quantization, int minimum );
@@ -72,11 +72,11 @@ public:
     // in case someone's using that one
     static int getNextPower2( int value ); // eg pass in 320, it will return: 512
     static int getPower2Upperbound( int value );
-    static OpenCLHelper *createForFirstGpu();
-    static OpenCLHelper *createForFirstGpuOtherwiseCpu();
-    static OpenCLHelper *createForIndexedGpu( int gpu );
-    static OpenCLHelper *createForPlatformDeviceIndexes(int platformIndex, int deviceIndex);
-    static OpenCLHelper *createForPlatformDeviceIds(cl_platform_id platformId, cl_device_id deviceId);
+    static EasyCL *createForFirstGpu();
+    static EasyCL *createForFirstGpuOtherwiseCpu();
+    static EasyCL *createForIndexedGpu( int gpu );
+    static EasyCL *createForPlatformDeviceIndexes(int platformIndex, int deviceIndex);
+    static EasyCL *createForPlatformDeviceIds(cl_platform_id platformId, cl_device_id deviceId);
     static std::string errorMessage(cl_int error );
     static void checkError( cl_int error );
 

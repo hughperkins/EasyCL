@@ -24,11 +24,11 @@ IF( CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" )
   SET_TARGET_PROPERTIES( CLEW PROPERTIES COMPILE_FLAGS "-fPIC")
 ENDIF( CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" )
 
-add_library( OpenCLHelper SHARED OpenCLHelper.cpp CLKernel.cpp platforminfo_helper.cpp deviceinfo_helper.cpp )
-target_link_libraries( OpenCLHelper CLEW )
+add_library( EasyCL SHARED EasyCL.cpp CLKernel.cpp platforminfo_helper.cpp deviceinfo_helper.cpp )
+target_link_libraries( EasyCL CLEW )
 if( ON_LINUX )
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-target_link_libraries( OpenCLHelper dl )
+target_link_libraries( EasyCL dl )
 endif()
 
 add_executable( gpuinfo gpuinfo.cpp platforminfo_helper.cpp deviceinfo_helper.cpp )
@@ -50,11 +50,11 @@ endif()
 
 add_executable( unittests test/testscalars.cpp test/testintarray.cpp test/testfloatwrapper.cpp
     test/testclarray.cpp test/testfloatwrapperconst.cpp test/testintwrapper.cpp test/test_scenario_te42kyfo.cpp
-    test/testfloatarray.cpp test/testopenclhelper.cpp test/testinout.cpp test/testintwrapper_huge.cpp
+    test/testfloatarray.cpp test/testeasycl.cpp test/testinout.cpp test/testintwrapper_huge.cpp
     test/testlocal.cpp ../test/testdefines.cpp test/testbuildlog.cpp test/testnewinstantiations.cpp
     test/testucharwrapper.cpp
     test/asserts.cpp thirdparty/gtest/gtest_main.cc ${CLBLAS_TEST_SOURCES} )
-target_link_libraries( unittests gtest OpenCLHelper CLEW )
+target_link_libraries( unittests gtest EasyCL CLEW )
 target_include_directories( unittests PRIVATE thirdparty/gtest )
 
 if( TEST_CLBLAS )
@@ -75,7 +75,7 @@ add_custom_target(
     git-submodule-update
     git submodule update --init --recursive
 )
-add_dependencies( OpenCLHelper git-submodule-update )
+add_dependencies( EasyCL git-submodule-update )
 endif()
 
 if( ON_LINUX )

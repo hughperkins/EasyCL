@@ -4,21 +4,21 @@
 
 #include "gtest/gtest.h"
 
-#include "OpenCLHelper.h"
+#include "EasyCL.h"
 
 #include "test/asserts.h"
 
 using namespace std;
 
 TEST( testfloatwrapperconst, main ) {
-    if( !OpenCLHelper::isOpenCLAvailable() ) {
+    if( !EasyCL::isOpenCLAvailable() ) {
         cout << "opencl library not found" << endl;
         exit(-1);
     }
     cout << "found opencl library" << endl;
 
-    OpenCLHelper *cl = OpenCLHelper::createForFirstGpuOtherwiseCpu();
-    CLKernel *kernel = cl->buildKernel("testopenclhelper.cl", "test");
+    EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
+    CLKernel *kernel = cl->buildKernel("testeasycl.cl", "test");
     float in[5];
     for( int i = 0; i < 5; i++ ) {
         in[i] = i * 3;

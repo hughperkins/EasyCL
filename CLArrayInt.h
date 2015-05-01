@@ -11,7 +11,7 @@
 
 //#include "clcc/clew.h"
 
-#include "OpenCLHelper.h"
+#include "EasyCL.h"
 #include "CLArray.h"
 
 class CLArrayInt : public CLArray {
@@ -20,8 +20,8 @@ protected:
 
 
 public:
-    CLArrayInt( int N, OpenCLHelper *openclhelper ) :
-        CLArray( N, openclhelper ) {
+    CLArrayInt( int N, EasyCL *easycl ) :
+        CLArray( N, easycl ) {
         hostarray = 0;
     }
     CLArrayInt( const CLArrayInt &source ) :

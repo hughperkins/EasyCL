@@ -2,13 +2,13 @@
 
 #include "gtest/gtest.h"
 
-#include "OpenCLHelper.h"
+#include "EasyCL.h"
 #include "test/asserts.h"
 
 using namespace std;
 
 TEST( test_scenario_te42kyfo, main ) {
-    OpenCLHelper *cl = OpenCLHelper::createForFirstGpuOtherwiseCpu();
+    EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
     CLKernel *kernel = cl->buildKernel("test_scenario_te42kyfo.cl", "test");
     CLArrayFloat *out = cl->arrayFloat(5);
     CLArrayFloat *in = cl->arrayFloat(5);

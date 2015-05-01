@@ -8,7 +8,7 @@
 
 #include <stdexcept>
 
-#include "OpenCLHelper.h"
+#include "EasyCL.h"
 #include "CLWrapper.h"
 
 // this wraps an existing array, which we wont free, rather than creating a new array
@@ -17,8 +17,8 @@ class CLFloatWrapper : public CLWrapper {
 protected:
     float *hostarray;  // NOT owned by this object, do NOT free :-)
 public:
-    CLFloatWrapper( int N, float *_hostarray, OpenCLHelper *openclhelper ) : 
-             CLWrapper( N, openclhelper),
+    CLFloatWrapper( int N, float *_hostarray, EasyCL *easycl ) : 
+             CLWrapper( N, easycl),
              hostarray(_hostarray)
               {
     }

@@ -9,7 +9,7 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "OpenCLHelper.h"
+#include "EasyCL.h"
 
 #include "platforminfo_helper.h"
 
@@ -29,11 +29,11 @@ string getPlatformInfoString( cl_platform_id platformId, cl_platform_info name )
     cl_int error = clGetPlatformInfo(platformId, name, 256, buffer, &namesize );
     if( error != CL_SUCCESS ) {
         if( error == CL_INVALID_PLATFORM ) {
-            throw runtime_error("Failed to obtain platform info for platform id " + OpenCLHelper::toString( platformId ) + ": invalid platform" );
+            throw runtime_error("Failed to obtain platform info for platform id " + EasyCL::toString( platformId ) + ": invalid platform" );
         } else if( error == CL_INVALID_VALUE ) {
-            throw runtime_error("Failed to obtain platform info " + OpenCLHelper::toString( name ) + " for platform id " + OpenCLHelper::toString( platformId ) + ": invalid value" );
+            throw runtime_error("Failed to obtain platform info " + EasyCL::toString( name ) + " for platform id " + EasyCL::toString( platformId ) + ": invalid value" );
         } else {
-            throw runtime_error("Failed to obtain platform info " + OpenCLHelper::toString( name ) + " for platform id " + OpenCLHelper::toString( platformId ) + ": unknown error code: " + OpenCLHelper::toString( error ) );
+            throw runtime_error("Failed to obtain platform info " + EasyCL::toString( name ) + " for platform id " + EasyCL::toString( platformId ) + ": unknown error code: " + EasyCL::toString( error ) );
         }
     }
     return string( buffer );

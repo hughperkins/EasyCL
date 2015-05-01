@@ -4,7 +4,7 @@
 
 #include "gtest/gtest.h"
 
-#include "OpenCLHelper.h"
+#include "EasyCL.h"
 
 #include "test/asserts.h"
 
@@ -13,14 +13,14 @@ using namespace std;
 #define uc (unsigned char)
 
 TEST( testucharwrapper, main ) {
-    if( !OpenCLHelper::isOpenCLAvailable() ) {
+    if( !EasyCL::isOpenCLAvailable() ) {
         cout << "opencl library not found" << endl;
         exit(-1);
     }
     cout << "found opencl library" << endl;
 
-    OpenCLHelper *cl = OpenCLHelper::createForFirstGpuOtherwiseCpu();
-    CLKernel *kernel = cl->buildKernel("testopenclhelper.cl", "testuchars");
+    EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
+    CLKernel *kernel = cl->buildKernel("testeasycl.cl", "testuchars");
     unsigned char in[5];
     for( int i = 0; i < 5; i++ ) {
         in[i] = i * 3;

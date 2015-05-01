@@ -1,11 +1,11 @@
-#include "OpenCLHelper.h"
+#include "EasyCL.h"
 #include <iostream>
 using namespace std;
 
 #include "gtest/gtest.h"
 
-void simpleTest( OpenCLHelper *cl ) {
-    CLKernel *kernel = cl->buildKernel("testopenclhelper.cl", "test");
+void simpleTest( EasyCL *cl ) {
+    CLKernel *kernel = cl->buildKernel("testeasycl.cl", "test");
     float in[5];
     for( int i = 0; i < 5; i++ ) {
         in[i] = i * 3;
@@ -25,25 +25,25 @@ void simpleTest( OpenCLHelper *cl ) {
 }
 
 TEST( testnewinstantiations, createForFirstGpu ) {
-    OpenCLHelper *cl = OpenCLHelper::createForFirstGpu();
+    EasyCL *cl = EasyCL::createForFirstGpu();
     simpleTest( cl );
     delete cl;
 }
 
 TEST( testnewinstantiations, createForIndexedGpu ) {
-    OpenCLHelper *cl = OpenCLHelper::createForIndexedGpu(0);
+    EasyCL *cl = EasyCL::createForIndexedGpu(0);
     simpleTest( cl );
     delete cl;
 }
 
 TEST( testnewinstantiations, createForPlatformDeviceIndexes ) {
-    OpenCLHelper *cl = OpenCLHelper::createForPlatformDeviceIndexes(0, 0);
+    EasyCL *cl = EasyCL::createForPlatformDeviceIndexes(0, 0);
     simpleTest( cl );
     delete cl;
 }
 
 TEST( testnewinstantiations, createForFirstGpuOtherwiseCpu ) {
-    OpenCLHelper *cl = OpenCLHelper::createForFirstGpuOtherwiseCpu();
+    EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
     simpleTest( cl );
     delete cl;
 }

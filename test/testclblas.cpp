@@ -1,7 +1,7 @@
 #include "clew.h"
 #include <iostream>
 #include <clBLAS.h>
-#include "OpenCLHelper.h"
+#include "EasyCL.h"
 
 #include "gtest/gtest.h"
 
@@ -10,18 +10,18 @@
 using namespace std;
 
 TEST( testclblas, test_gemm ) {
-    if( !OpenCLHelper::isOpenCLAvailable() ) {
+    if( !EasyCL::isOpenCLAvailable() ) {
         throw runtime_error( "opencl library not found" );
     }
     cout << "found opencl library" << endl;
-    OpenCLHelper *cl = OpenCLHelper::createForFirstGpuOtherwiseCpu();
+    EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
 
     cl_int err;
 
     err = clblasSetup();
     if (err != CL_SUCCESS) {
         delete cl;
-        throw runtime_error("clblasSetup() failed with " + OpenCLHelper::toString( err ) );
+        throw runtime_error("clblasSetup() failed with " + EasyCL::toString( err ) );
     }
 
     float A[] = {
@@ -61,7 +61,7 @@ TEST( testclblas, test_gemm ) {
                          1, cl->queue, 0, NULL, &event);
     if (err != CL_SUCCESS) {
         delete cl;
-        throw runtime_error("clblasSgemmEx() failed with " + OpenCLHelper::toString( err ) );
+        throw runtime_error("clblasSgemmEx() failed with " + EasyCL::toString( err ) );
 //        return 1;
     }
     else {

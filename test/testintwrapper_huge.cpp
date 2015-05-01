@@ -4,7 +4,7 @@
 
 #include "gtest/gtest.h"
 
-#include "OpenCLHelper.h"
+#include "EasyCL.h"
 
 //#include "unistd.h"
 
@@ -14,8 +14,8 @@
 using namespace std;
 
 TEST( SLOW_testintwrapper_huge, testreadnonwrapper ) {
-    OpenCLHelper *cl = OpenCLHelper::createForFirstGpuOtherwiseCpu();
-    CLKernel *kernel = cl->buildKernel("testopenclhelper.cl", "test_read");
+    EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
+    CLKernel *kernel = cl->buildKernel("testeasycl.cl", "test_read");
 //    const int N = 4500000;
 //    const int N = (4500000/512)*512;
     int N = 100000;
@@ -45,8 +45,8 @@ TEST( SLOW_testintwrapper_huge, testreadnonwrapper ) {
 
 TEST( SLOW_testintwrapper_huge, testread ) {
     Timer timer;
-    OpenCLHelper *cl = OpenCLHelper::createForFirstGpuOtherwiseCpu();
-    CLKernel *kernel = cl->buildKernel("testopenclhelper.cl", "test_read");
+    EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
+    CLKernel *kernel = cl->buildKernel("testeasycl.cl", "test_read");
 //    const int N = 4500000;
 //    const int N = (4500000/512)*512;
     int N = 100000;
@@ -77,8 +77,8 @@ TEST( SLOW_testintwrapper_huge, testread ) {
 
 TEST( SLOW_testintwrapper_huge, testreadwrite ) {
 
-    OpenCLHelper *cl = OpenCLHelper::createForFirstGpuOtherwiseCpu();
-    CLKernel *kernel = cl->buildKernel("testopenclhelper.cl", "test_stress");
+    EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
+    CLKernel *kernel = cl->buildKernel("testeasycl.cl", "test_stress");
     const int N = 1000000;
     int *in = new int[N];
     for( int i = 0; i < N; i++ ) {

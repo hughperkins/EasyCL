@@ -4,19 +4,19 @@ using namespace std;
 
 #include "gtest/gtest.h"
 
-#include "OpenCLHelper.h"
+#include "EasyCL.h"
 #include "CLKernel.h"
 
 #include "test/asserts.h"
 
 TEST( testinout, main ) {
-    if( !OpenCLHelper::isOpenCLAvailable() ) {
+    if( !EasyCL::isOpenCLAvailable() ) {
         cout << "opencl library not found" << endl;
         exit(-1);
     }
     cout << "found opencl library" << endl;
 
-    OpenCLHelper *cl = OpenCLHelper::createForFirstGpuOtherwiseCpu();
+    EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
     CLKernel *kernel = cl->buildKernel("testinout.cl", "test");
     float inout[5];
     for( int i = 0; i < 5; i++ ) {

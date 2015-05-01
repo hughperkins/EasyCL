@@ -1,4 +1,4 @@
-#include "OpenCLHelper.h"
+#include "EasyCL.h"
 #include <iostream>
 using namespace std;
 
@@ -7,7 +7,7 @@ using namespace std;
 #include "Timer.h"
 
 TEST( testlocal, globalreduce ) {
-    OpenCLHelper *cl = OpenCLHelper::createForFirstGpuOtherwiseCpu();
+    EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
     CLKernel *kernel = cl->buildKernel("testlocal.cl", "reduceGlobal" );
     int workgroupSize = min( 512, cl->getMaxWorkgroupSize() );
     float *myarray = new float[workgroupSize];
@@ -30,7 +30,7 @@ TEST( testlocal, globalreduce ) {
 }
 
 TEST( testlocal, localreduce ) {
-    OpenCLHelper *cl = OpenCLHelper::createForFirstGpuOtherwiseCpu();
+    EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
     CLKernel *kernel = cl->buildKernel("testlocal.cl", "reduceViaScratch" );
     int workgroupSize = min( 512, cl->getMaxWorkgroupSize() );
     float *myarray = new float[workgroupSize];
@@ -53,7 +53,7 @@ TEST( testlocal, localreduce ) {
 }
 
 TEST( testlocal, reduceviascratch_multipleworkgroups ) {
-    OpenCLHelper *cl = OpenCLHelper::createForFirstGpuOtherwiseCpu();
+    EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
     CLKernel *kernel = cl->buildKernel("testlocal.cl", "reduceViaScratch_multipleworkgroups" );
     int workgroupSize = min( 512, cl->getMaxWorkgroupSize() );
     const int numWorkgroups = workgroupSize;
@@ -97,7 +97,7 @@ TEST( testlocal, reduceviascratch_multipleworkgroups ) {
 }
 
 TEST( testlocal, reduceviascratch_multipleworkgroups_ints ) {
-    OpenCLHelper *cl = OpenCLHelper::createForFirstGpuOtherwiseCpu();
+    EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
     CLKernel *kernel = cl->buildKernel("testlocal.cl", "reduceViaScratch_multipleworkgroups_ints" );
     int workgroupSize = min( 512, cl->getMaxWorkgroupSize() );
     const int numWorkgroups = workgroupSize;
@@ -152,7 +152,7 @@ TEST( testlocal, reduceviascratch_multipleworkgroups_ints ) {
 }
 
 TEST( testlocal, reduce_multipleworkgroups_ints_noscratch ) {
-    OpenCLHelper *cl = OpenCLHelper::createForFirstGpuOtherwiseCpu();
+    EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
     CLKernel *kernel = cl->buildKernel("testlocal.cl", "reduce_multipleworkgroups_ints_noscratch" );
     int workgroupSize = min( 512, cl->getMaxWorkgroupSize() );
     const int numWorkgroups = workgroupSize;
@@ -205,7 +205,7 @@ TEST( testlocal, reduce_multipleworkgroups_ints_noscratch ) {
 }
 
 TEST( SLOW_testlocal, reduce_noscratch_multipleworkgroups_ints_3levels ) {
-    OpenCLHelper *cl = OpenCLHelper::createForFirstGpuOtherwiseCpu();
+    EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
     CLKernel *kernel = cl->buildKernel("testlocal.cl", "reduce_multipleworkgroups_ints_noscratch" );
     int workgroupSize = min( 512, cl->getMaxWorkgroupSize() );
     const int numWorkgroups = workgroupSize;
@@ -268,7 +268,7 @@ TEST( SLOW_testlocal, reduce_noscratch_multipleworkgroups_ints_3levels ) {
 }
 
 TEST( SLOW_testlocal, reduceviascratch_multipleworkgroups_ints_3levels ) {
-    OpenCLHelper *cl = OpenCLHelper::createForFirstGpuOtherwiseCpu();
+    EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
     CLKernel *kernel = cl->buildKernel("testlocal.cl", "reduceViaScratch_multipleworkgroups_ints" );
     int workgroupSize = min( 512, cl->getMaxWorkgroupSize() );
     const int numWorkgroups = workgroupSize;
@@ -334,7 +334,7 @@ TEST( SLOW_testlocal, reduceviascratch_multipleworkgroups_ints_3levels ) {
 }
 
 TEST( SLOW_testlocal, selfdot_3levels_withscratch ) {
-    OpenCLHelper *cl = OpenCLHelper::createForFirstGpuOtherwiseCpu();
+    EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
     CLKernel *kernel = cl->buildKernel("testlocal.cl", "selfdot_ints_withscratch" );
     int workgroupSize = min( 512, cl->getMaxWorkgroupSize() );
     const int numWorkgroups = workgroupSize;
@@ -388,7 +388,7 @@ TEST( SLOW_testlocal, selfdot_3levels_withscratch ) {
 }
 
 TEST( SLOW_testlocal, selfdot_3levels_withoutscratch ) {
-    OpenCLHelper *cl = OpenCLHelper::createForFirstGpuOtherwiseCpu();
+    EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
     CLKernel *kernel = cl->buildKernel("testlocal.cl", "selfdot_ints_withoutscratch" );
     int workgroupSize = min( 512, cl->getMaxWorkgroupSize() );
     const int numWorkgroups = workgroupSize;

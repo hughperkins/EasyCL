@@ -1,4 +1,4 @@
-#include "OpenCLHelper.h"
+#include "EasyCL.h"
 
 #include "gtest/gtest.h"
 
@@ -7,7 +7,7 @@
 using namespace std;
 
 TEST(testbuildlog, main ) {
-    OpenCLHelper *cl = OpenCLHelper::createForFirstGpuOtherwiseCpu();
+    EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
     try {
         cl->buildKernel( "testbuildlog.cl", "foo" );
     } catch( std::runtime_error err ) {

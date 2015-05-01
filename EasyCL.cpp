@@ -8,7 +8,7 @@
 #include <stdexcept>
 using namespace std;
 
-#include "OpenCLHelper.h"
+#include "EasyCL.h"
 
 #include "CLArrayFloat.h"
 #include "CLArrayInt.h"
@@ -17,15 +17,15 @@ using namespace std;
 #include "CLWrapper.h"
 #include "CLKernel.h"
 
-OpenCLHelper::OpenCLHelper(int gpu ) {
+EasyCL::EasyCL(int gpu ) {
     init(gpu);
 }
 
-OpenCLHelper::OpenCLHelper() {
+EasyCL::EasyCL() {
      init(0);
 }
 
-OpenCLHelper::OpenCLHelper( cl_platform_id platform_id, cl_device_id device ) {
+EasyCL::EasyCL( cl_platform_id platform_id, cl_device_id device ) {
     queue = 0;
     context = 0;
 
@@ -54,11 +54,11 @@ OpenCLHelper::OpenCLHelper( cl_platform_id platform_id, cl_device_id device ) {
     }
 }
 
-OpenCLHelper *OpenCLHelper::createForFirstGpu() {
+EasyCL *EasyCL::createForFirstGpu() {
     return createForIndexedGpu( 0 );
 }
 
-OpenCLHelper *OpenCLHelper::createForFirstGpuOtherwiseCpu() {
+EasyCL *EasyCL::createForFirstGpuOtherwiseCpu() {
     try {
         return createForIndexedGpu( 0 );
     } catch( std::runtime_error error ) {
@@ -68,7 +68,7 @@ OpenCLHelper *OpenCLHelper::createForFirstGpuOtherwiseCpu() {
     return createForPlatformDeviceIndexes( 0, 0 );
 }
 
-OpenCLHelper *OpenCLHelper::createForIndexedGpu( int gpu ) {
+EasyCL *EasyCL::createForIndexedGpu( int gpu ) {
     bool clpresent = 0 == clewInit();
     if( !clpresent ) {
         throw std::runtime_error("OpenCL library not found");
@@ -95,7 +95,7 @@ OpenCLHelper *OpenCLHelper::createForIndexedGpu( int gpu ) {
 //           throw std::runtime_error( "Error getting device ids for platform " + toString( platform ) + ": " + errorMessage(error) );
         }
         if( ( gpu - currentGpuIndex ) < (int)num_devices ) {
-            return new OpenCLHelper( platform_id, device_ids[( gpu - currentGpuIndex )] );
+            return new EasyCL( platform_id, device_ids[( gpu - currentGpuIndex )] );
         } else {
             currentGpuIndex += num_devices;
         }
@@ -107,7 +107,7 @@ OpenCLHelper *OpenCLHelper::createForIndexedGpu( int gpu ) {
     }
 }
 
-OpenCLHelper *OpenCLHelper::createForPlatformDeviceIndexes(int platformIndex, int deviceIndex) {
+EasyCL *EasyCL::createForPlatformDeviceIndexes(int platformIndex, int deviceIndex) {
     bool clpresent = 0 == clewInit();
     if( !clpresent ) {
         throw std::runtime_error("OpenCL library not found");
@@ -139,14 +139,14 @@ OpenCLHelper *OpenCLHelper::createForPlatformDeviceIndexes(int platformIndex, in
     if( deviceIndex >= (int)num_devices ) {
        throw std::runtime_error( "Error: device index " + toString(deviceIndex) + " goes beyond the available devices on platform index " + toString( platformIndex ) + ", which has " + toString( num_devices ) + " devices" );
     }
-    return new OpenCLHelper( platform_id, device_ids[deviceIndex] );
+    return new EasyCL( platform_id, device_ids[deviceIndex] );
 }
 
-OpenCLHelper *OpenCLHelper::createForPlatformDeviceIds(cl_platform_id platformId, cl_device_id deviceId) {
-    return new OpenCLHelper( platformId, deviceId );
+EasyCL *EasyCL::createForPlatformDeviceIds(cl_platform_id platformId, cl_device_id deviceId) {
+    return new EasyCL( platformId, deviceId );
 }
 
-void OpenCLHelper::init(int gpuIndex ) {
+void EasyCL::init(int gpuIndex ) {
     bool clpresent = 0 == clewInit();
     if( !clpresent ) {
         throw std::runtime_error("OpenCL library not found");
@@ -203,7 +203,7 @@ void OpenCLHelper::init(int gpuIndex ) {
     }
 }
 
-OpenCLHelper::~OpenCLHelper() {
+EasyCL::~EasyCL() {
 //        clReleaseProgram(program);
     if( queue != 0 ) {
 //        cout << "releasing OpenCL command queue" << endl;
@@ -217,41 +217,41 @@ OpenCLHelper::~OpenCLHelper() {
     }
 }
 
-CLArrayFloat *OpenCLHelper::arrayFloat(int N ) {
+CLArrayFloat *EasyCL::arrayFloat(int N ) {
     return new CLArrayFloat( N, this );
 }
 
-CLArrayInt *OpenCLHelper::arrayInt(int N ) {
+CLArrayInt *EasyCL::arrayInt(int N ) {
     return new CLArrayInt( N, this );
 }
 
-CLIntWrapper *OpenCLHelper::wrap(int N, int *source ) {
+CLIntWrapper *EasyCL::wrap(int N, int *source ) {
     return new CLIntWrapper( N, source, this );
 }
 
-CLUCharWrapper *OpenCLHelper::wrap(int N, unsigned char*source ) {
+CLUCharWrapper *EasyCL::wrap(int N, unsigned char*source ) {
     return new CLUCharWrapper( N, source, this );
 }
 
-CLFloatWrapper *OpenCLHelper::wrap(int N, float *source ) {
+CLFloatWrapper *EasyCL::wrap(int N, float *source ) {
     return new CLFloatWrapper( N, source, this );
 }
 
-CLFloatWrapperConst *OpenCLHelper::wrap(int N, float const*source ) {
+CLFloatWrapperConst *EasyCL::wrap(int N, float const*source ) {
     return new CLFloatWrapperConst( N, source, this );
 }
 
-CLKernel *OpenCLHelper::buildKernel( string kernelfilepath, string kernelname ) {
+CLKernel *EasyCL::buildKernel( string kernelfilepath, string kernelname ) {
     return buildKernel( kernelfilepath, kernelname, "" );
 }
 
-CLKernel *OpenCLHelper::buildKernel( string kernelfilepath, string kernelname, string options ) {
+CLKernel *EasyCL::buildKernel( string kernelfilepath, string kernelname, string options ) {
     std::string path = kernelfilepath.c_str();
     std::string source = getFileContents(path);
     return buildKernelFromString( source, kernelname, options, kernelfilepath );
 }
 
-CLKernel *OpenCLHelper::buildKernelFromString( string source, string kernelname, string options, string sourcefilename ) {
+CLKernel *EasyCL::buildKernelFromString( string source, string kernelname, string options, string sourcefilename ) {
     size_t src_size = 0;
     const char *source_char = source.c_str();
     src_size = strlen( source_char );
@@ -295,11 +295,11 @@ CLKernel *OpenCLHelper::buildKernelFromString( string source, string kernelname,
     return new CLKernel(this, program, kernel);
 }
 
-bool OpenCLHelper::isOpenCLAvailable() {
+bool EasyCL::isOpenCLAvailable() {
     return 0 == clewInit();
 }
 
-int OpenCLHelper::getPower2Upperbound( int value ) {
+int EasyCL::getPower2Upperbound( int value ) {
     int upperbound = 1;
     while( upperbound < value ) {
         upperbound <<= 1;
@@ -307,7 +307,7 @@ int OpenCLHelper::getPower2Upperbound( int value ) {
     return upperbound;
 }
 
-int OpenCLHelper::roundUp( int quantization, int minimum ) {
+int EasyCL::roundUp( int quantization, int minimum ) {
     int size = ( minimum / quantization) * quantization;
     if( size < minimum ) {
         size += quantization;
@@ -317,11 +317,11 @@ int OpenCLHelper::roundUp( int quantization, int minimum ) {
 
 // accidentally created 2 funcftions that do the same thing :-P  but wont remove either,
 // in case someone's using that one
-int OpenCLHelper::getNextPower2( int value ){ 
+int EasyCL::getNextPower2( int value ){ 
     return getPower2Upperbound( value ); 
 } // eg pass in 320, it will return: 512
 
-void OpenCLHelper::gpu( int gpuIndex ) {
+void EasyCL::gpu( int gpuIndex ) {
     if( queue != 0 ) {
         clReleaseCommandQueue(*queue);
         delete queue;
@@ -334,7 +334,7 @@ void OpenCLHelper::gpu( int gpuIndex ) {
     init( gpuIndex );
 }
 
-void OpenCLHelper::finish() {
+void EasyCL::finish() {
     error = clFinish( *queue );
     switch( error ) {
         case CL_SUCCESS:
@@ -346,27 +346,27 @@ void OpenCLHelper::finish() {
     }
 }
 
-int OpenCLHelper::getComputeUnits() {
+int EasyCL::getComputeUnits() {
     return (int)getDeviceInfoInt(CL_DEVICE_MAX_COMPUTE_UNITS);
 }
-int OpenCLHelper::getLocalMemorySize() {
+int EasyCL::getLocalMemorySize() {
     return (int)getDeviceInfoInt(CL_DEVICE_LOCAL_MEM_SIZE);
 }
-int OpenCLHelper::getLocalMemorySizeKB() {
+int EasyCL::getLocalMemorySizeKB() {
     return (int)( getDeviceInfoInt(CL_DEVICE_LOCAL_MEM_SIZE) / 1024 );
 }
-int OpenCLHelper::getMaxWorkgroupSize() {
+int EasyCL::getMaxWorkgroupSize() {
     return (int)getDeviceInfoInt(CL_DEVICE_MAX_WORK_GROUP_SIZE);
 }
-int OpenCLHelper::getMaxAllocSizeMB() {
+int EasyCL::getMaxAllocSizeMB() {
     return (int)(getDeviceInfoInt(CL_DEVICE_MAX_MEM_ALLOC_SIZE ) / 1024 / 1024 );
 }
 
-std::string OpenCLHelper::errorMessage(cl_int error ) {
+std::string EasyCL::errorMessage(cl_int error ) {
     return toString(error);
 }
 
-void OpenCLHelper::checkError( cl_int error ) {
+void EasyCL::checkError( cl_int error ) {
     if( error != CL_SUCCESS ) {
         std::string message = toString(error);
         switch( error ) {
@@ -381,14 +381,14 @@ void OpenCLHelper::checkError( cl_int error ) {
     }
 }
 
-std::string OpenCLHelper::getFileContents( std::string filename ) {
+std::string EasyCL::getFileContents( std::string filename ) {
     std::ifstream t(filename.c_str());
     std::stringstream buffer;
     buffer << t.rdbuf();
     return buffer.str();
 }
 
-long OpenCLHelper::getDeviceInfoInt( cl_device_info name ) {
+long EasyCL::getDeviceInfoInt( cl_device_info name ) {
     cl_ulong value = 0;
     clGetDeviceInfo(device, name, sizeof(cl_ulong), &value, 0);
     return static_cast<long>( value );

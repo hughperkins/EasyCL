@@ -2,12 +2,12 @@
 
 #include "gtest/gtest.h"
 
-#include "OpenCLHelper.h"
+#include "EasyCL.h"
 
 using namespace std;
 
 TEST( testdefines, simple ) {
-    OpenCLHelper *cl = OpenCLHelper::createForFirstGpuOtherwiseCpu();
+    EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
     CLKernel *kernel = cl->buildKernel("testdefines.cl", "testDefines", 
         "-D DOUBLE -D SOME_VALUE=5" );
     float out[32];
