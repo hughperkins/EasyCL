@@ -309,6 +309,7 @@ What if I just have a question?
 
 # Recent changes
 
+* Added `getCl()` to `CLWrapper` types
 * Renamed from OpenCLHelper to EasyCL (easier to type, and remember)
 * Added getBuffer to CLWrapper, to give access to the underlying buffer, eg can use this for using with clBLAS
 * Added CLWrapper instantiation for unsigned char
