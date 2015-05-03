@@ -394,4 +394,18 @@ long EasyCL::getDeviceInfoInt( cl_device_info name ) {
     return static_cast<long>( value );
 }
 
+// note that storing same name twice is an error, for now
+// you can use name-mangling, or request I add a parameter 'bool overwrite'
+void EasyCL::storeKernel( std::string name, CLKernel *kernel ) {
+    if( kernelByName.count( name ) != 0 ) {
+        throw runtime_error( "error: kernel for " + name + " already stored." );
+    }
+    kernelByName[ name ] = kernel;
+}
+CLKernel *EasyCL::getKernel( std::string name ) {
+    return kernelByName[ name ];
+}
+bool EasyCL::kernelExists( std::string name ) {
+    return kernelByName.count( name ) != 0;
+}
 

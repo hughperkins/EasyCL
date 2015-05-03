@@ -15,6 +15,7 @@
 #include <sstream>
 #include <fstream>
 #include <stdexcept>
+#include <map>
 
 #include "clew.h"
 #include "deviceinfo_helper.h"
@@ -40,19 +41,11 @@ class EasyCL_EXPORT EasyCL {
 public:
      cl_int error;  // easier than constantly declaring it in each method...
 
-//    cl_device_id *device_ids;
-
-//    cl_uint num_platforms;
-//    cl_uint num_devices;
-
     cl_platform_id platform_id;
     cl_device_id device;
 
     cl_context *context;
     cl_command_queue *queue;
-//    cl_program *program;
-
-//    int gpuIndex;
 
     template<typename T>
     static std::string toString(T val ) {
@@ -100,7 +93,16 @@ public:
     CLKernel *buildKernel( std::string kernelfilepath, std::string kernelname, std::string options );
     CLKernel *buildKernelFromString( std::string source, std::string kernelname, std::string options, std::string sourcefilename = "" );
 
+    // simple associate-array of kernels, specific to each EasyCL object
+    // so we can cache them easily, if we want
+    // good to make the cache per-connection, ie per-EasyCL object
+    // so here is not a bad place to put this?
+    void storeKernel( std::string name, CLKernel *kernel ); // throws exception if name already assigned
+    CLKernel *getKernel( std::string name );  // throw exception if name doesnt exist
+    bool kernelExists( std::string name );
 private:
+    std::map< std::string, CLKernel * >kernelByName;
+
     static std::string getFileContents( std::string filename );
     long getDeviceInfoInt( cl_device_info name );
 };

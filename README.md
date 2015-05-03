@@ -309,8 +309,9 @@ What if I just have a question?
 
 # Recent changes
 
-* Added `getCl()` to `CLWrapper` types
-* Renamed from OpenCLHelper to EasyCL (easier to type, and remember)
+* 2015 May 3: Added kernel store methods: `storeKernel( string name, CLKernel *kernel )`, `getKernel( string name )`, `kernelExists( string name )`, to facilitate per-connection kernel caching
+* 2015 May 3: Added `getCl()` to `CLWrapper` types
+* 2015 May 1:Renamed from OpenCLHelper to EasyCL (easier to type, and remember)
 * Added getBuffer to CLWrapper, to give access to the underlying buffer, eg can use this for using with clBLAS
 * Added CLWrapper instantiation for unsigned char
 
