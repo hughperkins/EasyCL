@@ -205,6 +205,20 @@ a different kernel, or you can use operator[] to read values from it.
 
 Currently, CLArray is available as 'CLArrayFloat' and 'CLArrayInt'.
 
+# Kernel store
+
+You can store kernels in the store, under a unique name each, to facilitate kernel caching
+```c++
+// store:
+cl->storeKernel( "mykernelname", somekernel ); // name must be not used yet
+
+// check exists:
+cl->kernelExists( "mykernelname" );
+
+// retrieve:
+CLKernel *kernel = cl->getKernel( "mykernelname" );
+```
+
 ## How to build
 
 ### Building on linux
