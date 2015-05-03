@@ -101,7 +101,15 @@ public:
     CLKernel *getKernel( std::string name );  // throw exception if name doesnt exist
     bool kernelExists( std::string name );
 private:
+// remove the warnings about dll-interface for kernelByName, which we 
+// can safely ignore, since kernelByName is private
+#ifdef _WIN32
+#pragma warning( disable: 4251 )
+#endif
     std::map< std::string, CLKernel * >kernelByName;
+#ifdef _WIN32
+#pragma warning( default: 4251 )
+#endif
 
     static std::string getFileContents( std::string filename );
     long getDeviceInfoInt( cl_device_info name );
