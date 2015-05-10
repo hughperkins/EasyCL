@@ -1,4 +1,4 @@
-// Copyright Hugh Perkins 2013 hughperkins at gmail
+// Copyright Hugh Perkins 2013, 2014, 2015 hughperkins at gmail
 //
 // This Source Code Form is subject to the terms of the Mozilla Public License, 
 // v. 2.0. If a copy of the MPL was not distributed with this file, You can 
@@ -105,6 +105,7 @@ CLKernel *CLKernel::inout( CLWrapper *wrapper ) {
     error = clSetKernelArg( kernel, nextArg, sizeof(cl_mem), devicearray );
     easycl->checkError(error);
     nextArg++;
+    wrappersToDirty.push_back( wrapper );
     return this;
 }
 
@@ -116,6 +117,7 @@ CLKernel *CLKernel::output( CLWrapper *wrapper ) {
     error = clSetKernelArg( kernel, nextArg, sizeof(cl_mem), (wrapper->getDeviceArray()) );
     easycl->checkError(error);
     nextArg++;
+    wrappersToDirty.push_back(wrapper);
     return this;      
 }
 
@@ -245,12 +247,17 @@ void CLKernel::run(int ND, const size_t *global_ws, const size_t *local_ws) {
 	for (int i = 0; i < (int)buffers.size(); i++) {
 		clReleaseMemObject(buffers[i]);
 	}
+    // mark wrappers dirty:
+    for( int i = 0; i < (int)wrappersToDirty.size(); i++ ) {
+        wrappersToDirty[i]->markDeviceDirty();
+    }
 	buffers.clear();
 	outputArgBuffers.clear();
 	outputArgPointers.clear();
 	outputArgSizes.clear();
 	inputArgInts.clear();
 	inputArgFloats.clear();
+    wrappersToDirty.clear();
 	nextArg = 0;
 }
 

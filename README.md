@@ -219,6 +219,14 @@ cl->kernelExists( "mykernelname" );
 CLKernel *kernel = cl->getKernel( "mykernelname" );
 ```
 
+# device dirty flag
+
+For CLWrapper objects, if the wrapper is passed to a kernel via `out` or `inout`, and then that kernel is run, then `isDeviceDirty()` will return true, until `->copyToHost()` is called.  So, you can use this to determine whether you need to run `->copyToHost()` prior to reading the host-side array.
+
+`isdevicedirty` is initially `false`, is reset to `false` by `->copyToHost()`, and is only set to true by passing it to a kernel, and running that kernel.  Simply passing it to a kernel doesnt set the flag, until the kernel is actually run.
+
+This is a new feature, as of May 15 2015, and might have some bugs prior to May 31 2015 (ie, about 2 weeks, long enough for me to find any bugs).
+
 ## How to build
 
 ### Building on linux
@@ -323,6 +331,7 @@ What if I just have a question?
 
 # Recent changes
 
+* 2015 May 10: Added CLWrapper.devicedirty flag, which is set whenever the wrapper is passed to a kernel via `out` or `inout`, and that kernel is run
 * 2015 May 3: Added kernel store methods: `storeKernel( string name, CLKernel *kernel )`, `getKernel( string name )`, `kernelExists( string name )`, to facilitate per-connection kernel caching
 * 2015 May 3: Added `getCl()` to `CLWrapper` types
 * 2015 May 1:Renamed from OpenCLHelper to EasyCL (easier to type, and remember)

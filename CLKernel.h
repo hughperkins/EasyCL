@@ -1,4 +1,4 @@
-// Copyright Hugh Perkins 2013 hughperkins at gmail
+// Copyright Hugh Perkins 2013, 2014, 2015 hughperkins at gmail
 //
 // This Source Code Form is subject to the terms of the Mozilla Public License, 
 // v. 2.0. If a copy of the MPL was not distributed with this file, You can 
@@ -31,6 +31,12 @@ class EasyCL_EXPORT CLKernel {
 	std::vector<void *> outputArgPointers;
 	std::vector<size_t> outputArgSizes;
 
+    std::vector< CLWrapper * > wrappersToDirty; // we will mark these dirty
+                                                // on 'run'
+                                                // only wrappers passed as `out` or
+                                                // or `inout` will be marked dirty
+                                                // on run
+
 	template<typename T>
 	static std::string toString(T val);
 #ifdef _WIN32
@@ -48,6 +54,7 @@ public:
     CLKernel *inout( CLArray *clarray1d );
     CLKernel *output( CLArray *clarray1d );
 
+    // synonyms, in case you prefer `in` instead of `input`:
     CLKernel *in( CLArray *clarray1d ) { return input( clarray1d ); }
     CLKernel *out( CLArray *clarray1d ) { return output( clarray1d ); }
 
@@ -55,6 +62,7 @@ public:
     CLKernel *output( CLWrapper *wrapper );
     CLKernel *inout( CLWrapper *wrapper );
 
+    // synonyms, in case you prefer `in` instead of `input`:
     CLKernel *in( CLWrapper *wrapper ) { return input( wrapper ); }
     CLKernel *out( CLWrapper *wrapper ) { return output( wrapper ); }
 
