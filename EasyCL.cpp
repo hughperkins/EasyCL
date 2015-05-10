@@ -204,6 +204,12 @@ void EasyCL::init(int gpuIndex ) {
 }
 
 EasyCL::~EasyCL() {
+    for( map< string, bool >::iterator it = kernelOwnedByName.begin(); it != kernelOwnedByName.end(); it++ ) {
+        if( it->second ) {
+            delete kernelByName[ it->first ];
+        }
+    }
+
 //        clReleaseProgram(program);
     if( queue != 0 ) {
 //        cout << "releasing OpenCL command queue" << endl;
@@ -394,13 +400,19 @@ long EasyCL::getDeviceInfoInt( cl_device_info name ) {
     return static_cast<long>( value );
 }
 
+void EasyCL::storeKernel( std::string name, CLKernel *kernel ) {
+    storeKernel( name, kernel, false );
+}
 // note that storing same name twice is an error, for now
 // you can use name-mangling, or request I add a parameter 'bool overwrite'
-void EasyCL::storeKernel( std::string name, CLKernel *kernel ) {
+// if deleteWithCl is true, then when this EasyCL object is deleted, this kernel
+// will be deleted too
+void EasyCL::storeKernel( std::string name, CLKernel *kernel, bool deleteWithCl ) {
     if( kernelByName.count( name ) != 0 ) {
         throw runtime_error( "error: kernel for " + name + " already stored." );
     }
     kernelByName[ name ] = kernel;
+    kernelOwnedByName[ name ] = deleteWithCl;
 }
 CLKernel *EasyCL::getKernel( std::string name ) {
     return kernelByName[ name ];

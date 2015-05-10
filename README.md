@@ -219,6 +219,13 @@ cl->kernelExists( "mykernelname" );
 CLKernel *kernel = cl->getKernel( "mykernelname" );
 ```
 
+New: you can transfer kernel ownership to EasyCL object, by passing third parameter `deleteWithCl = true`.  Then, when the EasyCL object is deleted, so will be the kernel.
+```c++
+// store:
+cl->storeKernel( "mykernelname", somekernel, true ); // this kernel will be deleted when
+                                                     // `cl` object is deleted
+```
+
 # device dirty flag
 
 For CLWrapper objects, if the wrapper is passed to a kernel via `out` or `inout`, and then that kernel is run, then `isDeviceDirty()` will return true, until `->copyToHost()` is called.  So, you can use this to determine whether you need to run `->copyToHost()` prior to reading the host-side array.

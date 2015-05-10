@@ -98,6 +98,8 @@ public:
     // good to make the cache per-connection, ie per-EasyCL object
     // so here is not a bad place to put this?
     void storeKernel( std::string name, CLKernel *kernel ); // throws exception if name already assigned
+    void storeKernel( std::string name, CLKernel *kernel, bool deleteWithCl ); // if deleteWithCl true, then
+                                // when the EasyCL object is deleted, so will be the kernel
     CLKernel *getKernel( std::string name );  // throw exception if name doesnt exist
     bool kernelExists( std::string name );
 private:
@@ -107,6 +109,7 @@ private:
 #pragma warning( disable: 4251 )
 #endif
     std::map< std::string, CLKernel * >kernelByName;
+    std::map< std::string, bool >kernelOwnedByName; // should we delete the kernel when we are deleted?
 #ifdef _WIN32
 #pragma warning( default: 4251 )
 #endif
