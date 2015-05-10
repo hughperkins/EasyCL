@@ -223,7 +223,9 @@ CLKernel *kernel = cl->getKernel( "mykernelname" );
 
 For CLWrapper objects, if the wrapper is passed to a kernel via `out` or `inout`, and then that kernel is run, then `isDeviceDirty()` will return true, until `->copyToHost()` is called.  So, you can use this to determine whether you need to run `->copyToHost()` prior to reading the host-side array.
 
-`isdevicedirty` is initially `false`, is reset to `false` by `->copyToHost()`, and is only set to true by passing it to a kernel, and running that kernel.  Simply passing it to a kernel doesnt set the flag, until the kernel is actually run.
+The following methods will reset the flag to `false`:
+* `copyToDevice()`
+* `copyToHost()`
 
 This is a new feature, as of May 15 2015, and might have some bugs prior to May 31 2015 (ie, about 2 weeks, long enough for me to find any bugs).
 
