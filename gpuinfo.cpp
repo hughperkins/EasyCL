@@ -31,7 +31,10 @@ int main( int argc, char *argv[] ) {
     cl_uint num_platforms;
     error = clGetPlatformIDs(10, platform_ids, &num_platforms);
     cout << "num platforms: " << num_platforms << endl;
-    assert (num_platforms == 1);
+    if( num_platforms == 0 ) {
+        cout << "No platforms found => exiting" << endl;
+        return 0;
+    }
     assert (error == CL_SUCCESS);
     cout << endl;
 
