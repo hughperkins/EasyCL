@@ -39,6 +39,7 @@ TEST( SLOW_testintwrapper_huge, testreadnonwrapper ) {
        }
     }
 
+    delete[] out;
     delete kernel;
     delete cl;
 }
@@ -70,6 +71,7 @@ TEST( SLOW_testintwrapper_huge, testread ) {
        }
     }
 
+    delete[] out;
     delete outwrapper;
     delete kernel;
     delete cl;
@@ -104,6 +106,7 @@ TEST( SLOW_testintwrapper_huge, testreadwrite ) {
        }
     }
 
+    delete[] out;
     delete outwrapper;
     delete inwrapper;
     delete kernel;

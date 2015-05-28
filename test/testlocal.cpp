@@ -27,6 +27,8 @@ TEST( testlocal, globalreduce ) {
     }
     timer.timeCheck("after iterations");
     delete[]myarray;
+    delete kernel;
+    delete cl;
 }
 
 TEST( testlocal, localreduce ) {
@@ -50,6 +52,8 @@ TEST( testlocal, localreduce ) {
     }
     timer.timeCheck("after iterations");
     delete[]myarray;
+    delete kernel;
+    delete cl;
 }
 
 TEST( testlocal, reduceviascratch_multipleworkgroups ) {
@@ -94,6 +98,8 @@ TEST( testlocal, reduceviascratch_multipleworkgroups ) {
     delete a2wrapper;
     delete[] a2;
     delete[]myarray;
+    delete kernel;
+    delete cl;
 }
 
 TEST( testlocal, reduceviascratch_multipleworkgroups_ints ) {
@@ -149,6 +155,8 @@ TEST( testlocal, reduceviascratch_multipleworkgroups_ints ) {
     delete a2wrapper;
     delete[] a2;
     delete[]myarray;
+    delete kernel;
+    delete cl;
 }
 
 TEST( testlocal, reduce_multipleworkgroups_ints_noscratch ) {
@@ -202,6 +210,8 @@ TEST( testlocal, reduce_multipleworkgroups_ints_noscratch ) {
     delete a2wrapper;
     delete[] a2;
     delete[]myarray;
+    delete kernel;
+    delete cl;
 }
 
 TEST( SLOW_testlocal, reduce_noscratch_multipleworkgroups_ints_3levels ) {
@@ -265,6 +275,8 @@ TEST( SLOW_testlocal, reduce_noscratch_multipleworkgroups_ints_3levels ) {
     delete[] a3;
     delete[] a2;
     delete[]myarray;
+    delete kernel;
+    delete cl;
 }
 
 TEST( SLOW_testlocal, reduceviascratch_multipleworkgroups_ints_3levels ) {
@@ -331,6 +343,8 @@ TEST( SLOW_testlocal, reduceviascratch_multipleworkgroups_ints_3levels ) {
     delete[] a3;
     delete[] a2;
     delete[]myarray;
+    delete kernel;
+    delete cl;
 }
 
 TEST( SLOW_testlocal, selfdot_3levels_withscratch ) {
@@ -385,6 +399,8 @@ TEST( SLOW_testlocal, selfdot_3levels_withscratch ) {
     delete[] a3;
     delete[] a2;
     delete[]myarray;
+    delete kernel;
+    delete cl;
 }
 
 TEST( SLOW_testlocal, selfdot_3levels_withoutscratch ) {
@@ -435,8 +451,12 @@ TEST( SLOW_testlocal, selfdot_3levels_withoutscratch ) {
     delete a1wrapper;
     delete a2wrapper;
     delete a3wrapper;
+    delete secondwrapper;
     delete[] a3;
+    delete[] second;
     delete[] a2;
     delete[]myarray;
+    delete kernel;
+    delete cl;
 }
 
