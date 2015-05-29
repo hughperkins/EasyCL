@@ -70,14 +70,18 @@ EasyCL::EasyCL( cl_platform_id platform_id, cl_device_id device, bool verbose ) 
 EasyCL::EasyCL( cl_platform_id platform_id, cl_device_id device ) {
     commonConstructor( platform_id, device, true );
 }
-
 EasyCL *EasyCL::createForFirstGpu() {
-    return createForIndexedGpu( 0 );
+    return createForIndexedGpu( true );
 }
-
+EasyCL *EasyCL::createForFirstGpu( bool verbose ) {
+    return createForIndexedGpu( 0, verbose );
+}
 EasyCL *EasyCL::createForFirstGpuOtherwiseCpu() {
+    return createForFirstGpuOtherwiseCpu( true );
+}
+EasyCL *EasyCL::createForFirstGpuOtherwiseCpu( bool verbose ) {
     try {
-        return createForIndexedGpu( 0 );
+        return createForIndexedGpu( 0, verbose );
     } catch( std::runtime_error error ) {
         cout << "Couldnt find available GPU: " << error.what() << endl;
         cout << "Trying for CPU" << endl;
@@ -86,6 +90,10 @@ EasyCL *EasyCL::createForFirstGpuOtherwiseCpu() {
 }
 
 EasyCL *EasyCL::createForIndexedGpu( int gpu ) {
+    return createForIndexedGpu( gpu, true );
+}
+
+EasyCL *EasyCL::createForIndexedGpu( int gpu, bool verbose ) {
     bool clpresent = 0 == clewInit();
     if( !clpresent ) {
         throw std::runtime_error("OpenCL library not found");
@@ -112,7 +120,7 @@ EasyCL *EasyCL::createForIndexedGpu( int gpu ) {
 //           throw std::runtime_error( "Error getting device ids for platform " + toString( platform ) + ": " + errorMessage(error) );
         }
         if( ( gpu - currentGpuIndex ) < (int)num_devices ) {
-            return new EasyCL( platform_id, device_ids[( gpu - currentGpuIndex )] );
+            return new EasyCL( platform_id, device_ids[( gpu - currentGpuIndex )], verbose );
         } else {
             currentGpuIndex += num_devices;
         }

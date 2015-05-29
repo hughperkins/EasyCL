@@ -74,6 +74,9 @@ public:
     static EasyCL *createForFirstGpu();
     static EasyCL *createForFirstGpuOtherwiseCpu();
     static EasyCL *createForIndexedGpu( int gpu );
+    static EasyCL *createForFirstGpu( bool verbose );
+    static EasyCL *createForFirstGpuOtherwiseCpu( bool verbose );
+    static EasyCL *createForIndexedGpu( int gpu, bool verbose );
     static EasyCL *createForPlatformDeviceIndexes(int platformIndex, int deviceIndex);
     static EasyCL *createForPlatformDeviceIds(cl_platform_id platformId, cl_device_id deviceId);
     static std::string errorMessage(cl_int error );
