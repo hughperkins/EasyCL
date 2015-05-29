@@ -39,6 +39,8 @@ class CLUCharWrapper;
 
 class EasyCL_EXPORT EasyCL {
 public:
+    bool verbose;
+
      cl_int error;  // easier than constantly declaring it in each method...
 
     cl_platform_id platform_id;
@@ -54,9 +56,13 @@ public:
        return myostringstream.str();
     }
 
-    EasyCL(int gpu );
+    void commonConstructor( cl_platform_id platform_id, cl_device_id device, bool verbose );
+    EasyCL( int gpu );
     EasyCL();
+    EasyCL( int gpu, bool verbose );
+    EasyCL( bool verbose );
     EasyCL( cl_platform_id platformId, cl_device_id deviceId );
+    EasyCL( cl_platform_id platformId, cl_device_id deviceId, bool verbose );
     ~EasyCL();
 
     static bool isOpenCLAvailable();
@@ -74,7 +80,7 @@ public:
     static void checkError( cl_int error );
 
     void gpu( int gpuIndex );
-    void init(int gpuIndex );
+    void init(int gpuIndex, bool verbose );
     void finish();
 
     int getComputeUnits();

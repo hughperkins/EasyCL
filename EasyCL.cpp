@@ -17,15 +17,22 @@ using namespace std;
 #include "CLWrapper.h"
 #include "CLKernel.h"
 
+EasyCL::EasyCL(int gpu, bool verbose ) {
+    init(gpu, verbose);
+}
 EasyCL::EasyCL(int gpu ) {
-    init(gpu);
+    init(gpu, true);
 }
 
+EasyCL::EasyCL( bool verbose ) {
+     init(0, verbose);
+}
 EasyCL::EasyCL() {
-     init(0);
+     init(0, true);
 }
 
-EasyCL::EasyCL( cl_platform_id platform_id, cl_device_id device ) {
+void EasyCL::commonConstructor( cl_platform_id platform_id, cl_device_id device, bool verbose ) {
+    this->verbose = verbose;
     queue = 0;
     context = 0;
 
@@ -36,9 +43,11 @@ EasyCL::EasyCL( cl_platform_id platform_id, cl_device_id device ) {
     this->platform_id = platform_id;
     this->device = device;
 
-    std::cout << "Using " << getPlatformInfoString( platform_id, CL_PLATFORM_VENDOR ) << " platform: " << getPlatformInfoString( platform_id, CL_PLATFORM_NAME ) << std::endl;
-//    std::cout << "Using " << getPlatformInfoString( platform_id, CL_PLATFORM_NAME ) << std::endl;
-    std::cout << "Using device: " << getDeviceInfoString( device, CL_DEVICE_NAME ) << std::endl;
+    if( verbose ) {
+        std::cout << "Using " << getPlatformInfoString( platform_id, CL_PLATFORM_VENDOR ) << " platform: " << getPlatformInfoString( platform_id, CL_PLATFORM_NAME ) << std::endl;
+    //    std::cout << "Using " << getPlatformInfoString( platform_id, CL_PLATFORM_NAME ) << std::endl;
+        std::cout << "Using device: " << getDeviceInfoString( device, CL_DEVICE_NAME ) << std::endl;
+    }
 
     // Context
     context = new cl_context();
@@ -52,6 +61,14 @@ EasyCL::EasyCL( cl_platform_id platform_id, cl_device_id device ) {
     if (error != CL_SUCCESS) {
        throw std::runtime_error( "Error creating command queue: " + errorMessage(error) );
     }
+}
+
+EasyCL::EasyCL( cl_platform_id platform_id, cl_device_id device, bool verbose ) {
+    commonConstructor( platform_id, device, verbose );
+}
+
+EasyCL::EasyCL( cl_platform_id platform_id, cl_device_id device ) {
+    commonConstructor( platform_id, device, true );
 }
 
 EasyCL *EasyCL::createForFirstGpu() {
@@ -146,7 +163,7 @@ EasyCL *EasyCL::createForPlatformDeviceIds(cl_platform_id platformId, cl_device_
     return new EasyCL( platformId, deviceId );
 }
 
-void EasyCL::init(int gpuIndex ) {
+void EasyCL::init(int gpuIndex, bool verbose ) {
     bool clpresent = 0 == clewInit();
     if( !clpresent ) {
         throw std::runtime_error("OpenCL library not found");
@@ -337,7 +354,7 @@ void EasyCL::gpu( int gpuIndex ) {
         delete context;
     }
 
-    init( gpuIndex );
+    init( gpuIndex, this->verbose );
 }
 
 void EasyCL::finish() {
