@@ -42,12 +42,10 @@ int main( int argc, char *argv[] ) {
         cout << "platform index: " << i << ":" << endl;
         cl_platform_id platform_id = platform_ids[i];
         cout << "platform id: " << platform_id << endl;
-//        printPlatformInfo( "platform id", platform_id, CL_PLATFORM_ID );
         printPlatformInfoString( "platform vendor", platform_id, CL_PLATFORM_VENDOR );
         printPlatformInfoString( "platform name", platform_id, CL_PLATFORM_NAME );
-        // Device
         cl_uint num_devices;
-        error = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_ALL, 1, &device, &num_devices);
+        error = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_ALL, 0, 0, &num_devices);
         if (error != CL_SUCCESS) {
            cout << "Error getting device ids: " << error << endl;
            exit(error);
@@ -80,6 +78,7 @@ int main( int argc, char *argv[] ) {
             printDeviceInfo( "   frequency MHz", device, CL_DEVICE_MAX_CLOCK_FREQUENCY );
             cout << endl;
         }
+        delete[] device_ids;
     }
     return 0;
 }
