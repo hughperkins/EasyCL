@@ -197,7 +197,7 @@ void EasyCL::init(int gpuIndex, bool verbose ) {
     }
 
     cl_uint num_devices;
-    error = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_GPU | CL_DEVICE_TYPE_ACCELERATOR , 1, &device, &num_devices);
+    error = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_GPU | CL_DEVICE_TYPE_ACCELERATOR , 0, 0, &num_devices);
     if (error != CL_SUCCESS) {
        throw std::runtime_error( "Error getting device ids: " + errorMessage(error) );
     }
