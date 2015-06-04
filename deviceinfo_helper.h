@@ -18,4 +18,6 @@ void printDeviceInfoArray( std::string valuename, cl_device_id deviceId, cl_devi
 void printDeviceInfoString( std::string valuename, cl_device_id deviceId, cl_device_info name );
 
 std::string getDeviceInfoString( cl_device_id deviceId, cl_device_info name );
+int getDeviceInfoInt( cl_device_id deviceId, cl_device_info name );
+long getDeviceInfoLong( cl_device_id deviceId, cl_device_info name );
 

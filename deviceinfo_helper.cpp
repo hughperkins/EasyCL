@@ -65,5 +65,33 @@ string getDeviceInfoString( cl_device_id deviceId, cl_device_info name ) {
     }
     return string( buffer );
 }
+int getDeviceInfoInt( cl_device_id deviceId, cl_device_info name ) {
+    cl_ulong somelong = 0;
+    cl_int error = clGetDeviceInfo(deviceId, name, sizeof(cl_ulong), &somelong, 0);
+    if( error != CL_SUCCESS ) {
+        if( error == CL_INVALID_DEVICE ) {
+            throw runtime_error("Failed to obtain info for device id " + EasyCL::toString( deviceId ) + ": invalid device" );
+        } else if( error == CL_INVALID_VALUE ) {
+            throw runtime_error("Failed to obtain device info " + EasyCL::toString( name ) + " for device id " + EasyCL::toString( deviceId ) + ": invalid value" );
+        } else {
+            throw runtime_error("Failed to obtain device info " + EasyCL::toString( name ) + " for device id " + EasyCL::toString( deviceId ) + ": unknown error code: " + EasyCL::toString( error ) );
+        }
+    }
+    return (int)somelong;
+}
+long getDeviceInfoLong( cl_device_id deviceId, cl_device_info name ) {
+    cl_ulong somelong = 0;
+    cl_int error = clGetDeviceInfo(deviceId, name, sizeof(cl_ulong), &somelong, 0);
+    if( error != CL_SUCCESS ) {
+        if( error == CL_INVALID_DEVICE ) {
+            throw runtime_error("Failed to obtain info for device id " + EasyCL::toString( deviceId ) + ": invalid device" );
+        } else if( error == CL_INVALID_VALUE ) {
+            throw runtime_error("Failed to obtain device info " + EasyCL::toString( name ) + " for device id " + EasyCL::toString( deviceId ) + ": invalid value" );
+        } else {
+            throw runtime_error("Failed to obtain device info " + EasyCL::toString( name ) + " for device id " + EasyCL::toString( deviceId ) + ": unknown error code: " + EasyCL::toString( error ) );
+        }
+    }
+    return somelong;
+}
 
 

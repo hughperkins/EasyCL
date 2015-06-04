@@ -133,5 +133,6 @@ private:
 #include "CLUCharWrapper.h"
 #include "CLWrapper.h"
 #include "CLKernel.h"
+#include "DevicesInfo.h"
 
 
