@@ -236,15 +236,6 @@ The following methods will reset the flag to `false`:
 
 This is a new feature, as of May 15 2015, and might have some bugs prior to May 31 2015 (ie, about 2 weeks, long enough for me to find any bugs).
 
-# Templated kernels :-)  (New!)
-
-* You can now do templating of kernels at runtime :-)
-* Of course, this was always possible, using `-D` defines, but compared to using `-D` defines, the `TemplatedKernel` class provides:
-  * automatically re-uses previous kernel instances, with same templating values, if found
-  * uses Jinja2-type syntax, ie `{{some_var_name}}`
-  * allows Jinja2 style for-loops :-) eg `{% for i in range(5) %} do something with {{i}} here {% endfor %}`
-* for examples, see [test/testTemplatedKernel.cpp](test/testTemplatedKernel.cpp) and [test/testSpeedTemplates.cpp](test/testSpeedTemplates.cpp)
-
 ## How to build
 
 ### Building on linux
