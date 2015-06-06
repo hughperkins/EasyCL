@@ -18,7 +18,7 @@
 #include <vector>
 #include <stdexcept>
 
-#include "util/stringhelper.h"
+#include "util/easycl_stringhelper.h"
 
 #define VIRTUAL virtual
 #define STATIC static

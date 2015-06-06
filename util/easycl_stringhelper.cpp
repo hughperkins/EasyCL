@@ -9,7 +9,7 @@
 #include <sstream>
 using namespace std;
 
-#include "util/stringhelper.h"
+#include "util/easycl_stringhelper.h"
 
 namespace easycl {
     vector<string> split(const string &str, const string &separator ) {

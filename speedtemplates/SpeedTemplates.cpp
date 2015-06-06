@@ -10,7 +10,7 @@
 #include <vector>
 #include <sstream>
 
-#include "util/stringhelper.h"
+#include "util/easycl_stringhelper.h"
 
 #include "speedtemplates/SpeedTemplates.h"
 

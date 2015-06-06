@@ -25,7 +25,7 @@ IF( CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" )
 ENDIF( CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" )
 
 add_library( EasyCL SHARED EasyCL.cpp CLKernel.cpp CLWrapper.cpp platforminfo_helper.cpp deviceinfo_helper.cpp DevicesInfo.cpp DeviceInfo.cpp
-    speedtemplates/SpeedTemplates.cpp templates/TemplatedKernel.cpp util/stringhelper.cpp )
+    speedtemplates/SpeedTemplates.cpp templates/TemplatedKernel.cpp util/easycl_stringhelper.cpp )
 target_link_libraries( EasyCL CLEW )
 if( ON_LINUX )
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")

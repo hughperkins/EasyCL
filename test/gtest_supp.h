@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "util/stringhelper.h"
+#include "util/easycl_stringhelper.h"
 
 inline ::testing::AssertionResult AssertFloatsNear( const char *expr_one, const char *expr_two,
     float one, float two ) {
