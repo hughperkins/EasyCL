@@ -60,7 +60,7 @@ PUBLIC CLKernel *TemplatedKernel::getKernel() {
 std::string TemplatedKernel::createInstanceName() {
     string name = filename + "_" + kernelName;
     for( map< string, SpeedTemplates::Value *>::iterator it = mytemplate->valueByName.begin(); it != mytemplate->valueByName.end(); it++ ) {
-        name += it->first + "=" + it->second->render();
+        name += "," + it->first + "=" + it->second->render();
     }
     cout << "intsancename=" << name << endl;
     return name;

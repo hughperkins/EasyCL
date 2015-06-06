@@ -77,3 +77,50 @@ TEST( testTemplatedKernel, basic2 ) {
     delete cl;
 }
 
+TEST( testTemplatedKernel, foreach ) {
+    EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
+
+    string kernelSource = "kernel void doStuff( global int *value) {\n"
+        "   int globalId = get_global_id(0);\n"
+        "   if( globalId == 0 ) {\n"
+        "       value[0] = {{myvalue}};\n"
+        "       {% for name in names %}\n"
+        "           int {{name}} = 0;\n"
+        "       {% endfor %}\n"
+        "   }\n"
+        "}\n";
+    TemplatedKernel kernela(cl, "testfile", kernelSource, "doStuff");
+    vector<string> names;
+    names.push_back("blue");
+    names.push_back("red");
+    names.push_back("green");
+    kernela.setValue("names", names );
+    kernela.setValue("myvalue", 3 );
+    CLKernel *kernel = kernela.getKernel();
+    kernel = kernela.getKernel();
+    kernel = kernela.getKernel();
+
+    delete cl;
+}
+TEST( testTemplatedKernel, forrange ) {
+    EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
+
+    string kernelSource = "kernel void doStuff( global int *value) {\n"
+        "   int globalId = get_global_id(0);\n"
+        "   if( globalId == 0 ) {\n"
+        "       value[0] = {{myvalue}};\n"
+        "       {% for i in range(5) %}\n"
+        "           int a{{i}} = 0;\n"
+        "       {% endfor %}\n"
+        "   }\n"
+        "}\n";
+    TemplatedKernel kernela(cl, "testfile", kernelSource, "doStuff");
+    vector<string> names;
+    kernela.setValue("myvalue", 3 );
+    CLKernel *kernel = kernela.getKernel();
+    kernel = kernela.getKernel();
+    kernel = kernela.getKernel();
+
+    delete cl;
+}
+

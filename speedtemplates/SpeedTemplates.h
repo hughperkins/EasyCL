@@ -74,8 +74,12 @@ public:
         values( values ) {
     }
     virtual std::string render() {
-        throw std::runtime_error("Not implemented");
-//        return value;
+        std::string results = "[";
+        for( int i = 0; i < (int)values.size(); i++ ) {
+            results += values[i] + ",";
+        }
+        results += "]";
+        return results;
     }
 };
 
