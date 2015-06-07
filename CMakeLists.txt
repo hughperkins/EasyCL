@@ -17,7 +17,8 @@ if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
 endif()
 
-OPTION(LUA_AVAILABLE "Allows kernel templating, at runtime.  Needs Lua." OFF)
+unset( LUA_AVAILABLE CACHE)
+OPTION(KERNEL_TEMPLATING "Activate kernel templating, at runtime, using Lua." OFF)
 OPTION(DEV_RUN_COG "Only EasyCL maintainers need this, otherwise set to 'OFF'." OFF)
 
 include_directories(.)
@@ -65,7 +66,7 @@ add_executable( unittests test/testscalars.cpp test/testintarray.cpp test/testfl
     test/testfloatarray.cpp test/testeasycl.cpp test/testinout.cpp test/testintwrapper_huge.cpp
     test/testlocal.cpp ../test/testdefines.cpp test/testbuildlog.cpp test/testnewinstantiations.cpp
     test/testucharwrapper.cpp test/testkernelstore.cpp test/testdirtywrapper.cpp test/testDeviceInfo.cpp
-    ${TEMPLATETESTS} test/easycl_stringhelper.cpp
+    ${TEMPLATETESTS} test/easycl_stringhelper.cpp test/testStructs.cpp
     test/asserts.cpp test/gtest_main.cpp test/GtestGlobals.cpp ${CLBLAS_TEST_SOURCES} )
 target_link_libraries( unittests gtest EasyCL CLEW )
 target_include_directories( unittests PRIVATE thirdparty/gtest )

@@ -236,6 +236,21 @@ The following methods will reset the flag to `false`:
 
 This is a new feature, as of May 15 2015, and might have some bugs prior to May 31 2015 (ie, about 2 weeks, long enough for me to find any bugs).
 
+# templated kernels (New!)
+
+* If you activate build option `KERNEL_TEMPLATING`, then you can use templating with kernels, at runtime, using Lua
+* Simple variable substitution by using eg `{{some_variable_name}}`
+* Embed lua code, including loops, if statements etc, ... using eg '{% for i=0,5 do %}... code here ... {% end %}`
+* The magic is done using the [templates/TemplatedKernel.h](templates/TemplatedKernel.h] class
+* See examples in [test/testTemplatedKernel.cpp](test/testTemplatedKernel.cpp)
+* Note that this templating method is based on John Nachtimwald's work at [https://john.nachtimwald.com/2014/08/06/using-lua-as-a-templating-engine/](https://john.nachtimwald.com/2014/08/06/using-lua-as-a-templating-engine/) ( [MIT License](https://john.nachtimwald.com/files/2008/11/MIT.txt) )
+
+# passing structs (New!)
+
+* Turns out this can be important, and is actually already available, just embedded in the cpp files, locked away
+* Simply `#include` new `"CLKernel_structs.h"` header, in order to be able to pass structs
+* See [test/testStructs.cpp](test/testStructs.cpp) for an example
+
 ## How to build
 
 ### Building on linux

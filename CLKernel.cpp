@@ -136,20 +136,6 @@ CLKernel *CLKernel::localInts(int count) {
 CLKernel *CLKernel::local(int N) {
 	return localFloats(N);
 }
-
-template<typename T> CLKernel *CLKernel::input(int N, const T *data) {
-	cl_mem buffer = clCreateBuffer(*(easycl->context), CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(T) * N, (void *)data, &error);
-	easycl->checkError(error);
-	error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), &buffer);
-	easycl->checkError(error);
-	buffers.push_back(buffer);
-	nextArg++;
-	return this;
-}
-template<typename T>
-CLKernel *CLKernel::in(int N, const T *data) {
-	return input(N, data);
-}
 CLKernel *CLKernel::input(int value) {
 	inputArgInts.push_back(value);
 	error = clSetKernelArg(kernel, nextArg, sizeof(int), &(inputArgInts[inputArgInts.size() - 1]));
@@ -169,6 +155,21 @@ CLKernel *CLKernel::input(float value) {
 }
 CLKernel *CLKernel::in(float value) {
 	return input(value);
+}
+
+#ifndef _CLKERNEL_STRUCTS_H
+template<typename T> CLKernel *CLKernel::input(int N, const T *data) {
+	cl_mem buffer = clCreateBuffer(*(easycl->context), CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(T) * N, (void *)data, &error);
+	easycl->checkError(error);
+	error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), &buffer);
+	easycl->checkError(error);
+	buffers.push_back(buffer);
+	nextArg++;
+	return this;
+}
+template<typename T>
+CLKernel *CLKernel::in(int N, const T *data) {
+	return input(N, data);
 }
 template<typename T>
 CLKernel *CLKernel::output(int N, T *data) {
@@ -200,6 +201,8 @@ CLKernel *CLKernel::inout(int N, T *data) {
 	nextArg++;
 	return this;
 }
+#endif // _CLKERNEL_STRUCTS_H
+
 void CLKernel::run_1d(int global_worksize, int local_worksize) {
 	size_t global_ws = global_worksize;
 	size_t local_ws = local_worksize;
