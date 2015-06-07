@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <string>
 #include "EasyCL.h"
-#include "speedtemplates/SpeedTemplates.h"
+//#include "speedtemplates/SpeedTemplates.h"
 #include "TemplatedKernel.h"
 
 using namespace std;

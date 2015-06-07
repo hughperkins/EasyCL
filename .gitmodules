@@ -1,3 +1,0 @@
-[submodule "clew"]
-	path = thirdparty/clew
-	url = https://github.com/martijnberger/clew.git

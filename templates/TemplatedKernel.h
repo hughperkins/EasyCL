@@ -23,7 +23,6 @@ public:
     std::string kernelName;
     std::string sourceCode;
     std::string filename;
-    SpeedTemplates::Template *mytemplate;
 
     // [[[cog
     // import cog_addheaders
