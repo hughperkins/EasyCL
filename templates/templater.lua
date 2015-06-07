@@ -141,6 +141,9 @@ function M.compile(tmpl)
     -- print('tc', tc)
     local func, err = loadstring(tc)
     if not func then
+        print('Error')
+        print('Incoming template:\n', tmpl)
+        print('intemediate form:\n', tc)
         return err
     end
     local res = func()

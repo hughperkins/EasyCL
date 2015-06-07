@@ -186,3 +186,22 @@ TEST( testLuaTemplater, foreachloop ) {
     EXPECT_EQ( expectedResult, result );
 }
 
+TEST( testLuaTemplater, codesection ) {
+    string source = "\n"
+        "{%\n"
+        "sum=0\n"
+        "for i=1,3 do\n"
+        "  if i <= 2 then \n"
+        "   sum = sum + 1\n"
+        "  end\n"
+        "end\n"
+        "%}\n"
+        "{{sum}}\n"
+        "";
+    LuaTemplater mytemplate;
+    string result = mytemplate.render(source);
+    cout << "[" << result << "]" << endl;
+    string expectedResult = "\n\n2\n";
+    EXPECT_EQ( expectedResult, result );
+}
+
