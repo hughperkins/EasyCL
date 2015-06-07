@@ -8,7 +8,7 @@
 #include <string>
 
 #include "gtest/gtest.h"
-#include "test/gtest_supp.h"
+#include "test/easycl_gtest_supp.h"
 
 #include "templates/LuaTemplater.h"
 
