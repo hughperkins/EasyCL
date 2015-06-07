@@ -83,3 +83,6 @@ if(DEV_RUN_COG)
     add_dependencies( EasyCL cog )
 endif(DEV_RUN_COG)
 
+INSTALL( TARGETS EasyCL
+    LIBRARY DESTINATION lib )
+
