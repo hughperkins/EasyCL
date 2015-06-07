@@ -6,10 +6,11 @@
 
 #pragma once
 
+#include <string>
+
 class EasyCL;
-namespace SpeedTemplates {
-    class Template;
-}
+class CLKernel;
+class LuaTemplater;
 
 #define VIRTUAL virtual
 #define STATIC static
@@ -20,9 +21,7 @@ namespace SpeedTemplates {
 class TemplatedKernel {
 public:
     EasyCL *cl;
-    std::string kernelName;
-    std::string sourceCode;
-    std::string filename;
+    LuaTemplater *templater;
 
     // [[[cog
     // import cog_addheaders
@@ -31,17 +30,18 @@ public:
     // generated, using cog:
 
     public:
-    TemplatedKernel( EasyCL *cl, std::string filename, std::string sourceCode, std::string kernelName );
+    TemplatedKernel( EasyCL *cl );
     ~TemplatedKernel();
-    TemplatedKernel &setValue( std::string name, int value );
-    TemplatedKernel &setValue( std::string name, float value );
-    TemplatedKernel &setValue( std::string name, std::string value );
-    TemplatedKernel &setValue( std::string name, std::vector< std::string > &value );
-    CLKernel *getKernel();
+    TemplatedKernel &set( std::string name, int value );
+    TemplatedKernel &set( std::string name, float value );
+    TemplatedKernel &set( std::string name, std::string value );
+    TemplatedKernel &set( std::string name, std::vector< std::string > &value );
+    TemplatedKernel &set( std::string name, std::vector< int > &value );
+    TemplatedKernel &set( std::string name, std::vector< float > &value );
+    CLKernel *buildKernel( std::string uniqueName, std::string filename, std::string templateSource, std::string kernelName );
 
     private:
-    std::string createInstanceName();
-    void buildKernel( std::string instanceName );
+    void _buildKernel( std::string uniqueName, std::string filename, std::string templateSource, std::string kernelName );
 
     // [[[end]]]
 };

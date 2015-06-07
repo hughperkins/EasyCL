@@ -25,10 +25,10 @@ TEST( testTemplatedKernel, basic ) {
         "       out[globalId] = value;\n"
         "   }\n"
         "}\n";
-    TemplatedKernel kernela(cl, "testfile", kernelSource, "doStuff");
-    kernela.setValue("type", "int");
-    CLKernel *kernel = kernela.getKernel();
-    kernel = kernela.getKernel();
+    TemplatedKernel kernelBuilder(cl);
+    kernelBuilder.set("type", "int");
+    CLKernel *kernel = kernelBuilder.buildKernel("doStuff_int", "testfile", kernelSource, "doStuff");
+//    kernel = kernela.getKernel();
     int a[2];
     int b[2];
     b[0] = 3;
@@ -38,9 +38,9 @@ TEST( testTemplatedKernel, basic ) {
     EXPECT_EQ(3, a[0]);
     EXPECT_EQ(2, a[1]);
 
-    TemplatedKernel kernelb(cl, "testfile", kernelSource, "doStuff");
-    kernelb.setValue("type", "float");
-    kernel = kernelb.getKernel();
+//    TemplatedKernel kernelb(cl, "testfile", kernelSource, "doStuff");
+    kernelBuilder.set("type", "float");
+    kernel = kernelBuilder.buildKernel("doStuff_float", "testfile", kernelSource, "doStuff");
     float ac[2];
     float bc[2];
     bc[0] = 3.2f;
@@ -62,11 +62,10 @@ TEST( testTemplatedKernel, basic2 ) {
         "       value[0] = {{myvalue}};\n"
         "   }\n"
         "}\n";
-    TemplatedKernel kernela(cl, "testfile", kernelSource, "doStuff");
+    TemplatedKernel kernelBuilder(cl);
     for( int i = 0; i < 10; i++ ) {
-        kernela.setValue("myvalue", i );
-        CLKernel *kernel = kernela.getKernel();
-        kernel = kernela.getKernel();
+        kernelBuilder.set("myvalue", i );
+        CLKernel *kernel = kernelBuilder.buildKernel( "doStuff_" + easycl::toString(i), "testfile", kernelSource, "doStuff" );
         int a[1];
         kernel->out(1, a)->run_1d(16, 16);
         cl->finish();
@@ -84,21 +83,21 @@ TEST( testTemplatedKernel, foreach ) {
         "   int globalId = get_global_id(0);\n"
         "   if( globalId == 0 ) {\n"
         "       value[0] = {{myvalue}};\n"
-        "       {% for name in names %}\n"
+        "       {% for _,name in ipairs(names) do %}\n"
         "           int {{name}} = 0;\n"
-        "       {% endfor %}\n"
+        "       {% end %}\n"
         "   }\n"
         "}\n";
-    TemplatedKernel kernela(cl, "testfile", kernelSource, "doStuff");
+    TemplatedKernel kernelBuilder(cl);
     vector<string> names;
     names.push_back("blue");
     names.push_back("red");
     names.push_back("green");
-    kernela.setValue("names", names );
-    kernela.setValue("myvalue", 3 );
-    CLKernel *kernel = kernela.getKernel();
-    kernel = kernela.getKernel();
-    kernel = kernela.getKernel();
+    kernelBuilder.set("names", names );
+    kernelBuilder.set("myvalue", 3 );
+    kernelBuilder.buildKernel("doStuff_foo", "testfile", kernelSource, "doStuff");
+    kernelBuilder.buildKernel("doStuff_foo", "testfile", kernelSource, "doStuff");
+    kernelBuilder.buildKernel("doStuff_foo", "testfile", kernelSource, "doStuff");
 
     delete cl;
 }
@@ -109,17 +108,16 @@ TEST( testTemplatedKernel, forrange ) {
         "   int globalId = get_global_id(0);\n"
         "   if( globalId == 0 ) {\n"
         "       value[0] = {{myvalue}};\n"
-        "       {% for i in range(5) %}\n"
+        "       {% for i=0,4 do %}\n"
         "           int a{{i}} = 0;\n"
-        "       {% endfor %}\n"
+        "       {% end %}\n"
         "   }\n"
         "}\n";
-    TemplatedKernel kernela(cl, "testfile", kernelSource, "doStuff");
-    vector<string> names;
-    kernela.setValue("myvalue", 3 );
-    CLKernel *kernel = kernela.getKernel();
-    kernel = kernela.getKernel();
-    kernel = kernela.getKernel();
+    TemplatedKernel kernelBuilder(cl);
+    kernelBuilder.set("myvalue", 3 );
+    kernelBuilder.buildKernel("doStuff_3", "testfile", kernelSource, "doStuff");
+    kernelBuilder.buildKernel("doStuff_3", "testfile", kernelSource, "doStuff");
+    kernelBuilder.buildKernel("doStuff_3", "testfile", kernelSource, "doStuff");
 
     delete cl;
 }
