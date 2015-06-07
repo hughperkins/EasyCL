@@ -236,6 +236,10 @@ The following methods will reset the flag to `false`:
 
 This is a new feature, as of May 15 2015, and might have some bugs prior to May 31 2015 (ie, about 2 weeks, long enough for me to find any bugs).
 
+# kernel run-time templates
+
+This feature is in development.  Recommend not to use for now.  Migrating to use lua templates, see branch `templates` if you are interested, but it is not stable, nor are the runtime templates in master in fact.
+
 ## How to build
 
 ### Building on linux
