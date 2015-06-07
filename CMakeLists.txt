@@ -23,13 +23,13 @@ OPTION(DEV_RUN_COG "Only EasyCL maintainers need this, otherwise set to 'OFF'." 
 
 include_directories(.)
 
-if(LUA_AVAILABLE)
+if(KERNEL_TEMPLATING)
     find_package(Lua51)
     include_directories(${LUA_INCLUDE_DIR})
     link_libraries(${LUA_LIBRARIES})
     set(TEMPLATESRC templates/LuaTemplater.cpp templates/TemplatedKernel.cpp )
     set(TEMPLATETESTS test/testLuaTemplater.cpp test/testTemplatedKernel.cpp )
-endif(LUA_AVAILABLE)
+endif(KERNEL_TEMPLATING)
 
 add_library( CLEW thirdparty/clew/src/clew.c )
 IF( CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" )

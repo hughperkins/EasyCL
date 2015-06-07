@@ -54,7 +54,7 @@ local function run_block(builder, text)
     local func
     local tag
  
-    print('run_block [' .. text .. ']' )
+    -- print('run_block [' .. text .. ']' )
     tag = text:sub(1, 2)
  
     if tag == "{{" then
@@ -80,7 +80,7 @@ end
 --
 -- return Compiled template.
 function M.compile(tmpl)
-    print('templ [' .. tmpl .. ']')
+    --print('templ [' .. tmpl .. ']')
     -- Turn the template into a string that can be run though
     -- Lua. Builder will be used to efficiently build the string
     -- we'll run. The string will use it's own builder (_ret). Each
@@ -138,13 +138,13 @@ function M.compile(tmpl)
  
     builder[#builder+1] = "return table.concat(_ret)"
     local tc = table.concat(builder, "\n")
-    print('tc', tc)
+    -- print('tc', tc)
     local func, err = loadstring(tc)
     if not func then
         return err
     end
     local res = func()
-    print('[' .. res .. ']')
+    -- print('[' .. res .. ']')
     return res
 end
  

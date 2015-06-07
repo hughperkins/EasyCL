@@ -62,9 +62,9 @@ PUBLIC CLKernel *TemplatedKernel::buildKernel( std::string uniqueName, std::stri
     return cl->getKernel( uniqueName );
 }
 void TemplatedKernel::_buildKernel( std::string uniqueName, std::string filename, std::string templateSource, std::string kernelName ) {
-    cout << "building kernel " << uniqueName << endl;
+    // cout << "building kernel " << uniqueName << endl;
     string renderedKernel = templater->render(templateSource);
-    cout << "renderedKernel=" << renderedKernel << endl;
+    // cout << "renderedKernel=" << renderedKernel << endl;
     CLKernel *kernel = cl->buildKernelFromString( renderedKernel, kernelName, "", filename );
     cl->storeKernel( uniqueName, kernel, true );
 }
