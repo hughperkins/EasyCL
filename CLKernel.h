@@ -16,20 +16,21 @@ class EasyCL_EXPORT CLKernel {
     cl_program program;
     cl_kernel kernel;
     cl_int error;
+    std::string source;
 
     int nextArg;
 
 #ifdef _WIN32
 #pragma warning(disable: 4251)
 #endif
-	std::vector<cl_mem> buffers;
+	  std::vector<cl_mem> buffers;
 
-	std::vector<int> inputArgInts;
-	std::vector<float> inputArgFloats;
+	  std::vector<int> inputArgInts;
+	  std::vector<float> inputArgFloats;
 
-	std::vector<cl_mem> outputArgBuffers;
-	std::vector<void *> outputArgPointers;
-	std::vector<size_t> outputArgSizes;
+	  std::vector<cl_mem> outputArgBuffers;
+	  std::vector<void *> outputArgPointers;
+	  std::vector<size_t> outputArgSizes;
 
     std::vector< CLWrapper * > wrappersToDirty; // we will mark these dirty
                                                 // on 'run'
@@ -37,18 +38,17 @@ class EasyCL_EXPORT CLKernel {
                                                 // or `inout` will be marked dirty
                                                 // on run
 
-	template<typename T>
-	static std::string toString(T val);
+	  template<typename T>
+	  static std::string toString(T val);
 #ifdef _WIN32
 #pragma warning(default: 4251)
 #endif
 
 public:
-
-	CLKernel(EasyCL *easycl, cl_program program, cl_kernel kernel);
-	CLKernel(const CLKernel &kernel);
-	CLKernel &operator=(const CLKernel &kernel);
-	~CLKernel();
+	  CLKernel(EasyCL *easycl, std::string source, cl_program program, cl_kernel kernel);
+	  CLKernel(const CLKernel &kernel);
+	  CLKernel &operator=(const CLKernel &kernel);
+	  ~CLKernel();
 
     CLKernel *input( CLArray *clarray1d );
     CLKernel *inout( CLArray *clarray1d );
@@ -66,20 +66,20 @@ public:
     CLKernel *in( CLWrapper *wrapper ) { return input( wrapper ); }
     CLKernel *out( CLWrapper *wrapper ) { return output( wrapper ); }
 
-	CLKernel *localFloats(int count);
-	CLKernel *localInts(int count);
-	CLKernel *local(int N);
+	  CLKernel *localFloats(int count);
+	  CLKernel *localInts(int count);
+	  CLKernel *local(int N);
 
     template<typename T> CLKernel *input(int N, const T *data);
     template<typename T> CLKernel *in(int N, const T *data);
-	CLKernel *input(int value);
-	CLKernel *in(int value);
-	CLKernel *input(float value);
-	CLKernel *in(float value);
+	  CLKernel *input(int value);
+	  CLKernel *in(int value);
+	  CLKernel *input(float value);
+	  CLKernel *in(float value);
     template<typename T> CLKernel *output(int N, T *data);
     template<typename T> CLKernel *out(int N, T *data);
     template<typename T> CLKernel *inout(int N, T *data);
-	void run_1d(int global_worksize, int local_worksize);
-	void run(int ND, const size_t *global_ws, const size_t *local_ws);
+	  void run_1d(int global_worksize, int local_worksize);
+	  void run(int ND, const size_t *global_ws, const size_t *local_ws);
 };
 

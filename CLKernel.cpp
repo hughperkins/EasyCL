@@ -11,6 +11,7 @@ using namespace std;
 #include "CLArrayFloat.h"
 #include "CLArrayInt.h"
 #include "CLArray.h"
+#include "util/easycl_stringhelper.h"
 
 #include "EasyCL_export.h"
 
@@ -21,7 +22,8 @@ std::string CLKernel::toString(T val) {
 	return myostringstream.str();
 }
 
-CLKernel::CLKernel(EasyCL *easycl, cl_program program, cl_kernel kernel) {
+CLKernel::CLKernel(EasyCL *easycl, std::string source, cl_program program, cl_kernel kernel) {
+  this->source = source;
 	this->easycl = easycl;
 	nextArg = 0;
 	error = CL_SUCCESS;
@@ -212,29 +214,34 @@ void CLKernel::run_1d(int global_worksize, int local_worksize) {
 void CLKernel::run(int ND, const size_t *global_ws, const size_t *local_ws) {
 	//cout << "running kernel" << std::endl;
 	error = clEnqueueNDRangeKernel(*(easycl->queue), kernel, ND, NULL, global_ws, local_ws, 0, NULL, NULL);
-	switch (error) {
-	case 0:
-		break;
-	case -4:
-		throw std::runtime_error("Memory object allocation failure, code -4");
-		break;
-	case -5:
-		throw std::runtime_error("Out of resources, code -5");
-		break;
-	case -11:
-		throw std::runtime_error("Program build failure, code -11");
-		break;
-	case -46:
-		throw std::runtime_error("Invalid kernel name, code -46");
-		break;
-	case -52:
-		throw std::runtime_error("Invalid kernel args, code -52");
-		break;
-	case -54:
-		throw std::runtime_error("Invalid work group size, code -54");
-		break;
-	default:
-		throw std::runtime_error("Something went wrong, code " + toString(error));
+  if( error != 0 ) {
+      vector<std::string> splitSource = easycl::split(source, "\n");
+      std::string sourceWithNumbers = "\nkernel source:\n";
+      for( int i = 0; i < (int)splitSource.size(); i++ ) {
+          sourceWithNumbers += toString(i + 1) + ": " + splitSource[i] + "\n";
+      }
+	    switch (error) {
+	        case -4:
+		        throw std::runtime_error(sourceWithNumbers + "\nMemory object allocation failure, code -4");
+		        break;
+	        case -5:
+		        throw std::runtime_error(sourceWithNumbers + "\nOut of resources, code -5");
+		        break;
+	        case -11:
+		        throw std::runtime_error(sourceWithNumbers + "\nProgram build failure, code -11");
+		        break;
+	        case -46:
+		        throw std::runtime_error(sourceWithNumbers + "\nInvalid kernel name, code -46");
+		        break;
+	        case -52:
+		        throw std::runtime_error(sourceWithNumbers + "\nInvalid kernel args, code -52");
+		        break;
+	        case -54:
+		        throw std::runtime_error(sourceWithNumbers + "\nInvalid work group size, code -54");
+		        break;
+	        default:
+		        throw std::runtime_error(sourceWithNumbers + "\nSomething went wrong, code " + toString(error));
+      }
 	}
 	easycl->checkError(error);
 	//        error = clFinish(easycl->queue);

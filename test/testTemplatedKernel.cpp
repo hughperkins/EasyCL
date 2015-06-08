@@ -95,6 +95,28 @@ TEST( testTemplatedKernel, withtemplateerror ) {
     delete cl;
 }
 
+TEST( testTemplatedKernel, withargserror ) {
+    EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
+
+    string kernelSource = "kernel void doStuff( int N, global {{type}} *out, global const {{type}} *in ) {\n"
+        "   int globalId = get_global_id(0);\n"
+        "   if( globalId < N ) {\n"
+        "       {{type}} value = in[globalId];\n"
+        "       out[globalId] = value;\n"
+        "   }\n"
+        "}\n";
+    TemplatedKernel kernelBuilder(cl);
+    kernelBuilder.set("type", "int");
+    CLKernel *kernel = kernelBuilder.buildKernel("doStuff", "testfile", kernelSource, "doStuff");
+    try {
+        kernel->run_1d(16,16);
+    } catch( runtime_error &e ) {
+        cout << "caught error: " << e.what() << endl;
+    }
+
+    delete cl;
+}
+
 TEST( testTemplatedKernel, basic2 ) {
     EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
 

@@ -323,7 +323,7 @@ CLKernel *EasyCL::buildKernelFromString( string source, string kernelname, strin
     }
     checkError(error);
 //    clReleaseProgram(program);
-    return new CLKernel(this, program, kernel);
+    return new CLKernel(this, source, program, kernel);
 }
 
 bool EasyCL::isOpenCLAvailable() {
