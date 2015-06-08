@@ -143,7 +143,7 @@ function M.compile(tmpl)
     if not func then
         print('Error')
         print('Incoming template:\n', tmpl)
-        print('intemediate form (this is just pure Lua code, you can run this in lua, see what happens):\n', tc)
+        print('intemediate form (this is just pure Lua code, you can run this in lua):\n', tc)
         return err
     end
     status, res = pcall(
@@ -154,7 +154,12 @@ function M.compile(tmpl)
     if not status then
       print('Error')
       print('Incoming template:\n', tmpl)
-      print('intemediate form:\n', tc)
+      print('intemediate form (this is just pure Lua code, you can run this in lua, see what happens):')
+      i = 1
+      for line in string.gmatch(tc, '[^\n]+') do
+        print(i .. ':', line)
+        i = i + 1
+      end
       print('err', res)
       error( res )
     else

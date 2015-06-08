@@ -53,6 +53,48 @@ TEST( testTemplatedKernel, basic ) {
     delete cl;
 }
 
+TEST( testTemplatedKernel, withbuilderror ) {
+    EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
+
+    string kernelSource = "kernel void doStuff( int N, global {{type}} *out, global const {{type}} *in ) {\n"
+        "   int globalId = get_global_id(0);\n"
+        "   if( globalId < N ) {\n"
+        "       {{type}} value = in[globalId];\n"
+        "       out[globalId] = value;\n"
+        "   }\n"
+        "}\n";
+    TemplatedKernel kernelBuilder(cl);
+    kernelBuilder.set("type", "int");
+    try {
+        kernelBuilder.buildKernel("doStuff_int", "testfile", kernelSource, "doStuffaaa");
+    } catch( runtime_error &e ) {
+        cout << "caught error: " << e.what() << endl;
+    }
+
+    delete cl;
+}
+
+TEST( testTemplatedKernel, withtemplateerror ) {
+    EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
+
+    string kernelSource = "kernel void doStuff( int N, global {{type}} *out, global const {{type}} *in ) {\n"
+        "   int globalId = get_global_id(0);\n"
+        "   if( globalId < N ) {\n"
+        "       {{type}} value = in[globalId];\n"
+        "       out[globalId] = value;\n"
+        "   }\n"
+        "}\n";
+    TemplatedKernel kernelBuilder(cl);
+//    kernelBuilder.set("type", "int");
+    try {
+        kernelBuilder.buildKernel("doStuff_int", "testfile", kernelSource, "doStuff");
+    } catch( runtime_error &e ) {
+        cout << "caught error: " << e.what() << endl;
+    }
+
+    delete cl;
+}
+
 TEST( testTemplatedKernel, basic2 ) {
     EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
 
