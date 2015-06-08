@@ -205,3 +205,19 @@ TEST( testLuaTemplater, codesection ) {
     EXPECT_EQ( expectedResult, result );
 }
 
+TEST( testLuaTemplater, codingerror ) {
+    string source = "\n"
+        "{%\n"
+        "sum=foo.blah\n"
+        "%}\n"
+        "";
+    LuaTemplater mytemplate;
+    bool threw = false;
+    try {
+      string result = mytemplate.render(source);
+    } catch( runtime_error e ) {
+      threw = true;
+    }
+    EXPECT_TRUE( threw );
+}
+

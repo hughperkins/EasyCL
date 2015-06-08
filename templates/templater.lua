@@ -143,12 +143,23 @@ function M.compile(tmpl)
     if not func then
         print('Error')
         print('Incoming template:\n', tmpl)
-        print('intemediate form:\n', tc)
+        print('intemediate form (this is just pure Lua code, you can run this in lua, see what happens):\n', tc)
         return err
     end
-    local res = func()
-    -- print('[' .. res .. ']')
-    return res
+    status, res = pcall(
+      function()
+        return func()
+      end
+    )
+    if not status then
+      print('Error')
+      print('Incoming template:\n', tmpl)
+      print('intemediate form:\n', tc)
+      print('err', res)
+      error( res )
+    else
+      return res
+    end
 end
  
 return M
