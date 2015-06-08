@@ -95,6 +95,24 @@ TEST( testTemplatedKernel, withtemplateerror ) {
     delete cl;
 }
 
+TEST( testTemplatedKernel, withbuilderrorintargs ) {
+    EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
+
+    string kernelSource = "\n"
+        "void op() {}\n"
+        "kernel void doStuff( int N, global float *a ) {\n"
+        "  op(N)\n"
+        "}\n";
+    TemplatedKernel kernelBuilder(cl);
+    try {
+        kernelBuilder.buildKernel("doStuff", "testfile", kernelSource, "doStuff");
+    } catch( runtime_error &e ) {
+        cout << "caught error: " << e.what() << endl;
+    }
+
+    delete cl;
+}
+
 TEST( testTemplatedKernel, withargserror ) {
     EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
 
