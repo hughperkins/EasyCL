@@ -121,7 +121,7 @@ void CLWrapper::copyTo( CLWrapper *target ) {
         throw std::runtime_error("copyTo: element size mismatch between source and target CLWrapper objects");
     }
     if( size() != target->size() ) {
-        throw std::runtime_error("copyTo: array size mismatch between source and target CLWrapper objects");
+        throw std::runtime_error("copyTo: array size mismatch between source and target CLWrapper objects " + easycl::toString(size()) + " vs " + easycl::toString(target->size()));
     }
     // can assume that we have our data on the device now, because of if check
     // just now

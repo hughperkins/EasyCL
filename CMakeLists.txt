@@ -64,7 +64,7 @@ endif()
 add_executable( unittests test/testscalars.cpp test/testintarray.cpp test/testfloatwrapper.cpp
     test/testclarray.cpp test/testfloatwrapperconst.cpp test/testintwrapper.cpp test/test_scenario_te42kyfo.cpp
     test/testfloatarray.cpp test/testeasycl.cpp test/testinout.cpp test/testintwrapper_huge.cpp
-    test/testlocal.cpp ../test/testdefines.cpp test/testbuildlog.cpp test/testnewinstantiations.cpp
+    test/testlocal.cpp test/testdefines.cpp test/testbuildlog.cpp test/testnewinstantiations.cpp
     test/testucharwrapper.cpp test/testkernelstore.cpp test/testdirtywrapper.cpp test/testDeviceInfo.cpp
     ${TEMPLATETESTS} test/easycl_stringhelper.cpp test/testStructs.cpp
     test/asserts.cpp test/gtest_main.cpp test/GtestGlobals.cpp 
