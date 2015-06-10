@@ -33,7 +33,7 @@ TEST( testcopybuffer, main ) {
     in2wrapper->copyToDevice();
 
     inwrapper->copyTo(in2wrapper);
-    cl->finish();
+  //  cl->finish();
     // check that in2 host-side unchanged:
     for( int i = 0; i < 5; i++ ) {
         in[i] = i * 3;
@@ -85,7 +85,7 @@ TEST( testcopybuffer, larger ) {
     in2wrapper->copyToDevice();
 
     inwrapper->copyTo(in2wrapper);
-    cl->finish();
+//    cl->finish();
     // check that in2 host-side unchanged:
     for( int i = 0; i < bufferSize; i++ ) {
         in[i] = i * 3;
@@ -113,6 +113,37 @@ TEST( testcopybuffer, larger ) {
     delete in2wrapper;
     delete[] in;
     delete[] in2;
+    delete cl;
+}
+
+TEST( testcopybuffer, throwsifnotondevice ) {
+    if( !EasyCL::isOpenCLAvailable() ) {
+        cout << "opencl library not found" << endl;
+        exit(-1);
+    }
+    cout << "found opencl library" << endl;
+
+    EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
+    //CLKernel *kernel = cl->buildKernel("testeasycl.cl", "test");
+    const int bufferSize = 100 * 1024 / 4;
+    float *in = new float[bufferSize];
+    float *in2 = new float[bufferSize];
+    for( int i = 0; i < bufferSize; i++ ) {
+        in[i] = i * 3;
+        in2[i] = 23 + i;
+    }
+    CLWrapper *inwrapper = cl->wrap(bufferSize, in);
+    CLWrapper *in2wrapper = cl->wrap(bufferSize, in2);
+    inwrapper->copyToDevice();
+//    in2wrapper->copyToDevice();
+
+    bool threw = false;
+    try {
+        inwrapper->copyTo(in2wrapper);
+    } catch( runtime_error &e ) {
+        threw = true;
+    }
+    EXPECT_TRUE( threw );
     delete cl;
 }
 

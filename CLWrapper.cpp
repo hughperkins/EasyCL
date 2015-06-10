@@ -114,6 +114,9 @@ void CLWrapper::copyTo( CLWrapper *target ) {
     if( !onDevice ) {
         throw std::runtime_error("Must have called copyToDevice() or createOnDevice() before calling copyTo(CLWrapper*)");
     }
+    if( !target->onDevice ) {
+        throw std::runtime_error("Must have called copyToDevice() or createOnDevice() on target before calling copyTo(target)");
+    }
     if( getElementSize() != target->getElementSize() ) {
         throw std::runtime_error("copyTo: element size mismatch between source and target CLWrapper objects");
     }
