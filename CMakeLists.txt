@@ -67,7 +67,9 @@ add_executable( unittests test/testscalars.cpp test/testintarray.cpp test/testfl
     test/testlocal.cpp ../test/testdefines.cpp test/testbuildlog.cpp test/testnewinstantiations.cpp
     test/testucharwrapper.cpp test/testkernelstore.cpp test/testdirtywrapper.cpp test/testDeviceInfo.cpp
     ${TEMPLATETESTS} test/easycl_stringhelper.cpp test/testStructs.cpp
-    test/asserts.cpp test/gtest_main.cpp test/GtestGlobals.cpp ${CLBLAS_TEST_SOURCES} )
+    test/asserts.cpp test/gtest_main.cpp test/GtestGlobals.cpp 
+    test/testcopybuffer.cpp
+    ${CLBLAS_TEST_SOURCES} )
 target_link_libraries( unittests gtest EasyCL CLEW )
 target_include_directories( unittests PRIVATE thirdparty/gtest )
 

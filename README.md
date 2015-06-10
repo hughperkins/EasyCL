@@ -145,7 +145,7 @@ on the host
 `copyToHost()` yourself
 
 CLArray objects are the first implementation.  CLWrapper objects are the second implementation.
-You can use either, but CLWrapper objects are simpler, more transparent, probably run faster.
+You can use either, but note that CLWrapper objects are the ones that I use myself.
 
 CLWrapper objects
 -----------------
@@ -154,32 +154,39 @@ Compared to CLArray objects, CLWrapper objects need less memory copying,
 since they wrap an existing native array, but you will need to call `copyToDevice()`
 and `copyToHost()` yourself.
 
-    if( !EasyCL::isOpenCLAvailable() ) {
-        cout << "opencl library not found" << endl;
-        exit(-1);
-    }
-    cout << "found opencl library" << endl;
+```c++
+if( !EasyCL::isOpenCLAvailable() ) {
+    cout << "opencl library not found" << endl;
+    exit(-1);
+}
+cout << "found opencl library" << endl;
 
-    EasyCL cl;
-    CLKernel *kernel = cl.buildKernel("../test/testeasycl.cl", "test_int");
-    int in[5];
-    for( int i = 0; i < 5; i++ ) {
-        in[i] = i * 3;
-    }
-    int out[5];
-    CLWrapper *inwrapper = cl.wrap(5, in);
-    CLWrapper *outwrapper = cl.wrap(5, out);
-    inwrapper->copyToDevice();
-    kernel->in( inwrapper );
-    kernel->out( outwrapper );
-    kernel->run_1d( 5, 5 );
-    outwrapper->copyToHost();
-    assertEquals( out[0] , 7 );
-    assertEquals( out[1] , 10 );
-    assertEquals( out[2] , 13 );
-    assertEquals( out[3] , 16 );
-    assertEquals( out[4] , 19 );
-    cout << "tests completed ok" << endl;
+EasyCL cl;
+CLKernel *kernel = cl.buildKernel("../test/testeasycl.cl", "test_int");
+int in[5];
+for( int i = 0; i < 5; i++ ) {
+    in[i] = i * 3;
+}
+int out[5];
+CLWrapper *inwrapper = cl.wrap(5, in);
+CLWrapper *outwrapper = cl.wrap(5, out);
+inwrapper->copyToDevice();
+kernel->in( inwrapper );
+kernel->out( outwrapper );
+kernel->run_1d( 5, 5 );
+outwrapper->copyToHost();
+assertEquals( out[0] , 7 );
+assertEquals( out[1] , 10 );
+assertEquals( out[2] , 13 );
+assertEquals( out[3] , 16 );
+assertEquals( out[4] , 19 );
+cout << "tests completed ok" << endl;
+```
+
+Can copy between buffers (New!):
+```c++
+wrapper1->copyTo( wrapper2 );
+```
 
 CLWrapper objects are currently available as `CLIntWrapper` and `CLFloatWrapper`.
 
@@ -189,16 +196,18 @@ CLArray objects
 Compared to CLWrapper objects, CLArray objects are more automated, but involve more 
 memory copying.
 
-    EasyCL cl;
+```c++
+EasyCL cl;
 
-    CLArrayFloat *one = cl.arrayFloat(10000); // create CLArray object for 10,000 floats
-    (*one)[0] = 5; // give some data...
-    (*one)[1] = 7; 
+CLArrayFloat *one = cl.arrayFloat(10000); // create CLArray object for 10,000 floats
+(*one)[0] = 5; // give some data...
+(*one)[1] = 7; 
 
-    CLArrayFloat *two = cl.arrayFloat(10000);
+CLArrayFloat *two = cl.arrayFloat(10000);
 
-    // pass to kernel:
-    kernel->in(one)->out(two);
+// pass to kernel:
+kernel->in(one)->out(two);
+```
 
 You can then take the 'two' CLArray object, and pass it as the 'input' to 
 a different kernel, or you can use operator[] to read values from it.

@@ -31,6 +31,7 @@ public:
     virtual int getElementSize() = 0;
     virtual void *getHostArray() = 0;
     virtual void const *getHostArrayConst() = 0;
+    virtual void copyTo( CLWrapper *target );
 
     CLWrapper( int N, EasyCL *cl );
     CLWrapper( const CLWrapper &source );
