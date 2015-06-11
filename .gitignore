@@ -15,4 +15,8 @@
 *.a
 
 /build/
+/build2/
+/build-win32/
+/build-win64/
+/install/
 

@@ -18,7 +18,8 @@ if (NOT CMAKE_BUILD_TYPE)
 endif()
 
 unset( LUA_AVAILABLE CACHE)
-OPTION(KERNEL_TEMPLATING "Activate kernel templating, at runtime, using Lua." OFF)
+OPTION(BUILD_TESTS "Build unit-tests." OFF)
+OPTION(KERNEL_TEMPLATING "Activate kernel templating, at runtime, using Lua." ON)
 OPTION(DEV_RUN_COG "Only EasyCL maintainers need this, otherwise set to 'OFF'." OFF)
 
 include_directories(.)
@@ -50,33 +51,35 @@ if( ON_LINUX )
     target_link_libraries( gpuinfo dl )
 endif()
 
-if( ON_LINUX )
-    add_library( gtest SHARED thirdparty/gtest/gtest-all.cc )
-    target_link_libraries( gtest pthread)
-else()
-    add_library( gtest thirdparty/gtest/gtest-all.cc )
-endif()
+if(BUILD_TESTS)
+  if( ON_LINUX )
+      add_library( easycl_gtest SHARED thirdparty/gtest/gtest-all.cc )
+      target_link_libraries( easycl_gtest pthread)
+  else()
+      add_library( easycl_gtest thirdparty/gtest/gtest-all.cc )
+  endif()
 
-if( TEST_CLBLAS )
-    set( CLBLAS_TEST_SOURCES test/testclblas.cpp )
-endif()
+  if( TEST_CLBLAS )
+      set( CLBLAS_TEST_SOURCES test/testclblas.cpp )
+  endif()
 
-add_executable( unittests test/testscalars.cpp test/testintarray.cpp test/testfloatwrapper.cpp
-    test/testclarray.cpp test/testfloatwrapperconst.cpp test/testintwrapper.cpp test/test_scenario_te42kyfo.cpp
-    test/testfloatarray.cpp test/testeasycl.cpp test/testinout.cpp test/testintwrapper_huge.cpp
-    test/testlocal.cpp test/testdefines.cpp test/testbuildlog.cpp test/testnewinstantiations.cpp
-    test/testucharwrapper.cpp test/testkernelstore.cpp test/testdirtywrapper.cpp test/testDeviceInfo.cpp
-    ${TEMPLATETESTS} test/easycl_stringhelper.cpp test/testStructs.cpp
-    test/asserts.cpp test/gtest_main.cpp test/GtestGlobals.cpp 
-    test/testcopybuffer.cpp
-    ${CLBLAS_TEST_SOURCES} )
-target_link_libraries( unittests gtest EasyCL CLEW )
-target_include_directories( unittests PRIVATE thirdparty/gtest )
+  add_executable( easycl_unittests test/testscalars.cpp test/testintarray.cpp test/testfloatwrapper.cpp
+      test/testclarray.cpp test/testfloatwrapperconst.cpp test/testintwrapper.cpp test/test_scenario_te42kyfo.cpp
+      test/testfloatarray.cpp test/testeasycl.cpp test/testinout.cpp test/testintwrapper_huge.cpp
+      test/testlocal.cpp test/testdefines.cpp test/testbuildlog.cpp test/testnewinstantiations.cpp
+      test/testucharwrapper.cpp test/testkernelstore.cpp test/testdirtywrapper.cpp test/testDeviceInfo.cpp
+      ${TEMPLATETESTS} test/easycl_stringhelper.cpp test/testStructs.cpp
+      test/asserts.cpp test/gtest_main.cpp test/GtestGlobals.cpp 
+      test/testcopybuffer.cpp
+      ${CLBLAS_TEST_SOURCES} )
+  target_link_libraries( easycl_unittests easycl_gtest EasyCL CLEW )
+  target_include_directories( easycl_unittests PRIVATE thirdparty/gtest )
 
-if( TEST_CLBLAS )
-    target_include_directories( unittests PRIVATE ../clBLAS/src )
-    target_link_libraries( unittests ${CMAKE_CURRENT_SOURCE_DIR}/../clBLAS/src/build/library/libclBLAS.so)
-endif()
+  if( TEST_CLBLAS )
+      target_include_directories( easycl_unittests PRIVATE ../clBLAS/src )
+      target_link_libraries( easycl_unittests ${CMAKE_CURRENT_SOURCE_DIR}/../clBLAS/src/build/library/libclBLAS.so)
+  endif()
+endif(BUILD_TESTS)
 
 if(DEV_RUN_COG)
     add_custom_target(
@@ -88,4 +91,13 @@ endif(DEV_RUN_COG)
 
 INSTALL( TARGETS EasyCL
     LIBRARY DESTINATION lib )
+if(BUILD_TESTS)
+#    INSTALL(TARGETS easycl_gtest easycl_unittests
+#       LIBRARY DESTINATION lib
+#       RUNTIME DESTINATION bin
+#    )
+    # Note: to run tests, need the .cl files currently, so need to install those
+    # too, and reference them appropriately from the code, ie correct path
+endif(BUILD_TESTS)
+
 
