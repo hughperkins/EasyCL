@@ -383,6 +383,7 @@ What if I just have a question?
 * 2015 June:
   * added kernel templates, using Lua
   * added `CLWrapper->copyTo()` method
+  * made it possible to pass arrays of 1 or more structs into `CLKernel`s
   * added install targets to the build
   * added options to the build to turn unit-tests on/off
 * 2015 May 11: just noticed there is an over-aggressive assert in gpuinfo, that exits if not exactly one platform => fixed
