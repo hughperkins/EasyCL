@@ -275,6 +275,10 @@ CL implementation .so file
 - cmake
 - g++
 
+#### Optional requirements
+
+* if you want to use Kernel templating, then you need Lua5.1 library installed, otherwise choose cmake option `KERNEL_TEMPLATING` = `OFF`
+
 #### Procedure
 
 ```bash
@@ -296,6 +300,10 @@ make
 - git  (only needed to obtain the source-code)
 - cmake
 - Visual Studio (tested with Visual Studio 2013 Community Edition)
+
+#### Optional requirements
+
+* if you want to use Kernel templating, then you need Lua5.1 library present, otherwise choose cmake option `KERNEL_TEMPLATING` = `OFF`
 
 #### Procedure
 
