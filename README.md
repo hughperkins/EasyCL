@@ -380,6 +380,11 @@ What if I just have a question?
 
 # Recent changes
 
+* 2015 June:
+  * added kernel templates, using Lua
+  * added `CLWrapper->copyTo()` method
+  * added install targets to the build
+  * added options to the build to turn unit-tests on/off
 * 2015 May 11: just noticed there is an over-aggressive assert in gpuinfo, that exits if not exactly one platform => fixed
 * 2015 May 10: Added CLWrapper.devicedirty flag, which is set whenever the wrapper is passed to a kernel via `out` or `inout`, and that kernel is run
 * 2015 May 3: Added kernel store methods: `storeKernel( string name, CLKernel *kernel )`, `getKernel( string name )`, `kernelExists( string name )`, to facilitate per-connection kernel caching
