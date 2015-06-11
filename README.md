@@ -340,8 +340,8 @@ To check clew library is working ok (ie finding and loading the opencl library, 
 
 To run:
 ```
-make unittests
-./unittests
+make easycl_unittests
+./easycl_unittests
 ```
 
 * unit-tests are created using [googletest](https://code.google.com/p/googletest/wiki/V1_7_Primer)
