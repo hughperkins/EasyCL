@@ -7,10 +7,16 @@
 *.so
 *.dylib
 
+*.pyc
+
 # Compiled Static libraries
 *.lai
 *.la
 *.a
 
 /build/
+/build2/
+/build-win32/
+/build-win64/
+/install/
 

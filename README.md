@@ -2,25 +2,33 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [EasyCL](#easycl)
+- [EasyCL ](#easycl)
   - [Example Usage](#example-usage)
   - [Examples](#examples)
   - [API](#api)
   - [CLArray and CLWrapper objects](#clarray-and-clwrapper-objects)
   - [CLWrapper objects](#clwrapper-objects)
   - [CLArray objects](#clarray-objects)
+- [Kernel store](#kernel-store)
+- [device dirty flag](#device-dirty-flag)
+- [kernel run-time templates](#kernel-run-time-templates)
+- [templated kernels (New!)](#templated-kernels-new)
+- [passing structs (New!)](#passing-structs-new)
   - [How to build](#how-to-build)
     - [Building on linux](#building-on-linux)
       - [Pre-requisites](#pre-requisites)
+      - [Optional requirements](#optional-requirements)
       - [Procedure](#procedure)
     - [Building on Windows](#building-on-windows)
       - [Pre-requisites](#pre-requisites-1)
+      - [Optional requirements](#optional-requirements-1)
       - [Procedure](#procedure-1)
   - [How to run self-tests](#how-to-run-self-tests)
   - [How to check my OpenCL installation/configuration?](#how-to-check-my-opencl-installationconfiguration)
   - [What if I've found a bug?](#what-if-ive-found-a-bug)
   - [What if I want a new feature?](#what-if-i-want-a-new-feature)
   - [What if I just have a question?](#what-if-i-just-have-a-question)
+- [Recent changes](#recent-changes)
   - [License](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -145,7 +153,7 @@ on the host
 `copyToHost()` yourself
 
 CLArray objects are the first implementation.  CLWrapper objects are the second implementation.
-You can use either, but CLWrapper objects are simpler, more transparent, probably run faster.
+You can use either, but note that CLWrapper objects are the ones that I use myself.
 
 CLWrapper objects
 -----------------
@@ -154,32 +162,39 @@ Compared to CLArray objects, CLWrapper objects need less memory copying,
 since they wrap an existing native array, but you will need to call `copyToDevice()`
 and `copyToHost()` yourself.
 
-    if( !EasyCL::isOpenCLAvailable() ) {
-        cout << "opencl library not found" << endl;
-        exit(-1);
-    }
-    cout << "found opencl library" << endl;
+```c++
+if( !EasyCL::isOpenCLAvailable() ) {
+    cout << "opencl library not found" << endl;
+    exit(-1);
+}
+cout << "found opencl library" << endl;
 
-    EasyCL cl;
-    CLKernel *kernel = cl.buildKernel("../test/testeasycl.cl", "test_int");
-    int in[5];
-    for( int i = 0; i < 5; i++ ) {
-        in[i] = i * 3;
-    }
-    int out[5];
-    CLWrapper *inwrapper = cl.wrap(5, in);
-    CLWrapper *outwrapper = cl.wrap(5, out);
-    inwrapper->copyToDevice();
-    kernel->in( inwrapper );
-    kernel->out( outwrapper );
-    kernel->run_1d( 5, 5 );
-    outwrapper->copyToHost();
-    assertEquals( out[0] , 7 );
-    assertEquals( out[1] , 10 );
-    assertEquals( out[2] , 13 );
-    assertEquals( out[3] , 16 );
-    assertEquals( out[4] , 19 );
-    cout << "tests completed ok" << endl;
+EasyCL cl;
+CLKernel *kernel = cl.buildKernel("../test/testeasycl.cl", "test_int");
+int in[5];
+for( int i = 0; i < 5; i++ ) {
+    in[i] = i * 3;
+}
+int out[5];
+CLWrapper *inwrapper = cl.wrap(5, in);
+CLWrapper *outwrapper = cl.wrap(5, out);
+inwrapper->copyToDevice();
+kernel->in( inwrapper );
+kernel->out( outwrapper );
+kernel->run_1d( 5, 5 );
+outwrapper->copyToHost();
+assertEquals( out[0] , 7 );
+assertEquals( out[1] , 10 );
+assertEquals( out[2] , 13 );
+assertEquals( out[3] , 16 );
+assertEquals( out[4] , 19 );
+cout << "tests completed ok" << endl;
+```
+
+Can copy between buffers (New!):
+```c++
+wrapper1->copyTo( wrapper2 );
+```
 
 CLWrapper objects are currently available as `CLIntWrapper` and `CLFloatWrapper`.
 
@@ -189,16 +204,18 @@ CLArray objects
 Compared to CLWrapper objects, CLArray objects are more automated, but involve more 
 memory copying.
 
-    EasyCL cl;
+```c++
+EasyCL cl;
 
-    CLArrayFloat *one = cl.arrayFloat(10000); // create CLArray object for 10,000 floats
-    (*one)[0] = 5; // give some data...
-    (*one)[1] = 7; 
+CLArrayFloat *one = cl.arrayFloat(10000); // create CLArray object for 10,000 floats
+(*one)[0] = 5; // give some data...
+(*one)[1] = 7; 
 
-    CLArrayFloat *two = cl.arrayFloat(10000);
+CLArrayFloat *two = cl.arrayFloat(10000);
 
-    // pass to kernel:
-    kernel->in(one)->out(two);
+// pass to kernel:
+kernel->in(one)->out(two);
+```
 
 You can then take the 'two' CLArray object, and pass it as the 'input' to 
 a different kernel, or you can use operator[] to read values from it.
@@ -240,6 +257,21 @@ This is a new feature, as of May 15 2015, and might have some bugs prior to May 
 
 This feature is in development.  Recommend not to use for now.  Migrating to use lua templates, see branch `templates` if you are interested, but it is not stable, nor are the runtime templates in master in fact.
 
+# templated kernels (New!)
+
+* If you activate build option `KERNEL_TEMPLATING`, then you can use templating with kernels, at runtime, using Lua
+* Simple variable substitution by using eg `{{some_variable_name}}`
+* Embed lua code, including loops, if statements etc, ... using eg '{% for i=0,5 do %}... code here ... {% end %}`
+* The magic is done using the [templates/TemplatedKernel.h](templates/TemplatedKernel.h] class
+* See examples in [test/testTemplatedKernel.cpp](test/testTemplatedKernel.cpp)
+* Note that this templating method is based on John Nachtimwald's work at [https://john.nachtimwald.com/2014/08/06/using-lua-as-a-templating-engine/](https://john.nachtimwald.com/2014/08/06/using-lua-as-a-templating-engine/) ( [MIT License](https://john.nachtimwald.com/files/2008/11/MIT.txt) )
+
+# passing structs (New!)
+
+* Turns out this can be important, and is actually already available, just embedded in the cpp files, locked away
+* Simply `#include` new `"CLKernel_structs.h"` header, in order to be able to pass structs
+* See [test/testStructs.cpp](test/testStructs.cpp) for an example
+
 ## How to build
 
 ### Building on linux
@@ -254,6 +286,10 @@ CL implementation .so file
 - git  (only needed to obtain the source-code)
 - cmake
 - g++
+
+#### Optional requirements
+
+* if you want to use Kernel templating, then you need Lua5.1 library installed, otherwise choose cmake option `KERNEL_TEMPLATING` = `OFF`
 
 #### Procedure
 
@@ -276,6 +312,10 @@ make
 - git  (only needed to obtain the source-code)
 - cmake
 - Visual Studio (tested with Visual Studio 2013 Community Edition)
+
+#### Optional requirements
+
+* if you want to use Kernel templating, then you need Lua5.1 library present, otherwise choose cmake option `KERNEL_TEMPLATING` = `OFF`
 
 #### Procedure
 

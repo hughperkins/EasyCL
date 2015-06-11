@@ -7,6 +7,7 @@
 #include "EasyCL.h"
 
 #include "CLWrapper.h"
+#include "util/easycl_stringhelper.h"
 
 CLWrapper::CLWrapper( int N, EasyCL *cl ) : N(N), onHost(true), cl(cl) {
     error = CL_SUCCESS;
@@ -94,7 +95,6 @@ void CLWrapper::copyToDevice() {
         deviceDirty = false;
     }
 }
-
 int CLWrapper::size() {
     return N;
 }
@@ -109,5 +109,33 @@ bool CLWrapper::isDeviceDirty() {
 }
 void CLWrapper::markDeviceDirty() {
     deviceDirty = true;
+}
+void CLWrapper::copyTo( CLWrapper *target ) {
+    if( !onDevice ) {
+        throw std::runtime_error("Must have called copyToDevice() or createOnDevice() before calling copyTo(CLWrapper*)");
+    }
+    if( !target->onDevice ) {
+        throw std::runtime_error("Must have called copyToDevice() or createOnDevice() on target before calling copyTo(target)");
+    }
+    if( getElementSize() != target->getElementSize() ) {
+        throw std::runtime_error("copyTo: element size mismatch between source and target CLWrapper objects");
+    }
+    if( size() != target->size() ) {
+        throw std::runtime_error("copyTo: array size mismatch between source and target CLWrapper objects " + easycl::toString(size()) + " vs " + easycl::toString(target->size()));
+    }
+    // can assume that we have our data on the device now, because of if check
+    // just now
+    // we will also assume that destination CLWrapper* is valid
+    cl_event event = NULL;
+    cl_int err = clEnqueueCopyBuffer( *(cl->queue), devicearray, target->devicearray, 
+        0, 0, N * getElementSize(),
+        0, NULL, &event );
+    if (err != CL_SUCCESS) {
+        throw std::runtime_error("copyTo failed with " + easycl::toString( err ) );
+    }
+    else {
+        /* Wait for calculations to be finished. */
+        err = clWaitForEvents(1, &event);
+    }
 }
 

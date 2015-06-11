@@ -16,6 +16,7 @@ using namespace std;
 #include "CLFloatWrapperConst.h"
 #include "CLWrapper.h"
 #include "CLKernel.h"
+#include "util/easycl_stringhelper.h"
 
 EasyCL::EasyCL(int gpu, bool verbose ) {
     init(gpu, verbose);
@@ -311,19 +312,25 @@ CLKernel *EasyCL::buildKernelFromString( string source, string kernelname, strin
     checkError(error);
 
     cl_kernel kernel = clCreateKernel(program, kernelname.c_str(), &error);
-    switch( error ) {
-        case CL_SUCCESS:
-            break;
-        case -46:
-            throw std::runtime_error( "Invalid kernel name, code -46, kernel " + kernelname + "\n" + buildLogMessage );
-            break;
-        default:
-            throw std::runtime_error( "Something went wrong with clCreateKernel, code " + toString( error ) + "\n" + buildLogMessage );
-            break;
+    if( error != CL_SUCCESS ) {
+        vector<std::string> splitSource = easycl::split(source, "\n");
+        std::string sourceWithNumbers = "\nkernel source:\n";
+        for( int i = 0; i < (int)splitSource.size(); i++ ) {
+            sourceWithNumbers += toString(i + 1) + ": " + splitSource[i] + "\n";
+        }
+        sourceWithNumbers += "\n";
+        switch( error ) {
+            case -46:
+                throw std::runtime_error( sourceWithNumbers + "Invalid kernel name, code -46, kernel " + kernelname + "\n" + buildLogMessage );
+                break;
+            default:
+                throw std::runtime_error( sourceWithNumbers + "Something went wrong with clCreateKernel, code " + toString( error ) + "\n" + buildLogMessage );
+                break;
+        }
     }
     checkError(error);
 //    clReleaseProgram(program);
-    return new CLKernel(this, program, kernel);
+    return new CLKernel(this, source, program, kernel);
 }
 
 bool EasyCL::isOpenCLAvailable() {
