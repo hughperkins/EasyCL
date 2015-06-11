@@ -52,6 +52,7 @@ if( ON_LINUX )
 endif()
 
 if(BUILD_TESTS)
+  message("BUILD_TESTS ${BUILD_TESTS}")
   if( ON_LINUX )
       add_library( easycl_gtest SHARED thirdparty/gtest/gtest-all.cc )
       target_link_libraries( easycl_gtest pthread)
@@ -91,6 +92,7 @@ endif(DEV_RUN_COG)
 
 INSTALL( TARGETS EasyCL
     LIBRARY DESTINATION lib )
+
 if(BUILD_TESTS)
 #    INSTALL(TARGETS easycl_gtest easycl_unittests
 #       LIBRARY DESTINATION lib

@@ -32,7 +32,9 @@ TEST( testcopybuffer, main ) {
     inwrapper->copyToDevice();
     in2wrapper->copyToDevice();
 
+    EXPECT_FALSE(in2wrapper->isDeviceDirty());
     inwrapper->copyTo(in2wrapper);
+    EXPECT_TRUE(in2wrapper->isDeviceDirty());
   //  cl->finish();
     // check that in2 host-side unchanged:
     for( int i = 0; i < 5; i++ ) {

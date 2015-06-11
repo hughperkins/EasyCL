@@ -137,5 +137,6 @@ void CLWrapper::copyTo( CLWrapper *target ) {
         /* Wait for calculations to be finished. */
         err = clWaitForEvents(1, &event);
     }
+    target->markDeviceDirty();
 }
 
