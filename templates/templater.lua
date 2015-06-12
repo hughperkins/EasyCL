@@ -79,7 +79,7 @@ end
 -- @param[opt] env  Environment table to use for sandboxing.
 --
 -- return Compiled template.
-function M.compile(tmpl)
+function M._compile(tmpl)
     --print('templ [' .. tmpl .. ']')
     -- Turn the template into a string that can be run though
     -- Lua. Builder will be used to efficiently build the string
@@ -165,6 +165,17 @@ function M.compile(tmpl)
     else
       return res
     end
+end
+
+function M.compile(tmpl)
+  -- status = true
+  last_compiled = ''
+  compiled = tmpl
+  while compiled ~= last_compiled do
+    last_compiled = compiled
+    compiled = M._compile(compiled)
+  end
+  return compiled
 end
  
 return M

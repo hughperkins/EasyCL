@@ -221,3 +221,20 @@ TEST( testLuaTemplater, codingerror ) {
     EXPECT_TRUE( threw );
 }
 
+TEST( testLuaTemplater, include ) {
+    string source = "\n"
+        "{{include_tensorinfocl}}\n"
+        "\n"
+        "";
+    string source2 = "var color = '{{color}}';\n"
+      "var {{foo}} = 0;\n";
+    LuaTemplater mytemplate;
+    mytemplate.set("include_tensorinfocl", source2);
+    mytemplate.set("color", "blue");
+    mytemplate.set("foo", "blah");
+    string result = mytemplate.render(source);
+    cout << "[" << result << "]" << endl;
+    string expectedResult = "\nvar color = 'blue';\nvar blah = 0;\n\n\n";
+    EXPECT_EQ( expectedResult, result );
+}
+
