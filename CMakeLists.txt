@@ -21,6 +21,7 @@ unset( LUA_AVAILABLE CACHE)
 OPTION(BUILD_TESTS "Build unit-tests." OFF)
 OPTION(KERNEL_TEMPLATING "Activate kernel templating, at runtime, using Lua." ON)
 OPTION(DEV_RUN_COG "Only EasyCL maintainers need this, otherwise set to 'OFF'." OFF)
+SET(CLBLAS_DIR "../clMathLibraries/clBLAS" CACHE PATH "Only needed if TEST_CLBLAS is On.")
 
 include_directories(.)
 
@@ -52,7 +53,7 @@ if( ON_LINUX )
 endif()
 
 if(BUILD_TESTS)
-  message("BUILD_TESTS ${BUILD_TESTS}")
+  # message("BUILD_TESTS ${BUILD_TESTS}")
   if( ON_LINUX )
       add_library( easycl_gtest SHARED thirdparty/gtest/gtest-all.cc )
       target_link_libraries( easycl_gtest pthread)
@@ -77,8 +78,8 @@ if(BUILD_TESTS)
   target_include_directories( easycl_unittests PRIVATE thirdparty/gtest )
 
   if( TEST_CLBLAS )
-      target_include_directories( easycl_unittests PRIVATE ../clBLAS/src )
-      target_link_libraries( easycl_unittests ${CMAKE_CURRENT_SOURCE_DIR}/../clBLAS/src/build/library/libclBLAS.so)
+      target_include_directories( easycl_unittests PRIVATE ${CLBLAS_DIR}/src )
+      target_link_libraries( easycl_unittests ${CLBLAS_DIR}/src/build/library/libclBLAS.so)
   endif()
 endif(BUILD_TESTS)
 

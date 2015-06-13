@@ -91,3 +91,65 @@ TEST( testclblas, test_gemm ) {
     delete cl;
 }
 
+TEST( testclblas, test_sdot ) {
+    if( !EasyCL::isOpenCLAvailable() ) {
+        throw runtime_error( "opencl library not found" );
+    }
+    cout << "found opencl library" << endl;
+    EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
+
+    cl_int err;
+
+    err = clblasSetup();
+    if (err != CL_SUCCESS) {
+        delete cl;
+        throw runtime_error("clblasSetup() failed with " + EasyCL::toString( err ) );
+    }
+
+    int N = 3;
+    float A[] = {
+        1,2,-1
+    };
+    float B[] = {
+        3,5,2
+    };
+
+    CLFloatWrapper *Awrap = cl->wrap( N, A );
+    CLFloatWrapper *Bwrap = cl->wrap( N, B );
+    Awrap->copyToDevice();
+    Bwrap->copyToDevice();
+
+    float result;
+    CLWrapper *resultWrapper = cl->wrap( 1, &result );
+//    float *scratch = new float[N];
+    float scratch[N];
+    CLWrapper *scratchWrapper = cl->wrap(N, scratch);
+    scratchWrapper->createOnDevice();
+    resultWrapper->createOnDevice();
+
+    cl_event event = NULL;
+    err = clblasSdot( N, resultWrapper->getBuffer(), 0, 
+          Awrap->getBuffer(), 0, 1, 
+          Bwrap->getBuffer(), 0, 1, 
+          scratchWrapper->getBuffer(),
+          1, cl->queue, 0, NULL, &event);
+    if (err != CL_SUCCESS) {
+        delete cl;
+        throw runtime_error("clblasSdot() failed with " + EasyCL::toString( err ) );
+    }
+    cl->finish(); 
+//    err = clWaitForEvents(1, &event);
+    resultWrapper->copyToHost();
+    EXPECT_EQ( 11, result );
+
+    delete Awrap;
+    delete Bwrap;
+    delete scratchWrapper;
+    delete resultWrapper;
+//    delete[] scratch;
+
+    clblasTeardown();
+
+    delete cl;
+}
+
