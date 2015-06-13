@@ -73,10 +73,12 @@ public:
     static int getPower2Upperbound( int value );
     static EasyCL *createForFirstGpu();
     static EasyCL *createForFirstGpuOtherwiseCpu();
+    static EasyCL *createForIndexedDevice( int device );
     static EasyCL *createForIndexedGpu( int gpu );
     static EasyCL *createForFirstGpu( bool verbose );
     static EasyCL *createForFirstGpuOtherwiseCpu( bool verbose );
     static EasyCL *createForIndexedGpu( int gpu, bool verbose );
+    static EasyCL *createForIndexedDevice( int device, bool verbose );
     static EasyCL *createForPlatformDeviceIndexes(int platformIndex, int deviceIndex);
     static EasyCL *createForPlatformDeviceIds(cl_platform_id platformId, cl_device_id deviceId);
     static std::string errorMessage(cl_int error );

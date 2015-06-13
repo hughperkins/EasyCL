@@ -1,5 +1,6 @@
 #include "EasyCL.h"
 #include <iostream>
+#include "DevicesInfo.h"
 using namespace std;
 
 #include "gtest/gtest.h"
@@ -34,6 +35,15 @@ TEST( testnewinstantiations, createForIndexedGpu ) {
     EasyCL *cl = EasyCL::createForIndexedGpu(0);
     simpleTest( cl );
     delete cl;
+}
+
+TEST( testnewinstantiations, createForIndexedDevice ) {
+    int numDevices = easycl::DevicesInfo::getNumDevices();
+    for( int i = 0; i < numDevices; i++ ) {
+        EasyCL *cl = EasyCL::createForIndexedDevice(i);
+        simpleTest( cl );
+        delete cl;
+    }
 }
 
 TEST( testnewinstantiations, createForPlatformDeviceIndexes ) {

@@ -94,6 +94,10 @@ EasyCL *EasyCL::createForIndexedGpu( int gpu ) {
     return createForIndexedGpu( gpu, true );
 }
 
+EasyCL *EasyCL::createForIndexedDevice( int device ) {
+    return createForIndexedDevice( device, true );
+}
+
 EasyCL *EasyCL::createForIndexedGpu( int gpu, bool verbose ) {
     bool clpresent = 0 == clewInit();
     if( !clpresent ) {
@@ -130,6 +134,45 @@ EasyCL *EasyCL::createForIndexedGpu( int gpu, bool verbose ) {
         throw std::runtime_error("No gpus found" );
     } else {
         throw std::runtime_error("Not enough gpus found to satisfy gpu index: " + toString( gpu ) );
+    }
+}
+
+EasyCL *EasyCL::createForIndexedDevice( int device, bool verbose ) {
+    bool clpresent = 0 == clewInit();
+    if( !clpresent ) {
+        throw std::runtime_error("OpenCL library not found");
+    }
+    cl_int error;
+    int currentGpuIndex = 0;
+    cl_platform_id platform_ids[10];
+    cl_uint num_platforms;
+    error = clGetPlatformIDs(10, platform_ids, &num_platforms);
+    if (error != CL_SUCCESS) {
+       throw std::runtime_error( "Error getting platforms ids: " + errorMessage(error) );
+    }
+    if( num_platforms == 0 ) {
+       throw std::runtime_error( "Error: no platforms available" );
+    }
+    for( int platform =  0; platform < (int)num_platforms; platform++ ) {
+        cl_platform_id platform_id = platform_ids[platform];
+//        cout << "checking platform id " << platform_id << endl;
+        cl_device_id device_ids[100];
+        cl_uint num_devices;
+        error = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_ALL , 100, device_ids, &num_devices);
+        if (error != CL_SUCCESS) {
+            continue;
+//           throw std::runtime_error( "Error getting device ids for platform " + toString( platform ) + ": " + errorMessage(error) );
+        }
+        if( ( device - currentGpuIndex ) < (int)num_devices ) {
+            return new EasyCL( platform_id, device_ids[( device - currentGpuIndex )], verbose );
+        } else {
+            currentGpuIndex += num_devices;
+        }
+    }
+    if( device == 0 ) {
+        throw std::runtime_error("No devices found" );
+    } else {
+        throw std::runtime_error("Not enough devices found to satisfy gpu index: " + toString( device ) );
     }
 }
 
