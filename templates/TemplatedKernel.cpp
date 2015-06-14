@@ -68,4 +68,8 @@ void TemplatedKernel::_buildKernel( std::string uniqueName, std::string filename
     CLKernel *kernel = cl->buildKernelFromString( renderedKernel, kernelName, "", filename );
     cl->storeKernel( uniqueName, kernel, true );
 }
+// this is mostly for debugging purposes really
+PUBLIC std::string TemplatedKernel::getRenderedKernel( std::string templateSource ) {
+    return templater->render(templateSource);
+}
 

@@ -40,6 +40,7 @@ public:
     TemplatedKernel &set( std::string name, std::vector< int > &value );
     TemplatedKernel &set( std::string name, std::vector< float > &value );
     CLKernel *buildKernel( std::string uniqueName, std::string filename, std::string templateSource, std::string kernelName );
+    std::string getRenderedKernel( std::string templateSource );
 
     private:
     void _buildKernel( std::string uniqueName, std::string filename, std::string templateSource, std::string kernelName );
