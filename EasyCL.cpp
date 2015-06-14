@@ -362,14 +362,17 @@ CLKernel *EasyCL::buildKernelFromString( string source, string kernelname, strin
             sourceWithNumbers += toString(i + 1) + ": " + splitSource[i] + "\n";
         }
         sourceWithNumbers += "\n";
+        std::string exceptionMessage = "";
         switch( error ) {
             case -46:
-                throw std::runtime_error( sourceWithNumbers + "Invalid kernel name, code -46, kernel " + kernelname + "\n" + buildLogMessage );
+                exceptionMessage = sourceWithNumbers + "\nInvalid kernel name, code -46, kernel " + kernelname + "\n" + buildLogMessage;
                 break;
             default:
-                throw std::runtime_error( sourceWithNumbers + "Something went wrong with clCreateKernel, code " + toString( error ) + "\n" + buildLogMessage );
+                exceptionMessage = sourceWithNumbers + "\nSomething went wrong with clCreateKernel, code " + toString( error ) + "\n" + buildLogMessage;
                 break;
         }
+        cout << "kernel build error:\n" << exceptionMessage << endl;
+        throw std::runtime_error( exceptionMessage );
     }
     checkError(error);
 //    clReleaseProgram(program);
