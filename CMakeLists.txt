@@ -38,7 +38,7 @@ IF( CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" )
     SET_TARGET_PROPERTIES( CLEW PROPERTIES COMPILE_FLAGS "-fPIC")
 ENDIF( CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" )
 
-add_library( EasyCL SHARED EasyCL.cpp CLKernel.cpp CLWrapper.cpp platforminfo_helper.cpp deviceinfo_helper.cpp DevicesInfo.cpp DeviceInfo.cpp
+add_library( EasyCL SHARED EasyCL.cpp CLKernel.cpp CLWrapper.cpp platforminfo_helper.cpp deviceinfo_helper.cpp DevicesInfo.cpp DeviceInfo.cpp util/easycl_stringhelper.cpp
     ${TEMPLATESRC} )
 target_link_libraries( EasyCL CLEW )
 if( ON_LINUX )
