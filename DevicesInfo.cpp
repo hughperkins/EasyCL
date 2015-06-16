@@ -85,10 +85,12 @@ namespace easycl {
         cl_uint num_platforms;
         error = clGetPlatformIDs(10, platform_ids, &num_platforms);
         if (error != CL_SUCCESS) {
-           throw std::runtime_error( "Error getting platforms ids: " + errorMessage(error) );
+            return 0;
+//           throw std::runtime_error( "Error getting platforms ids: " + errorMessage(error) );
         }
         if( num_platforms == 0 ) {
-           throw std::runtime_error( "Error: no platforms available" );
+            return 0;
+//           throw std::runtime_error( "Error: no platforms available" );
         }
         int numDevices = 0;
         for( int platform =  0; platform < (int)num_platforms; platform++ ) {
