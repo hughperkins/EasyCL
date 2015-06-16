@@ -380,6 +380,13 @@ What if I just have a question?
 
 # Recent changes
 
+* 2015 June 17th:
+  * Merged changes to master:
+    * DevicesInfo::getNumDevices() now returns 0, if no platforms available, rather than throwing exception
+    * templates are expanded recursively now, so eg you can include other templates inside your template, and those will be expanded correctly (if you dislike this, please raise an issue to make it an option; easy to add)
+    * added EasyCL::createForIndexedDevice, which creates an instance for the indexed device, over all opencl-enabled devices, gpu or not
+    * more diagnostic output if a kernel fails to build, including line-numbers :-)
+    * added getRenderedKernel method to KernelTemplater class
 * 2015 June:
   * added kernel templates, using Lua
   * added `CLWrapper->copyTo()` method
