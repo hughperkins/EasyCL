@@ -25,7 +25,7 @@ using namespace std;
 #define PUBLIC
 
 PUBLIC LuaTemplater::LuaTemplater() {
-    L = lua_open();
+    L = luaL_newstate();
     luaL_openlibs(L);
 
     if(luaL_dostring(L, getTemplaterSource().c_str())) {
