@@ -68,9 +68,14 @@ void CLWrapper::copyToHost() {
     if(!onDevice) {
         throw std::runtime_error("copyToHost(): not on device");
     }
-    cl->finish();
-    error = clEnqueueReadBuffer(*(cl->queue), devicearray, CL_TRUE, 0, getElementSize() * N, getHostArray(), 0, NULL, NULL);    
+//    cl->finish();
+    cl_event event = NULL;
+    error = clEnqueueReadBuffer(*(cl->queue), devicearray, CL_TRUE, 0, getElementSize() * N, getHostArray(), 0, NULL, &event);    
     cl->checkError(error);
+    cl_int err = clWaitForEvents(1, &event);
+    if (err != CL_SUCCESS) {
+        throw std::runtime_error("wait for event on copytohost failed with " + easycl::toString( err ) );
+    }
     deviceDirty = false;
 }
 cl_mem CLWrapper::getBuffer() { // be careful!
@@ -135,7 +140,7 @@ void CLWrapper::copyTo( CLWrapper *target ) {
     }
     else {
         /* Wait for calculations to be finished. */
-        err = clWaitForEvents(1, &event);
+//        err = clWaitForEvents(1, &event);
     }
     target->markDeviceDirty();
 }
