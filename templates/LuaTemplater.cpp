@@ -38,11 +38,11 @@ PUBLIC LuaTemplater::~LuaTemplater() {
 }
 PUBLIC void LuaTemplater::set( std::string name, std::string value ) {
     lua_pushstring(L, value.c_str());
-    lua_setfield(L, LUA_GLOBALSINDEX, name.c_str());
+    lua_setglobal(L, name.c_str());
 }
 PUBLIC void LuaTemplater::set( std::string name, float value ) {
     lua_pushnumber(L, value);
-    lua_setfield(L, LUA_GLOBALSINDEX, name.c_str());
+    lua_setglobal(L, name.c_str());
 }
 PUBLIC void LuaTemplater::set( std::string name, std::vector< std::string> &values ) {
     lua_newtable(L);
@@ -50,7 +50,7 @@ PUBLIC void LuaTemplater::set( std::string name, std::vector< std::string> &valu
         lua_pushstring(L, values[i].c_str());
         lua_rawseti(L, -2, i + 1);
     }
-    lua_setfield(L, LUA_GLOBALSINDEX, name.c_str());
+    lua_setglobal(L, name.c_str());
 }
 PUBLIC void LuaTemplater::set( std::string name, std::vector< int> &values ) {
     lua_newtable(L);
@@ -58,7 +58,7 @@ PUBLIC void LuaTemplater::set( std::string name, std::vector< int> &values ) {
         lua_pushnumber(L, values[i]);
         lua_rawseti(L, -2, i + 1);
     }
-    lua_setfield(L, LUA_GLOBALSINDEX, name.c_str());
+    lua_setglobal(L, name.c_str());
 }
 PUBLIC void LuaTemplater::set( std::string name, std::vector< float> &values ) {
     lua_newtable(L);
@@ -66,7 +66,7 @@ PUBLIC void LuaTemplater::set( std::string name, std::vector< float> &values ) {
         lua_pushnumber(L, values[i]);
         lua_rawseti(L, -2, i + 1);
     }
-    lua_setfield(L, LUA_GLOBALSINDEX, name.c_str());
+    lua_setglobal(L, name.c_str());
 }
 PUBLIC std::string LuaTemplater::render( std::string template_string ) {
     lua_getfield(L, -1, "compile");
