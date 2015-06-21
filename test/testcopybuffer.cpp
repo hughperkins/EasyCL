@@ -65,7 +65,7 @@ TEST( testcopybuffer, main ) {
     delete cl;
 }
 
-TEST( testcopybuffer, larger ) {
+TEST( SLOW_testcopybuffer, larger ) {
     if( !EasyCL::isOpenCLAvailable() ) {
         cout << "opencl library not found" << endl;
         exit(-1);

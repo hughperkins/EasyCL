@@ -26,6 +26,9 @@ class EasyCL_EXPORT CLKernel {
 	  std::vector<cl_mem> buffers;
 
 	  std::vector<int> inputArgInts;
+	  std::vector<unsigned int> inputArgUInts;
+	  std::vector<long> inputArgLongs;
+	  std::vector<unsigned long> inputArgULongs;
 	  std::vector<float> inputArgFloats;
 
 	  std::vector<cl_mem> outputArgBuffers;
@@ -76,10 +79,17 @@ public:
 	  CLKernel *in(int value);
 	  CLKernel *input(float value);
 	  CLKernel *in(float value);
+	  CLKernel *input(long value);
+	  CLKernel *in(long value);
+	  CLKernel *input(unsigned long value);
+	  CLKernel *in(unsigned long value);
+	  CLKernel *input(unsigned int value);
+	  CLKernel *in(unsigned int value);
     template<typename T> CLKernel *output(int N, T *data);
     template<typename T> CLKernel *out(int N, T *data);
     template<typename T> CLKernel *inout(int N, T *data);
 	  void run_1d(int global_worksize, int local_worksize);
 	  void run(int ND, const size_t *global_ws, const size_t *local_ws);
 };
+
 

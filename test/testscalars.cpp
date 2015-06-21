@@ -19,8 +19,20 @@ TEST( testscalars, test1 ) {
     EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
     CLKernel *kernel = cl->buildKernel("testscalars.cl", "test");
     int intout[5];
+    unsigned int uintout[5];
+    long longout[5];
+    unsigned long ulongout[5];
     float floatout[5];
-    kernel->in( 37 )->in( 1.234f)->out( 5, intout )->out( 5, floatout );
+    kernel->in( -156 );
+    kernel->in( (unsigned int)3000 );
+    kernel->in( (long)-2524653l );
+    kernel->in( (unsigned long)1353523545l );
+    kernel->in( 1.234f);
+    kernel->out( 5, intout );
+    kernel->out( 5, uintout );
+    kernel->out( 5, longout );
+    kernel->out( 5, ulongout );
+    kernel->out( 5, floatout );
     kernel->run_1d( 5, 5 );
 
     for( int i = 0; i < 5; i++ ) {
@@ -28,15 +40,32 @@ TEST( testscalars, test1 ) {
     }
     cout << endl;
     for( int i = 0; i < 5; i++ ) {
+        cout << uintout[i] << " ";
+    }
+    cout << endl;
+    for( int i = 0; i < 5; i++ ) {
+        cout << longout[i] << " ";
+    }
+    cout << endl;
+    for( int i = 0; i < 5; i++ ) {
+        cout << ulongout[i] << " ";
+    }
+    cout << endl;
+    for( int i = 0; i < 5; i++ ) {
         cout << floatout[i] << " ";
     }
     cout << endl;
 
-    assertEquals( intout[0], 37 );
-    assertEquals( intout[1] , 38 );
-    assertEquals( intout[2] , 39 );
-    assertEquals( intout[3] , 40 );
-    assertEquals( intout[4], 41 );
+    assertEquals( intout[0], -156 );
+    assertEquals( intout[1] , -155 );
+    assertEquals( intout[2] , -154 );
+    assertEquals( intout[3] , -153 );
+    assertEquals( intout[4], -152 );
+
+    assertEquals( uintout[2] , (unsigned int)3002 );
+    assertEquals( longout[2] ,  -2524653l + 2);
+    assertEquals( ulongout[2] , (unsigned long)(1353523545l + 2) );
+
     assertEquals( floatout[0] , 1.234f );
     assertEquals( floatout[1] , 2.234f );
     assertEquals( floatout[2] , 3.234f );
