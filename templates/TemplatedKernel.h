@@ -13,13 +13,15 @@ class EasyCL;
 class CLKernel;
 class LuaTemplater;
 
+#include "EasyCL_export.h"
+
 #define VIRTUAL virtual
 #define STATIC static
 
 // idea of htis is that it will behave a bit like the templates in CUDA, ie you give it a set of template parameters, and if that kernel has
 // already been built, for those parameters, then uses that, otherwise bulids for new parameters
 // works by storing hte built kernels in a map, keyed on kernel file path, kernel method name, and template parameter names and values
-class TemplatedKernel {
+class EasyCL_EXPORT TemplatedKernel {
 public:
     EasyCL *cl;
     LuaTemplater *templater;

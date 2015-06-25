@@ -3,8 +3,10 @@
 #include "clew.h"
 #include "DeviceInfo.h"
 
+#include "EasyCL_export.h"
+
 namespace easycl {
-    class DevicesInfo {
+    class EasyCL_EXPORT DevicesInfo {
     public:
         static int getNumDevices();
         static int getNumGpus();
