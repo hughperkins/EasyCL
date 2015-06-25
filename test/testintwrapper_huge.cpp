@@ -9,7 +9,7 @@
 //#include "unistd.h"
 
 #include "test/asserts.h"
-#include "test/Timer.h"
+//#include "test/Timer.h"
 
 using namespace std;
 
@@ -26,9 +26,9 @@ TEST( SLOW_testintwrapper_huge, testreadnonwrapper ) {
     int workgroupsize = cl->getMaxWorkgroupSize();
     globalSize = ( ( globalSize + workgroupsize - 1 ) / workgroupsize ) * workgroupsize;
     cout << "globalsize: " << globalSize << " workgroupsize " << workgroupsize << endl;
-    Timer timer;
+//    Timer timer;
     kernel->run_1d( globalSize, workgroupsize );
-    timer.timeCheck("after kernel");
+//    timer.timeCheck("after kernel");
     for( int i = 0; i < 5; i++ ) {
            cout << "out[" << i << "]=" << out[i] << endl;
     }
@@ -45,7 +45,7 @@ TEST( SLOW_testintwrapper_huge, testreadnonwrapper ) {
 }
 
 TEST( SLOW_testintwrapper_huge, testread ) {
-    Timer timer;
+//    Timer timer;
     EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
     CLKernel *kernel = cl->buildKernel("testeasycl.cl", "test_read");
 //    const int N = 4500000;
@@ -59,11 +59,11 @@ TEST( SLOW_testintwrapper_huge, testread ) {
     int workgroupsize = cl->getMaxWorkgroupSize();
     globalSize = ( ( globalSize + workgroupsize - 1 ) / workgroupsize ) * workgroupsize;
     cout << "globalsize: " << globalSize << " workgroupsize " << workgroupsize << endl;
-    timer.timeCheck("before kernel");
+//    timer.timeCheck("before kernel");
     kernel->run_1d( globalSize, workgroupsize );
-    timer.timeCheck("after kernel");
+//    timer.timeCheck("after kernel");
     outwrapper->copyToHost();
-    timer.timeCheck("after copy to host");
+//    timer.timeCheck("after copy to host");
     for( int i = 0; i < N; i++ ) {
        if( out[i] != 4228 ) {
            cout << "out[" << i << "] != 4228: " << out[i] << endl;
