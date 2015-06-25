@@ -4,14 +4,14 @@ using namespace std;
 
 #include "gtest/gtest.h"
 
-#include "Timer.h"
+// #include "Timer.h"
 
 TEST( testlocal, globalreduce ) {
     EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
     CLKernel *kernel = cl->buildKernel("testlocal.cl", "reduceGlobal" );
     int workgroupSize = min( 512, cl->getMaxWorkgroupSize() );
     float *myarray = new float[workgroupSize];
-    Timer timer;
+//    Timer timer;
     for( int i = 0; i < 2000; i++ ) {
         float sumViaCpu = 0;
         for( int i = 0; i < workgroupSize; i++ ) {
@@ -25,7 +25,7 @@ TEST( testlocal, globalreduce ) {
         
         EXPECT_EQ( myarray[0], sumViaCpu );
     }
-    timer.timeCheck("after iterations");
+//    timer.timeCheck("after iterations");
     delete[]myarray;
     delete kernel;
     delete cl;
@@ -36,7 +36,7 @@ TEST( testlocal, localreduce ) {
     CLKernel *kernel = cl->buildKernel("testlocal.cl", "reduceViaScratch" );
     int workgroupSize = min( 512, cl->getMaxWorkgroupSize() );
     float *myarray = new float[workgroupSize];
-    Timer timer;
+//    Timer timer;
     for( int i = 0; i < 2000; i++ ) {
         float sumViaCpu = 0;
         for( int i = 0; i < workgroupSize; i++ ) {
@@ -50,7 +50,7 @@ TEST( testlocal, localreduce ) {
         
         EXPECT_EQ( myarray[0], sumViaCpu );
     }
-    timer.timeCheck("after iterations");
+//    timer.timeCheck("after iterations");
     delete[]myarray;
     delete kernel;
     delete cl;
@@ -75,7 +75,7 @@ TEST( testlocal, reduceviascratch_multipleworkgroups ) {
     cout << "expected sum, calc'd via cpu, : " << sumViaCpu << endl;
     EXPECT_NE( myarray[0], sumViaCpu );
 
-    Timer timer;
+//    Timer timer;
 
     CLWrapper *a1wrapper = cl->wrap( N, myarray );
     a1wrapper->copyToDevice();
@@ -131,7 +131,7 @@ TEST( testlocal, reduceviascratch_multipleworkgroups_ints ) {
     ASSERT_EQ( localSumViaCpu2, localSumsViaCpu[1] );
     ASSERT_NE( myarray[0], sumViaCpu );
 
-    Timer timer;
+//    Timer timer;
 
     CLWrapper *a1wrapper = cl->wrap( N, myarray );
     a1wrapper->copyToDevice();
@@ -147,7 +147,7 @@ TEST( testlocal, reduceviascratch_multipleworkgroups_ints ) {
     kernel->out( 1, &finalSum );
     kernel->localInts( workgroupSize );
     kernel->run_1d( numWorkgroups, workgroupSize );
-    timer.timeCheck("finished 2-way reduce");
+//    timer.timeCheck("finished 2-way reduce");
 
     EXPECT_EQ( sumViaCpu, finalSum );
 
@@ -188,7 +188,7 @@ TEST( testlocal, reduce_multipleworkgroups_ints_noscratch ) {
     ASSERT_EQ( localSumViaCpu2, localSumsViaCpu[1] );
     ASSERT_NE( myarray[0], sumViaCpu );
 
-    Timer timer;
+//    Timer timer;
 
     CLWrapper *a1wrapper = cl->wrap( N, myarray );
     a1wrapper->copyToDevice();
@@ -202,7 +202,7 @@ TEST( testlocal, reduce_multipleworkgroups_ints_noscratch ) {
     kernel->in( a2wrapper );
     kernel->out( 1, &finalSum );
     kernel->run_1d( numWorkgroups, workgroupSize );
-    timer.timeCheck("finished 2-way reduce");
+//    timer.timeCheck("finished 2-way reduce");
 
     EXPECT_EQ( sumViaCpu, finalSum );
 
@@ -244,11 +244,11 @@ TEST( SLOW_testlocal, reduce_noscratch_multipleworkgroups_ints_3levels ) {
     ASSERT_EQ( localSumViaCpu2, localSumsViaCpu[1] );
     ASSERT_NE( myarray[0], sumViaCpu );
 
-    Timer timer;
+//    Timer timer;
 
     CLWrapper *a1wrapper = cl->wrap( N, myarray );
     a1wrapper->copyToDevice();
-    timer.timeCheck("copied array to device");
+//    timer.timeCheck("copied array to device");
     int *a2 = new int[numWorkgroups*level3size];
     CLWrapper *a2wrapper = cl->wrap( numWorkgroups * level3size, a2 );
     kernel->in( a1wrapper );
@@ -265,7 +265,7 @@ TEST( SLOW_testlocal, reduce_noscratch_multipleworkgroups_ints_3levels ) {
     kernel->in( a3wrapper );
     kernel->out( 1, &finalSum );
     kernel->run_1d( level3size, level3size );
-    timer.timeCheck("finished 3-level reduce");
+//    timer.timeCheck("finished 3-level reduce");
 
     EXPECT_EQ( sumViaCpu, finalSum );
 
@@ -309,11 +309,11 @@ TEST( SLOW_testlocal, reduceviascratch_multipleworkgroups_ints_3levels ) {
     ASSERT_EQ( localSumViaCpu2, localSumsViaCpu[1] );
     ASSERT_NE( myarray[0], sumViaCpu );
 
-    Timer timer;
+//    Timer timer;
 
     CLWrapper *a1wrapper = cl->wrap( N, myarray );
     a1wrapper->copyToDevice();
-    timer.timeCheck("copied array to device");
+//    timer.timeCheck("copied array to device");
     int *a2 = new int[numWorkgroups*level3size];
     CLWrapper *a2wrapper = cl->wrap( numWorkgroups * level3size, a2 );
     kernel->in( a1wrapper );
@@ -333,7 +333,7 @@ TEST( SLOW_testlocal, reduceviascratch_multipleworkgroups_ints_3levels ) {
     kernel->out( 1, &finalSum );
     kernel->localInts( level3size );
     kernel->run_1d( level3size, level3size );
-    timer.timeCheck("finished 3-level reduce");
+//    timer.timeCheck("finished 3-level reduce");
 
     EXPECT_EQ( sumViaCpu, finalSum );
 
@@ -360,11 +360,11 @@ TEST( SLOW_testlocal, selfdot_3levels_withscratch ) {
         myarray[i] = ( (i + 7) * 3 ) % 5;
     }
 
-    Timer timer;
+//    Timer timer;
 
     CLWrapper *a1wrapper = cl->wrap( N, myarray );
     a1wrapper->copyToDevice();
-    timer.timeCheck("copied array to device");
+//    timer.timeCheck("copied array to device");
     int *a2 = new int[numWorkgroups*level3size];
     CLWrapper *a2wrapper = cl->wrap( numWorkgroups * level3size, a2 );
     kernel->in( a1wrapper );
@@ -389,7 +389,7 @@ TEST( SLOW_testlocal, selfdot_3levels_withscratch ) {
     kernel->localInts( level3size );
     kernel->localInts( workgroupSize );
     kernel->run_1d( level3size, level3size );
-    timer.timeCheck("finished 3-level reduce");
+//    timer.timeCheck("finished 3-level reduce");
 
     EXPECT_EQ( -1306309159, finalSum );
 
@@ -416,11 +416,11 @@ TEST( SLOW_testlocal, selfdot_3levels_withoutscratch ) {
         myarray[i] = ( (i + 7) * 3 ) % 5;
     }
 
-    Timer timer;
+//    Timer timer;
 
     CLWrapper *a1wrapper = cl->wrap( N, myarray );
     a1wrapper->copyToDevice();
-    timer.timeCheck("copied array to device");
+//    timer.timeCheck("copied array to device");
     int *second = new int[N];
     CLWrapper *secondwrapper = cl->wrap( N, second );
     int *a2 = new int[numWorkgroups*level3size];
@@ -444,7 +444,7 @@ TEST( SLOW_testlocal, selfdot_3levels_withoutscratch ) {
     kernel->out( secondwrapper );
     kernel->out( 1, &finalSum );
     kernel->run_1d( level3size, level3size );
-    timer.timeCheck("finished 3-level reduce");
+//    timer.timeCheck("finished 3-level reduce");
 
     EXPECT_EQ( -1306309159, finalSum );
 
