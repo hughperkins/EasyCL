@@ -19,26 +19,30 @@ endif()
 
 unset( LUA_AVAILABLE CACHE)
 OPTION(BUILD_TESTS "Build unit-tests." OFF)
-OPTION(KERNEL_TEMPLATING "Activate kernel templating, at runtime, using Lua." ON)
+#OPTION(KERNEL_TEMPLATING "Activate kernel templating, at runtime, using Lua." ON)
 OPTION(DEV_RUN_COG "Only EasyCL maintainers need this, otherwise set to 'OFF'." OFF)
 SET(CLBLAS_DIR "../clMathLibraries/clBLAS" CACHE PATH "Only needed if TEST_CLBLAS is On.")
+unset(KERNEL_TEMPLATING CACHE)
 
 include_directories(.)
 
-if(KERNEL_TEMPLATING)
-    find_package(Lua51)
-    include_directories(${LUA_INCLUDE_DIR})
-    link_libraries(${LUA_LIBRARIES})
-    set(TEMPLATESRC templates/LuaTemplater.cpp templates/TemplatedKernel.cpp )
-    set(TEMPLATETESTS test/testLuaTemplater.cpp test/testTemplatedKernel.cpp )
-endif(KERNEL_TEMPLATING)
+include_directories(thirdparty/lua-5.1.5/src)
+# link_libraries(${LUA_LIBRARIES})
+set(TEMPLATESRC templates/LuaTemplater.cpp templates/TemplatedKernel.cpp )
+set(TEMPLATETESTS test/testLuaTemplater.cpp test/testTemplatedKernel.cpp )
 
 add_library( CLEW thirdparty/clew/src/clew.c )
 IF( CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" )
     SET_TARGET_PROPERTIES( CLEW PROPERTIES COMPILE_FLAGS "-fPIC")
 ENDIF( CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" )
 
+file(STRINGS thirdparty/lua-5.1.5/files.txt lua_src1)
+foreach(source ${lua_src1})
+    set( lua_src ${lua_src} thirdparty/lua-5.1.5/src/${source})
+endforeach()
+
 add_library( EasyCL SHARED EasyCL.cpp CLKernel.cpp CLWrapper.cpp platforminfo_helper.cpp deviceinfo_helper.cpp DevicesInfo.cpp DeviceInfo.cpp util/easycl_stringhelper.cpp
+${lua_src}
     ${TEMPLATESRC} )
 target_link_libraries( EasyCL CLEW )
 if( ON_LINUX )
