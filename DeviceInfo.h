@@ -4,8 +4,10 @@
 #include "DeviceInfo.h"
 #include "clew.h"
 
+#include "EasyCL_export.h"
+
 namespace easycl {
-    class DeviceInfo {
+    class EasyCL_EXPORT DeviceInfo {
     public:
 //        long platformId;
         std::string platformVendor;

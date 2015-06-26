@@ -9,12 +9,14 @@
 #include <string>
 #include <vector>
 
+#include "EasyCL_export.h"
+
 class lua_State;
 
 #define STATIC static
 #define VIRTUAL virtual
 
-class LuaTemplater {
+class EasyCL_EXPORT LuaTemplater {
 private:
     lua_State *L;
 
