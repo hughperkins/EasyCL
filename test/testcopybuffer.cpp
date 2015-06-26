@@ -65,6 +65,65 @@ TEST( testcopybuffer, main ) {
     delete cl;
 }
 
+TEST( testcopybuffer, withoffset ) {
+    if( !EasyCL::isOpenCLAvailable() ) {
+        cout << "opencl library not found" << endl;
+        exit(-1);
+    }
+    cout << "found opencl library" << endl;
+
+    EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
+    //CLKernel *kernel = cl->buildKernel("testeasycl.cl", "test");
+    float in[10];
+    float in2[10];
+    for( int i = 0; i < 10; i++ ) {
+        in[i] = i * 3;
+        in2[i] = 23 + i;
+    }
+    float out[10];
+    CLWrapper *inwrapper = cl->wrap(10, in);
+    CLWrapper *in2wrapper = cl->wrap(10, in2);
+    CLWrapper *outwrapper = cl->wrap(10, out);
+    inwrapper->copyToDevice();
+    in2wrapper->copyToDevice();
+
+    EXPECT_FALSE(in2wrapper->isDeviceDirty());
+    inwrapper->copyTo(in2wrapper, 2, 5, 4);
+    EXPECT_TRUE(in2wrapper->isDeviceDirty());
+  //  cl->finish();
+    // check that in2 host-side unchanged:
+    for( int i = 0; i < 10; i++ ) {
+        in[i] = i * 3;
+        EXPECT_EQ( 23 + i, in2[i] );
+    }
+
+    in2wrapper->copyToHost();
+    // check that in2 is now a partial copy of in:
+    for( int i = 0; i < 10; i++ ) {
+//        in[i] = i * 3;
+        if( i >= 5 && i < 9 ) {
+          EXPECT_EQ( (i-3) * 3, in2[i] );
+        } else {
+          EXPECT_EQ( 23 + i, in2[i] );
+        }
+    }
+
+    // check that modifying in2 doesnt modfiy in:
+    in2[1] = 27;
+    in2wrapper->copyToDevice();
+    inwrapper->copyToHost();
+    EXPECT_EQ( 1 * 3, in[1] );
+
+    in2wrapper->copyToHost();
+    EXPECT_EQ( 1 * 3, in[1] );
+    EXPECT_EQ( 27, in2[1] );
+    
+    delete inwrapper;
+    delete in2wrapper;
+    delete outwrapper;
+    delete cl;
+}
+
 TEST( SLOW_testcopybuffer, larger ) {
     if( !EasyCL::isOpenCLAvailable() ) {
         cout << "opencl library not found" << endl;

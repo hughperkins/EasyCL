@@ -116,6 +116,9 @@ void CLWrapper::markDeviceDirty() {
     deviceDirty = true;
 }
 void CLWrapper::copyTo( CLWrapper *target ) {
+  copyTo( target, 0, 0, N );
+}
+void CLWrapper::copyTo( CLWrapper *target, int srcOffset, int dstOffset, int count ) {
     if( !onDevice ) {
         throw std::runtime_error("Must have called copyToDevice() or createOnDevice() before calling copyTo(CLWrapper*)");
     }
@@ -133,7 +136,7 @@ void CLWrapper::copyTo( CLWrapper *target ) {
     // we will also assume that destination CLWrapper* is valid
     cl_event event = NULL;
     cl_int err = clEnqueueCopyBuffer( *(cl->queue), devicearray, target->devicearray, 
-        0, 0, N * getElementSize(),
+        srcOffset * getElementSize(), dstOffset * getElementSize(), count * getElementSize(),
         0, NULL, &event );
     if (err != CL_SUCCESS) {
         throw std::runtime_error("copyTo failed with " + easycl::toString( err ) );

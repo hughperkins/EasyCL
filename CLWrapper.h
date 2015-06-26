@@ -32,6 +32,7 @@ public:
     virtual void *getHostArray() = 0;
     virtual void const *getHostArrayConst() = 0;
     virtual void copyTo( CLWrapper *target );
+    virtual void copyTo( CLWrapper *target, int srcOffset, int dstOffset, int count );
 
     CLWrapper( int N, EasyCL *cl );
     CLWrapper( const CLWrapper &source );
