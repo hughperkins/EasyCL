@@ -116,6 +116,9 @@ void CLWrapper::markDeviceDirty() {
     deviceDirty = true;
 }
 void CLWrapper::copyTo( CLWrapper *target ) {
+    if( size() != target->size() ) {
+        throw std::runtime_error("copyTo: array size mismatch between source and target CLWrapper objects " + easycl::toString(size()) + " vs " + easycl::toString(target->size()));
+    }
   copyTo( target, 0, 0, N );
 }
 void CLWrapper::copyTo( CLWrapper *target, int srcOffset, int dstOffset, int count ) {
@@ -125,11 +128,14 @@ void CLWrapper::copyTo( CLWrapper *target, int srcOffset, int dstOffset, int cou
     if( !target->onDevice ) {
         throw std::runtime_error("Must have called copyToDevice() or createOnDevice() on target before calling copyTo(target)");
     }
+    if( srcOffset + count > N ) {
+      throw std::runtime_error("copyTo: not enough source elements, given offset " + easycl::toString(srcOffset) + " and count " + easycl::toString(count));
+    }
+    if( dstOffset + count > target->N ) {
+      throw std::runtime_error("copyTo: not enough destation elements, given offset " + easycl::toString(dstOffset) + " and count " + easycl::toString(count));
+    }
     if( getElementSize() != target->getElementSize() ) {
         throw std::runtime_error("copyTo: element size mismatch between source and target CLWrapper objects");
-    }
-    if( size() != target->size() ) {
-        throw std::runtime_error("copyTo: array size mismatch between source and target CLWrapper objects " + easycl::toString(size()) + " vs " + easycl::toString(target->size()));
     }
     // can assume that we have our data on the device now, because of if check
     // just now
