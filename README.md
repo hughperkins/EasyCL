@@ -380,11 +380,15 @@ What if I just have a question?
 
 # Recent changes
 
+* 2015 June 27th:
+  * merged bundle-lua to master
+  * Added StatefulTimer.h (was in [DeepCL](http://github.com/hughperkins/DeepCL) )
 * 2015 June 18-25th:
-  * In branch `bundle-lua`:
+  * on branch bundle-lua:
     * builds on Windows again
     * started bundling lua sourcecode, so dont need lua libraries etc
     * Added new version of CLWrapper->copyTo, wihch has additional parameters `, srcOffset, dstOffset, count`
+    * Added StatefulTimer.h (was in [DeepCL](http://github.com/hughperkins/DeepCL)
 * 2015 June 17th:
   * Merged changes to master:
     * DevicesInfo::getNumDevices() now returns 0, if no platforms available, rather than throwing exception
