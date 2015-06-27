@@ -15,7 +15,10 @@
 #define NOMINMAX // prevents errors compiling std::max and std::min
 #include <Windows.h>
 #else
-#include <chrono>
+#include <sys/time.h>
+#include <stdio.h>
+#include <unistd.h>
+//#include <chrono>
 #endif
 
 #include <vector>
@@ -28,29 +31,25 @@ public:
         static StatefulTimer *_instance = new StatefulTimer();
         return _instance;
     }
-    #ifdef WINNOCHRONO
-    DWORD last;
-    #else
-    std::chrono::time_point<std::chrono::high_resolution_clock> last;
-    #endif
-    std::map< std::string, float > timeByState;
-    std::string prefix; // = "";
+
+    double last;
+
+    std::map< std::string, double > timeByState;
+    std::string prefix;
+
     StatefulTimer() : prefix("") {
-        #ifdef WINNOCHRONO
-        last = timeGetTime();
-        #else
-         last = std::chrono::high_resolution_clock::now();
-        #endif
+      std::cout<< "statefultimer v0.6" << std::endl;
+        last = getSystemMilliseconds();
     }
     ~StatefulTimer() {
         std::cout << "StatefulTimer readings:" << std::endl;
-        for( std::map< std::string, float >::iterator it = timeByState.begin(); it != timeByState.end(); it++ ) {
+        for( std::map< std::string, double >::iterator it = timeByState.begin(); it != timeByState.end(); it++ ) {
             std::cout << "   " << it->first << ": " << it->second << std::endl;
         }
     }
     void _dump(bool force = false) {
         double totalTimings = 0;
-        for( std::map< std::string, float >::iterator it = timeByState.begin(); it != timeByState.end(); it++ ) {
+        for( std::map< std::string, double >::iterator it = timeByState.begin(); it != timeByState.end(); it++ ) {
 //            std::cout << "   " << it->first << ": " << it->second << std::endl;
             totalTimings += it->second;
         }
@@ -58,7 +57,7 @@ public:
             return;
         }
         std::cout << "StatefulTimer readings:" << std::endl;
-        for( std::map< std::string, float >::iterator it = timeByState.begin(); it != timeByState.end(); it++ ) {
+        for( std::map< std::string, double >::iterator it = timeByState.begin(); it != timeByState.end(); it++ ) {
             if( it->second > 0 ) {
                 std::cout << "   " << it->first << ": " << it->second << "ms" << std::endl;
             }
@@ -74,26 +73,27 @@ public:
     static void timeCheck( std::string state ) {
         instance()->_timeCheck( state );
     }
+    double getSystemMilliseconds() {
+        // ok I fought for ages with chrono, but vs2010 doesnt support chrono anyway
+        // so lets use the simpler normal functions :-P
+        #ifdef WINNOCHRONO
+          DWORD thistime = timeGetTime();
+          return thistime;
+        #else // linux etc
+          struct timeval now;
+          gettimeofday(&now, NULL);
+          double mtime = now.tv_sec * 1000.0 + now.tv_usec/1000.0;
+          return mtime;
+        #endif
+    }
     void _timeCheck( std::string state ) {
         state = prefix + state;
-        #ifdef WINNOCHRONO
-        DWORD thistime = timeGetTime();
-		DWORD timemilliseconds = thistime - last;
-        #else
-       std::chrono::time_point<std::chrono::high_resolution_clock> thistime = std::chrono::high_resolution_clock::now();
-       std::chrono::duration<float> change = thistime - last;
-       float timemilliseconds = static_cast<float>( std::chrono::duration_cast<std::chrono::milliseconds> ( change ).count() );
-        #endif
-//        if( timeByState.has_key( state ) ) {
-            timeByState[state] += timemilliseconds;
-//        } else {
-//            timeByState[state] = timemilliseconds;
-//        }
-        #ifdef WINNOCHRONO
-        last = thistime;
-        #else
-        last = thistime;
-        #endif
+        double now = getSystemMilliseconds();
+        //std::cout << "now " << now << std::endl;
+        double change = now - last;
+        //std::cout << "change " << change << std::endl;
+        timeByState[state] += change;
+        last = now;
     }
 };
 
