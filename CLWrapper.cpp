@@ -73,6 +73,7 @@ void CLWrapper::copyToHost() {
     error = clEnqueueReadBuffer(*(cl->queue), devicearray, CL_TRUE, 0, getElementSize() * N, getHostArray(), 0, NULL, &event);    
     cl->checkError(error);
     cl_int err = clWaitForEvents(1, &event);
+    clReleaseEvent(event);
     if (err != CL_SUCCESS) {
         throw std::runtime_error("wait for event on copytohost failed with " + easycl::toString( err ) );
     }
@@ -151,6 +152,7 @@ void CLWrapper::copyTo( CLWrapper *target, int srcOffset, int dstOffset, int cou
         /* Wait for calculations to be finished. */
 //        err = clWaitForEvents(1, &event);
     }
+    clReleaseEvent(event);
     target->markDeviceDirty();
 }
 
