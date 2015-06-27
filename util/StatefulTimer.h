@@ -22,8 +22,6 @@
 #include <map>
 #include <string>
 
-#include "DeepCLDllExport.h"
-
 class StatefulTimer {
 public:
     static StatefulTimer *instance() {
