@@ -121,10 +121,14 @@ FILE(GLOB HEADERFILES *.h templates/*.h util/*.h)
 INSTALL(FILES ${HEADERFILES} DESTINATION include/easycl)
 
 if(BUILD_TESTS)
-#    INSTALL(TARGETS easycl_gtest easycl_unittests
-#       LIBRARY DESTINATION lib
-#       RUNTIME DESTINATION bin
-#    )
+   FILE(GLOB CLFILES test/*.cl)
+   message("CLFILES ${CLFILES}")
+   INSTALL(FILES ${CLFILES} DESTINATION bin)
+   INSTALL(TARGETS easycl_gtest easycl_unittests gpuinfo
+      LIBRARY DESTINATION lib
+      ARCHIVE DESTINATION lib
+      RUNTIME DESTINATION bin
+   )
     # Note: to run tests, need the .cl files currently, so need to install those
     # too, and reference them appropriately from the code, ie correct path
 endif(BUILD_TESTS)
