@@ -17,24 +17,32 @@ if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
 endif()
 
-unset( LUA_AVAILABLE CACHE)
 OPTION(BUILD_TESTS "Build unit-tests." OFF)
-#OPTION(KERNEL_TEMPLATING "Activate kernel templating, at runtime, using Lua." ON)
 OPTION(DEV_RUN_COG "Only EasyCL maintainers need this, otherwise set to 'OFF'." OFF)
 SET(CLBLAS_DIR "../clMathLibraries/clBLAS" CACHE PATH "Only needed if TEST_CLBLAS is On.")
+
+unset( LUA_AVAILABLE CACHE)
 unset(KERNEL_TEMPLATING CACHE)
 
 include_directories(.)
+include_directories("${CMAKE_INSTALL_PREFIX}/include")
 
 include_directories(thirdparty/lua-5.1.5/src)
 # link_libraries(${LUA_LIBRARIES})
 set(TEMPLATESRC templates/LuaTemplater.cpp templates/TemplatedKernel.cpp )
 set(TEMPLATETESTS test/testLuaTemplater.cpp test/testTemplatedKernel.cpp )
 
-add_library( CLEW thirdparty/clew/src/clew.c )
-IF( CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" )
-    SET_TARGET_PROPERTIES( CLEW PROPERTIES COMPILE_FLAGS "-fPIC")
-ENDIF( CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" )
+#add_library( clew thirdparty/clew/src/clew.c )
+#IF( CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" )
+#    SET_TARGET_PROPERTIES( clew PROPERTIES COMPILE_FLAGS "-fPIC")
+#ENDIF( CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" )
+
+SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules")
+
+INCLUDE("${CMAKE_MODULE_PATH}/build_clew.cmake")
+message("CLEW_INCLUDE_DIRS ${CLEW_INCLUDE_DIRS}")
+INCLUDE_DIRECTORIES(${CLEW_INCLUDE_DIRS})
+#LINK_DIRECTORIES(${CLEW_LIBRARIES})
 
 file(STRINGS thirdparty/lua-5.1.5/files.txt lua_src1)
 foreach(source ${lua_src1})
@@ -44,14 +52,15 @@ endforeach()
 add_library( EasyCL SHARED EasyCL.cpp CLKernel.cpp CLWrapper.cpp platforminfo_helper.cpp deviceinfo_helper.cpp DevicesInfo.cpp DeviceInfo.cpp util/easycl_stringhelper.cpp
 ${lua_src}
     ${TEMPLATESRC} )
-target_link_libraries( EasyCL CLEW )
+target_link_libraries( EasyCL clew )
 if( ON_LINUX )
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
     target_link_libraries( EasyCL dl )
 endif()
 
+
 add_executable( gpuinfo gpuinfo.cpp platforminfo_helper.cpp deviceinfo_helper.cpp DeviceInfo.cpp DeviceInfo.cpp )
-target_link_libraries( gpuinfo CLEW )
+target_link_libraries( gpuinfo clew )
 if( ON_LINUX )
     target_link_libraries( gpuinfo dl )
 endif()
@@ -78,7 +87,7 @@ if(BUILD_TESTS)
       test/asserts.cpp test/gtest_main.cpp test/GtestGlobals.cpp 
       test/testcopybuffer.cpp
       ${CLBLAS_TEST_SOURCES} )
-  target_link_libraries( easycl_unittests easycl_gtest EasyCL CLEW )
+  target_link_libraries( easycl_unittests easycl_gtest EasyCL clew )
   target_include_directories( easycl_unittests PRIVATE thirdparty/gtest )
 
   if( TEST_CLBLAS )
@@ -94,6 +103,13 @@ if(DEV_RUN_COG)
     )
     add_dependencies( EasyCL cog )
 endif(DEV_RUN_COG)
+
+ADD_DEPENDENCIES(EasyCL clew)
+ADD_DEPENDENCIES(gpuinfo clew)
+
+#message("CLEW_LIBRARIES ${CLEW_LIBRARIES}")
+#target_link_libraries(EasyCL ${CLEW_LIBRARIES})
+#target_link_libraries(gpuinfo ${CLEW_LIBRARIES})
 
 INSTALL( TARGETS EasyCL
      RUNTIME DESTINATION bin
