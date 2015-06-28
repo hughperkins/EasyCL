@@ -268,6 +268,10 @@ This is a new feature, as of May 15 2015, and might have some bugs prior to May 
 * Simply `#include` new `"CLKernel_structs.h"` header, in order to be able to pass structs
 * See [test/testStructs.cpp](test/testStructs.cpp) for an example
 
+# Using with clBLAS
+
+* You can call `->getBuffer()` on a CLWrapper object, in order to pass it to clBLAS.  You can see an example eg at [THClBlas.cpp#L425](https://github.com/hughperkins/cltorch/blob/b6a226722a6ee7bd55b4729e5bf12c7c700d3da3/lib/THCl/THClBlas.cpp#L425)
+
 ## How to build
 
 ### Building on linux
