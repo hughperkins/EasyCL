@@ -21,4 +21,5 @@
 /build-win64/
 /install/
 
-/dist-*/
+/dist*/
+
