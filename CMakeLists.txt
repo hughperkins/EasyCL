@@ -22,8 +22,9 @@ unset(KERNEL_TEMPLATING CACHE)
 unset(CLBLAS_DIR CACHE)
 unset(TEST_CLBLAS CACHE)
 
-include_directories(.)
-include_directories("${CMAKE_INSTALL_PREFIX}/include")
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/clew/include)
+# include_directories("${CMAKE_INSTALL_PREFIX}/include")
 
 include_directories(thirdparty/lua-5.1.5/src)
 set(TEMPLATESRC templates/LuaTemplater.cpp templates/TemplatedKernel.cpp )
