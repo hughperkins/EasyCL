@@ -43,7 +43,7 @@ endforeach()
 add_library( EasyCL SHARED EasyCL.cpp CLKernel.cpp CLWrapper.cpp platforminfo_helper.cpp deviceinfo_helper.cpp DevicesInfo.cpp DeviceInfo.cpp util/easycl_stringhelper.cpp
 ${lua_src}
     ${TEMPLATESRC} )
-target_link_libraries( EasyCL clew )
+target_link_libraries( EasyCL ${CLEW_LIBRARIES} )
 if( ON_LINUX )
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
     target_link_libraries( EasyCL dl )
@@ -51,7 +51,7 @@ endif()
 
 
 add_executable( gpuinfo gpuinfo.cpp platforminfo_helper.cpp deviceinfo_helper.cpp DeviceInfo.cpp DeviceInfo.cpp )
-target_link_libraries( gpuinfo clew )
+target_link_libraries( gpuinfo ${CLEW_LIBRARIES} )
 if( ON_LINUX )
     target_link_libraries( gpuinfo dl )
 endif()
@@ -64,10 +64,6 @@ if(BUILD_TESTS)
       add_library( easycl_gtest thirdparty/gtest/gtest-all.cc )
   endif()
 
-  if( TEST_CLBLAS )
-      set( CLBLAS_TEST_SOURCES test/testclblas.cpp )
-  endif()
-
   add_executable( easycl_unittests test/testscalars.cpp test/testintarray.cpp test/testfloatwrapper.cpp
       test/testclarray.cpp test/testfloatwrapperconst.cpp test/testintwrapper.cpp test/test_scenario_te42kyfo.cpp
       test/testfloatarray.cpp test/testeasycl.cpp test/testinout.cpp test/testintwrapper_huge.cpp
@@ -77,13 +73,8 @@ if(BUILD_TESTS)
       test/asserts.cpp test/gtest_main.cpp test/GtestGlobals.cpp 
       test/testcopybuffer.cpp
       ${CLBLAS_TEST_SOURCES} )
-  target_link_libraries( easycl_unittests easycl_gtest EasyCL clew )
+  target_link_libraries( easycl_unittests easycl_gtest EasyCL ${CLEW_LIBRARIES} )
   target_include_directories( easycl_unittests PRIVATE thirdparty/gtest )
-
-  if( TEST_CLBLAS )
-      target_include_directories( easycl_unittests PRIVATE ${CLBLAS_DIR}/src )
-      target_link_libraries( easycl_unittests ${CLBLAS_DIR}/src/build/library/libclBLAS.so)
-  endif()
 endif(BUILD_TESTS)
 
 if(DEV_RUN_COG)
@@ -101,8 +92,12 @@ INSTALL( TARGETS EasyCL
      RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib )
 	
-FILE(GLOB HEADERFILES *.h templates/*.h util/*.h)
-INSTALL(FILES ${HEADERFILES} DESTINATION include/easycl)
+FILE(GLOB HEADERS_ROOT *.h )
+FILE(GLOB HEADERS_TEMPLATES templates/*.h )
+FILE(GLOB HEADERS_UTIL util/*.h)
+INSTALL(FILES ${HEADERS_ROOT} DESTINATION include/easycl)
+INSTALL(FILES ${HEADERS_TEMPLATES} DESTINATION include/easycl/templates)
+INSTALL(FILES ${HEADERS_UTIL} DESTINATION include/easycl/util)
 
 if(BUILD_TESTS)
    FILE(GLOB CLFILES test/*.cl)
