@@ -149,10 +149,10 @@ CLKernel *CLKernel::input(TYPE value) { \
 CLKernel *CLKernel::in(TYPE value) { \
 	return input(value); \
 }
-CLKERNEL_CREATE_SCALAR_INPUT(int, Int);
-CLKERNEL_CREATE_SCALAR_INPUT(unsigned int, UInt);
-CLKERNEL_CREATE_SCALAR_INPUT(long, Long);
-CLKERNEL_CREATE_SCALAR_INPUT(unsigned long, ULong);
+CLKERNEL_CREATE_SCALAR_INPUT(int32, Int32);
+CLKERNEL_CREATE_SCALAR_INPUT(uint32, UInt32);
+CLKERNEL_CREATE_SCALAR_INPUT(int64, Int64);
+CLKERNEL_CREATE_SCALAR_INPUT(uint64, UInt64);
 CLKERNEL_CREATE_SCALAR_INPUT(float, Float);
 
 //CLKernel *CLKernel::input(unsigned int value) {
@@ -163,8 +163,8 @@ CLKERNEL_CREATE_SCALAR_INPUT(float, Float);
 //	return this;
 //}
 //CLKernel *CLKernel::input(long value) {
-//	inputArgLongs.push_back(value);
-//	error = clSetKernelArg(kernel, nextArg, sizeof(long), &(inputArgLongs[inputArgLongs.size() - 1]));
+//	inputArgInt64s.push_back(value);
+//	error = clSetKernelArg(kernel, nextArg, sizeof(long), &(inputArgInt64s[inputArgInt64s.size() - 1]));
 //	easycl->checkError(error);
 //	nextArg++;
 //	return this;
@@ -286,10 +286,10 @@ void CLKernel::run(int ND, const size_t *global_ws, const size_t *local_ws) {
 	outputArgBuffers.clear();
 	outputArgPointers.clear();
 	outputArgSizes.clear();
-	inputArgInts.clear();
-	inputArgUInts.clear();
-	inputArgLongs.clear();
-	inputArgULongs.clear();
+	inputArgInt32s.clear();
+	inputArgUInt32s.clear();
+	inputArgInt64s.clear();
+	inputArgUInt64s.clear();
 	inputArgFloats.clear();
     wrappersToDirty.clear();
 	nextArg = 0;
@@ -305,10 +305,10 @@ template EasyCL_EXPORT CLKernel *CLKernel::out(int N, TYPE *data); \
 template EasyCL_EXPORT CLKernel *CLKernel::inout(int N, TYPE *data);
 
 EASYCL_INSTANTIATE_FOR_TYPE(float);
-EASYCL_INSTANTIATE_FOR_TYPE(int);
-EASYCL_INSTANTIATE_FOR_TYPE(unsigned int);
-EASYCL_INSTANTIATE_FOR_TYPE(long);
-EASYCL_INSTANTIATE_FOR_TYPE(unsigned long);
+EASYCL_INSTANTIATE_FOR_TYPE(int32);
+EASYCL_INSTANTIATE_FOR_TYPE(uint32);
+EASYCL_INSTANTIATE_FOR_TYPE(int64);
+EASYCL_INSTANTIATE_FOR_TYPE(uint64);
 
 //template EasyCL_EXPORT CLKernel *CLKernel::input(int N, const float *data);
 //template EasyCL_EXPORT CLKernel *CLKernel::input(int N, const int *data);
