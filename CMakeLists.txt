@@ -15,6 +15,12 @@ endif()
 
 OPTION(BUILD_TESTS "Build unit-tests." OFF)
 OPTION(DEV_RUN_COG "Only EasyCL maintainers need this, otherwise set to 'OFF'." OFF)
+OPTION(PROVIDE_LUA_ENGINE "eg for Torch, we use Torch's engine." ON)
+
+if(BUILD_TESTS AND NOT PROVIDE_LUA_ENGINE)
+  # find_library(Lua51 REQUIRED)
+  message("Error: if building tests, need to enable PROVIDE_LUA_ENGINE")
+endif()
 
 # remove obsolete options, so dont clutter the ccmake config page
 unset( LUA_AVAILABLE CACHE)
@@ -35,10 +41,12 @@ SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules")
 INCLUDE("${CMAKE_MODULE_PATH}/build_clew.cmake")
 INCLUDE_DIRECTORIES(${CLEW_INCLUDE_DIRS})
 
-file(STRINGS thirdparty/lua-5.1.5/files.txt lua_src1)
-foreach(source ${lua_src1})
-    set( lua_src ${lua_src} thirdparty/lua-5.1.5/src/${source})
-endforeach()
+if(PROVIDE_LUA_ENGINE)
+    file(STRINGS thirdparty/lua-5.1.5/files.txt lua_src1)
+    foreach(source ${lua_src1})
+        set( lua_src ${lua_src} thirdparty/lua-5.1.5/src/${source})
+    endforeach()
+endif(PROVIDE_LUA_ENGINE)
 
 add_library( EasyCL SHARED EasyCL.cpp CLKernel.cpp CLWrapper.cpp platforminfo_helper.cpp deviceinfo_helper.cpp DevicesInfo.cpp DeviceInfo.cpp util/easycl_stringhelper.cpp
 ${lua_src}
@@ -48,7 +56,9 @@ if( ON_LINUX )
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
     target_link_libraries( EasyCL dl )
 endif()
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 
+# link_libraries(EasyCL /home/user/torch/install/lib/libluaT.so)
 
 add_executable( gpuinfo gpuinfo.cpp platforminfo_helper.cpp deviceinfo_helper.cpp DeviceInfo.cpp DeviceInfo.cpp )
 target_link_libraries( gpuinfo ${CLEW_LIBRARIES} )
