@@ -11,7 +11,7 @@
 
 #include "EasyCL_export.h"
 
-class lua_State;
+struct lua_State;
 
 #define STATIC static
 #define VIRTUAL virtual
