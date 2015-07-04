@@ -58,7 +58,11 @@ if( ON_LINUX )
 endif()
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 
-# link_libraries(EasyCL /home/user/torch/install/lib/libluaT.so)
+if(NOT PROVIDE_LUA_ENGINE)
+  IF(APPLE)
+    SET_TARGET_PROPERTIES(EasyCL PROPERTIES LINK_FLAGS "-undefined dynamic_lookup")
+  ENDIF(APPLE)
+endif(NOT PROVIDE_LUA_ENGINE)
 
 add_executable( gpuinfo gpuinfo.cpp platforminfo_helper.cpp deviceinfo_helper.cpp DeviceInfo.cpp DeviceInfo.cpp )
 target_link_libraries( gpuinfo ${CLEW_LIBRARIES} )
