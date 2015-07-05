@@ -38,7 +38,7 @@ public:
     std::string prefix;
 
     StatefulTimer() : prefix("") {
-      std::cout<< "statefultimer v0.6" << std::endl;
+//      std::cout<< "statefultimer v0.6" << std::endl;
         last = getSystemMilliseconds();
     }
     ~StatefulTimer() {
