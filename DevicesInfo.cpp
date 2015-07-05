@@ -49,7 +49,7 @@ namespace easycl {
     //        cout << "checking platform id " << platform_id << endl;
             cl_device_id device_ids[100];
             cl_uint num_devices;
-            error = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_ALL, 100, device_ids, &num_devices);
+            error = clGetDeviceIDs(platform_id, types, 100, device_ids, &num_devices);
             if (error != CL_SUCCESS) {
                 continue;
     //           throw std::runtime_error( "Error getting device ids for platform " + EasyCL::toString( platform ) + ": " + errorMessage(error) );
@@ -98,7 +98,7 @@ namespace easycl {
     //        cout << "checking platform id " << platform_id << endl;
             cl_device_id device_ids[100];
             cl_uint num_devices;
-            error = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_ALL, 100, device_ids, &num_devices);
+            error = clGetDeviceIDs(platform_id, types, 100, device_ids, &num_devices);
             if (error != CL_SUCCESS) {
                 continue;
     //           throw std::runtime_error( "Error getting device ids for platform " + EasyCL::toString( platform ) + ": " + errorMessage(error) );
