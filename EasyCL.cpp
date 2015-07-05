@@ -128,7 +128,7 @@ EasyCL *EasyCL::createForIndexedGpu( int gpu, bool verbose ) {
             continue;
 //           throw std::runtime_error( "Error getting device ids for platform " + toString( platform ) + ": " + errorMessage(error) );
         }
-        cout << "gpu=" << gpu << " currentGpuIndex=" << currentGpuIndex << " num_devices=" << num_devices << endl;
+//        cout << "gpu=" << gpu << " currentGpuIndex=" << currentGpuIndex << " num_devices=" << num_devices << endl;
         if( ( gpu - currentGpuIndex ) < (int)num_devices ) {
             return new EasyCL( platform_id, device_ids[( gpu - currentGpuIndex )], verbose );
         } else {
