@@ -12,3 +12,10 @@ TEST( testDeviceInfo, basic ) {
     }
 }
 
+TEST( testDeviceInfo, gpus ) {
+    int numGpus = DevicesInfo::getNumGpus();
+    for( int i = 0; i < numGpus; i++ ) {
+        cout << DevicesInfo::getGpuInfo(i).toString() << endl;
+    }
+}
+
