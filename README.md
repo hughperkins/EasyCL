@@ -253,7 +253,7 @@ The following methods will reset the flag to `false`:
 
 This is a new feature, as of May 15 2015, and might have some bugs prior to May 31 2015 (ie, about 2 weeks, long enough for me to find any bugs).
 
-# templated kernels (New!)
+# templated kernels
 
 * If you activate build option `KERNEL_TEMPLATING`, then you can use templating with kernels, at runtime, using Lua
 * Simple variable substitution by using eg `{{some_variable_name}}`
@@ -262,11 +262,18 @@ This is a new feature, as of May 15 2015, and might have some bugs prior to May 
 * See examples in [test/testTemplatedKernel.cpp](test/testTemplatedKernel.cpp)
 * Note that this templating method is based on John Nachtimwald's work at [https://john.nachtimwald.com/2014/08/06/using-lua-as-a-templating-engine/](https://john.nachtimwald.com/2014/08/06/using-lua-as-a-templating-engine/) ( [MIT License](https://john.nachtimwald.com/files/2008/11/MIT.txt) )
 
-# passing structs (New!)
+# passing structs
 
 * Turns out this can be important, and is actually already available, just embedded in the cpp files, locked away
 * Simply `#include` new `"CLKernel_structs.h"` header, in order to be able to pass structs
 * See [test/testStructs.cpp](test/testStructs.cpp) for an example
+
+# Profiling (New!)
+
+* Simply call `cl->setProfiling(true);`, then run your kernels as normal, then call `cl->dumpProfiling` to print the results
+* Timings are cumulative over multiple calls to the same kernel
+* Timings are grouped by kernel filename and kernelname
+* See [test/testprofiling.cpp](test/testprofiling.cpp) for an example
 
 # Using with clBLAS
 
@@ -384,6 +391,8 @@ What if I just have a question?
 
 # Recent changes
 
+* 2015 July 15th:
+  * added profiling
 * 2015 June 27th:
   * merged bundle-lua to master
   * Added StatefulTimer.h (was in [DeepCL](http://github.com/hughperkins/DeepCL) )
