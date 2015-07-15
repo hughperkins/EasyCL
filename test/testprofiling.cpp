@@ -25,7 +25,10 @@ TEST( testprofiling, basic ) {
 
     EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
     cl->setProfiling(true);
-    CLKernel *kernel = cl->buildKernelFromString(kernelSource, "test", "", "");
+    CLKernel *kernel = cl->buildKernelFromString(kernelSource, "test", "", "source1");
+    CLKernel *kernel2 = cl->buildKernelFromString(kernelSource, "test", "", "source2");
+    CLKernel *kernel3 = cl->buildKernelFromString(kernelSource, "test", "", "source3");
+    CLKernel *kernel4 = cl->buildKernelFromString(kernelSource, "test", "", "source4");
     const int N = 8 * 1024 * 1024;
     float *in = new float[N];
     for( int i = 0; i < N; i++ ) {
@@ -38,6 +41,15 @@ TEST( testprofiling, basic ) {
       kernel->in(N);
       kernel->inout( inwrapper );
       kernel->run_1d( ((N+64-1)/64) * 64, 64 );
+      kernel2->in(N/8);
+      kernel2->inout( inwrapper );
+      kernel2->run_1d( ((N/8+64-1)/64) * 64, 64 );
+      kernel3->in(N/64);
+      kernel3->inout( inwrapper );
+      kernel3->run_1d( ((N/64+64-1)/64) * 64, 64 );
+      kernel4->in(N/64/8);
+      kernel4->inout( inwrapper );
+      kernel4->run_1d( ((N/64/8+64-1)/64) * 64, 64 );
     }
     cl->dumpProfiling();
     inwrapper->copyToHost();

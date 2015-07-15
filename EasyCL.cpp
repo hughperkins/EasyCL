@@ -472,7 +472,7 @@ void EasyCL::dumpProfiling() {
     delete event;
   }
   for( map< string, double >::iterator it = timeByKernel.begin(); it != timeByKernel.end(); it++ ) {
-    cout << it->first << " " << it->second;
+    cout << it->first << " " << it->second << "ms" << endl;
   }
   profilingNames.clear();
   profilingEvents.clear();
