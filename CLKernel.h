@@ -18,6 +18,8 @@ typedef unsigned long long uint64;
 
 class EasyCL_EXPORT CLKernel {
     EasyCL *easycl; // NOT owned by this object, dont delete!
+    std::string sourceFilename; // just for info really
+    std::string kernelName; // this too
     cl_program program;
     cl_kernel kernel;
     cl_int error;
@@ -53,7 +55,7 @@ class EasyCL_EXPORT CLKernel {
 #endif
 
 public:
-	  CLKernel(EasyCL *easycl, std::string source, cl_program program, cl_kernel kernel);
+	  CLKernel(EasyCL *easycl, std::string sourceFilename, std::string kernelName, std::string source, cl_program program, cl_kernel kernel);
 	  CLKernel(const CLKernel &kernel);
 	  CLKernel &operator=(const CLKernel &kernel);
 	  ~CLKernel();

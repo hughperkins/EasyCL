@@ -36,6 +36,7 @@ void EasyCL::commonConstructor( cl_platform_id platform_id, cl_device_id device,
     this->verbose = verbose;
     queue = 0;
     context = 0;
+    profilingOn = false;
 
     bool clpresent = 0 == clewInit();
     if( !clpresent ) {
@@ -284,6 +285,11 @@ EasyCL::~EasyCL() {
         }
     }
 
+    for( vector< cl_event * >::iterator it = profilingEvents.begin(); it != profilingEvents.end(); it++ ) {
+      clReleaseEvent(**it);
+      delete *it;
+    }
+
 //        clReleaseProgram(program);
     if( queue != 0 ) {
 //        cout << "releasing OpenCL command queue" << endl;
@@ -381,7 +387,7 @@ CLKernel *EasyCL::buildKernelFromString( string source, string kernelname, strin
     }
     checkError(error);
 //    clReleaseProgram(program);
-    return new CLKernel(this, source, program, kernel);
+    return new CLKernel(this, sourcefilename, kernelname, source, program, kernel);
 }
 
 bool EasyCL::isOpenCLAvailable() {
@@ -434,7 +440,43 @@ void EasyCL::finish() {
             checkError(error);                
     }
 }
+void EasyCL::setProfiling(bool profiling) {
+  finish();
+  clReleaseCommandQueue(*queue);
+//  delete queue;
 
+//  queue = new cl_command_queue;
+  *queue = clCreateCommandQueue(*context, device, profiling ? CL_QUEUE_PROFILING_ENABLE : 0, &error);
+  if (error != CL_SUCCESS) {
+     throw std::runtime_error( "Error creating command queue: " + errorMessage(error) );
+  }
+  this->profilingOn = profiling;
+}
+void EasyCL::pushEvent( std::string name, cl_event *event ) {
+  profilingNames.push_back(name);
+  profilingEvents.push_back(event);
+}
+void EasyCL::dumpProfiling() {
+  map< string, double > timeByKernel;
+  for( int i = 0; i < (int)profilingEvents.size(); i++ ) {
+    string name = profilingNames[i];
+    cl_event *event = profilingEvents[i];
+    clWaitForEvents(1, event);
+    cl_ulong start, end;
+    clGetEventProfilingInfo(*event, CL_PROFILING_COMMAND_START, sizeof(start), &start, NULL);
+    clGetEventProfilingInfo(*event, CL_PROFILING_COMMAND_END, sizeof(end), &end, NULL);
+    cl_ulong time_nanos = end - start;
+    double time_millis = time_nanos / 1000000.0;
+    timeByKernel[name] += time_millis;
+    clReleaseEvent(*event);
+    delete event;
+  }
+  for( map< string, double >::iterator it = timeByKernel.begin(); it != timeByKernel.end(); it++ ) {
+    cout << it->first << " " << it->second;
+  }
+  profilingNames.clear();
+  profilingEvents.clear();
+}
 int EasyCL::getComputeUnits() {
     return (int)getDeviceInfoInt(CL_DEVICE_MAX_COMPUTE_UNITS);
 }

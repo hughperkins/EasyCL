@@ -48,6 +48,8 @@ if(PROVIDE_LUA_ENGINE)
     endforeach()
 endif(PROVIDE_LUA_ENGINE)
 
+#add_definitions(-DCL_USE_DEPRECATED_OPENCL_1_0_APIS)
+
 add_library( EasyCL SHARED EasyCL.cpp CLKernel.cpp CLWrapper.cpp platforminfo_helper.cpp deviceinfo_helper.cpp DevicesInfo.cpp DeviceInfo.cpp util/easycl_stringhelper.cpp
 ${lua_src}
     ${TEMPLATESRC} )
@@ -89,7 +91,7 @@ if(BUILD_TESTS)
       test/testlocal.cpp test/testdefines.cpp test/testbuildlog.cpp test/testnewinstantiations.cpp
       test/testucharwrapper.cpp test/testkernelstore.cpp test/testdirtywrapper.cpp test/testDeviceInfo.cpp
       ${TEMPLATETESTS} test/easycl_stringhelper.cpp test/testStructs.cpp
-      test/asserts.cpp test/gtest_main.cpp test/GtestGlobals.cpp 
+      test/asserts.cpp test/gtest_main.cpp test/GtestGlobals.cpp test/testprofiling.cpp
       test/testcopybuffer.cpp
       ${CLBLAS_TEST_SOURCES} )
   target_link_libraries( easycl_unittests easycl_gtest EasyCL ${CLEW_LIBRARIES} )

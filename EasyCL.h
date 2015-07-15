@@ -49,6 +49,8 @@ public:
     cl_context *context;
     cl_command_queue *queue;
 
+    bool profilingOn;
+
     template<typename T>
     static std::string toString(T val ) {
        std::ostringstream myostringstream;
@@ -88,6 +90,10 @@ public:
     void init(int gpuIndex, bool verbose );
     void finish();
 
+    void setProfiling(bool profiling);
+    void pushEvent( std::string name, cl_event *event );
+    void dumpProfiling();
+
     int getComputeUnits();
     int getLocalMemorySize();
     int getLocalMemorySizeKB();
@@ -121,6 +127,8 @@ private:
 #endif
     std::map< std::string, CLKernel * >kernelByName;
     std::map< std::string, bool >kernelOwnedByName; // should we delete the kernel when we are deleted?
+    std::vector< cl_event *> profilingEvents;
+    std::vector< std::string > profilingNames;
 #ifdef _WIN32
 #pragma warning( default: 4251 )
 #endif
