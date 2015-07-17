@@ -86,20 +86,12 @@ void CLWrapper::copyToDevice() {
     if(!onHost ) {
         throw std::runtime_error("copyToDevice(): not on host");
     }
-    if( onDevice ) {
-        error = clEnqueueWriteBuffer(*(cl->queue), devicearray, CL_TRUE, 0, getElementSize() * N, getHostArray(), 0, NULL, NULL);    
-        cl->checkError(error);
-        deviceDirty = false;
-    } else {
-//        std::cout << "copying buffer to device of " << N << " elements" << std::endl;
-//        for( int i = 0; i < N; i++ ) { 
-//           std::cout << "i " << i << " " << ((float*)getHostArrayConst())[i] << std::endl;
-//        }
-        devicearray = clCreateBuffer(*(cl->context), CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, getElementSize() * N, (void *)getHostArrayConst(), &error);
-        cl->checkError(error);
-        onDevice = true;
-        deviceDirty = false;
+    if( !onDevice ) {
+        createOnDevice();
     }
+    error = clEnqueueWriteBuffer(*(cl->queue), devicearray, CL_TRUE, 0, getElementSize() * N, getHostArrayConst(), 0, NULL, NULL);    
+    cl->checkError(error);
+    deviceDirty = false;
 }
 int CLWrapper::size() {
     return N;
