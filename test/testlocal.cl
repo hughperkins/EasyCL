@@ -1,3 +1,15 @@
+kernel void useLocal(int N, global float *inout, local float *_buffer ) {
+    if(get_global_id(0) < N) {
+        inout[get_global_id(0)] += 1.0f;
+    }
+}
+
+kernel void notUseLocal(int N, global float *inout) {
+    if(get_global_id(0) < N) {
+        inout[get_global_id(0)] += 1.0f;
+    }
+}
+
 kernel void reduceGlobal( global float *inout ) {
     // simply going to reduce inout values into inout[0]
     int localId = get_local_id(0);

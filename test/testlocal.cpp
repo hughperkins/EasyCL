@@ -6,6 +6,37 @@ using namespace std;
 
 // #include "Timer.h"
 
+TEST( testlocal, uselocal ) {
+    EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
+    CLKernel *kernel = cl->buildKernel("testlocal.cl", "useLocal" );
+    int workgroupSize = 64;
+    float *myarray = new float[workgroupSize];
+
+    kernel->in(workgroupSize);
+    kernel->inout( workgroupSize, myarray );
+    kernel->localFloats(workgroupSize);
+    kernel->run_1d( workgroupSize, workgroupSize );
+
+    delete[]myarray;
+    delete kernel;
+    delete cl;
+}
+
+TEST( testlocal, notUselocal ) {
+    EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
+    CLKernel *kernel = cl->buildKernel("testlocal.cl", "notUseLocal" );
+    int workgroupSize = 64;
+    float *myarray = new float[workgroupSize];
+
+    kernel->in(workgroupSize);
+    kernel->inout( workgroupSize, myarray );
+    kernel->run_1d( workgroupSize, workgroupSize );
+
+    delete[]myarray;
+    delete kernel;
+    delete cl;
+}
+
 TEST( testlocal, globalreduce ) {
     EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
     CLKernel *kernel = cl->buildKernel("testlocal.cl", "reduceGlobal" );
