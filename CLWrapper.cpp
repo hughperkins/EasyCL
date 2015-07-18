@@ -133,10 +133,10 @@ void CLWrapper::copyTo( CLWrapper *target, int srcOffset, int dstOffset, int cou
     // can assume that we have our data on the device now, because of if check
     // just now
     // we will also assume that destination CLWrapper* is valid
-    cl_event event = NULL;
+//    cl_event event = NULL;
     cl_int err = clEnqueueCopyBuffer( *(cl->queue), devicearray, target->devicearray, 
         srcOffset * getElementSize(), dstOffset * getElementSize(), count * getElementSize(),
-        0, NULL, &event );
+        0, NULL, 0 );
     if (err != CL_SUCCESS) {
         throw std::runtime_error("copyTo failed with " + easycl::toString( err ) );
     }
@@ -144,7 +144,7 @@ void CLWrapper::copyTo( CLWrapper *target, int srcOffset, int dstOffset, int cou
         /* Wait for calculations to be finished. */
 //        err = clWaitForEvents(1, &event);
     }
-    clReleaseEvent(event);
+//    clReleaseEvent(event);
     target->markDeviceDirty();
 }
 
