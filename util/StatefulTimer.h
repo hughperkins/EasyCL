@@ -32,14 +32,17 @@ public:
         return _instance;
     }
 
+    static bool enabled;
     double last;
 
     std::map< std::string, double > timeByState;
+    std::map< std::string, int > countByState;
     std::string prefix;
 
     StatefulTimer() : prefix("") {
 //      std::cout<< "statefultimer v0.6" << std::endl;
         last = getSystemMilliseconds();
+//        enabled = false;
     }
     ~StatefulTimer() {
         std::cout << "StatefulTimer readings:" << std::endl;
@@ -48,6 +51,9 @@ public:
         }
     }
     void _dump(bool force = false) {
+        if(!enabled) {
+            return;
+        }
         double totalTimings = 0;
         for( std::map< std::string, double >::iterator it = timeByState.begin(); it != timeByState.end(); it++ ) {
 //            std::cout << "   " << it->first << ": " << it->second << std::endl;
@@ -59,21 +65,29 @@ public:
         std::cout << "StatefulTimer readings:" << std::endl;
         for( std::map< std::string, double >::iterator it = timeByState.begin(); it != timeByState.end(); it++ ) {
             if( it->second > 0 ) {
-                std::cout << "   " << it->first << ": " << it->second << "ms" << std::endl;
+                std::cout << "   " << it->first << ": " << it->second << "ms" << " count=" << countByState[it->first] << std::endl;
             }
         }
         timeByState.clear();
+        countByState.clear();
     }
-    static void setPrefix( std::string _prefix ) {
-        instance()->prefix = _prefix;
+    static void setPrefix(const char *_prefix) {
+        if(instance()->enabled) {
+            instance()->prefix = _prefix;
+        }
+    }
+    static void setEnabled(bool _enabled) {
+        enabled = _enabled;
     }
     static void dump(bool force = false) {
         instance()->_dump(force);
     }
-    static void timeCheck( std::string state ) {
-        instance()->_timeCheck( state );
+    static void timeCheck(const char *state ) {
+        if(enabled) {
+           instance()->_timeCheck( state );
+        }
     }
-    double getSystemMilliseconds() {
+    static double getSystemMilliseconds() {
         // ok I fought for ages with chrono, but vs2010 doesnt support chrono anyway
         // so lets use the simpler normal functions :-P
         #ifdef WINNOCHRONO
@@ -86,13 +100,17 @@ public:
           return mtime;
         #endif
     }
-    void _timeCheck( std::string state ) {
-        state = prefix + state;
+    void _timeCheck(const char *_state) {
+        if(!enabled) {
+            return;
+        }
+        std::string state = prefix + _state;
         double now = getSystemMilliseconds();
         //std::cout << "now " << now << std::endl;
         double change = now - last;
         //std::cout << "change " << change << std::endl;
         timeByState[state] += change;
+        countByState[state]++;
         last = now;
     }
 };
