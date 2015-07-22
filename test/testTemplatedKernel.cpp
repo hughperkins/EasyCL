@@ -203,4 +203,28 @@ TEST( testTemplatedKernel, forrange ) {
 
     delete cl;
 }
+TEST( testTemplatedKernel, forrange2 ) {
+    EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
+
+    string kernelSource = "kernel void doStuff( \n"
+        "{% for t=1,num_tensors do %}\n"
+         "   {% local thisdim = loadstring('return dims' .. t)() %}\n"
+         "  {% for i=1,thisdim do %}\n"
+         "    int t{{t}}{{i}},\n"
+         "  {% end %}\n"
+        "{% end %}\n"
+        " int count\n"
+        ") {\n"
+        "}\n"
+        ;
+    TemplatedKernel kernelBuilder(cl);
+    kernelBuilder.set("num_tensors", 3 );
+    kernelBuilder.set("dims1", 2 );
+    kernelBuilder.set("dims2", 3 );
+    kernelBuilder.set("dims3", -2 );
+    cout << kernelBuilder.getRenderedKernel(kernelSource) << endl;
+    kernelBuilder.buildKernel("doStuff_3", "testfile", kernelSource, "doStuff");
+
+    delete cl;
+}
 
