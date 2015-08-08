@@ -391,6 +391,13 @@ What if I just have a question?
 
 # Recent changes
 
+* 2015 Aug 8th:
+  * merged development branches into master.  changes include:
+    * clew is now a git submodule again.  Make sure to do `git submodule init` and `git submodulate update` to download it
+      * when you checkout / update, you might need to use `-f` option to git, or delete the thirdparty/clew directory first
+    * added build option to not link with internal Lua library
+    * added profiling, using the OpenCL profiling functions
+    * copy of data between host and device is done using explicit enqueueCopyBuffer functions now
 * 2015 July 15th:
   * added profiling
 * 2015 June 27th:
