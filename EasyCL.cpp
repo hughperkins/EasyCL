@@ -46,22 +46,22 @@ void EasyCL::commonConstructor( cl_platform_id platform_id, cl_device_id device,
     this->device = device;
 
     if( verbose ) {
-        std::cout << "Using " << getPlatformInfoString( platform_id, CL_PLATFORM_VENDOR ) << " platform: " << getPlatformInfoString( platform_id, CL_PLATFORM_NAME ) << std::endl;
+        std::cout << "Using " << getPlatformInfoString( platform_id, CL_PLATFORM_VENDOR ) << " , OpenCL platform: " << getPlatformInfoString( platform_id, CL_PLATFORM_NAME ) << std::endl;
     //    std::cout << "Using " << getPlatformInfoString( platform_id, CL_PLATFORM_NAME ) << std::endl;
-        std::cout << "Using device: " << getDeviceInfoString( device, CL_DEVICE_NAME ) << std::endl;
+        std::cout << "Using OpenCL device: " << getDeviceInfoString( device, CL_DEVICE_NAME ) << std::endl;
     }
 
     // Context
     context = new cl_context();
     *context = clCreateContext(0, 1, &device, NULL, NULL, &error);
     if (error != CL_SUCCESS) {
-       throw std::runtime_error( "Error creating context: " + errorMessage(error) );
+       throw std::runtime_error( "Error creating OpenCL context, OpenCL errocode: " + errorMessage(error) );
     }
     // Command-queue
     queue = new cl_command_queue;
     *queue = clCreateCommandQueue(*context, device, 0, &error);
     if (error != CL_SUCCESS) {
-       throw std::runtime_error( "Error creating command queue: " + errorMessage(error) );
+       throw std::runtime_error( "Error creating OpenCL command queue, OpenCL errorcode: " + errorMessage(error) );
     }
 }
 
@@ -87,8 +87,8 @@ EasyCL *EasyCL::createForFirstGpuOtherwiseCpu( bool verbose ) {
     try {
         return createForIndexedGpu( 0, verbose );
     } catch( std::runtime_error error ) {
-        cout << "Couldnt find available GPU: " << error.what() << endl;
-        cout << "Trying for CPU" << endl;
+        cout << "Couldnt find OpenCL-enabled GPU: " << error.what() << endl;
+        cout << "Trying for OpenCL-enabled CPU" << endl;
     }
     return createForPlatformDeviceIndexes( 0, 0 );
 }
@@ -114,10 +114,10 @@ EasyCL *EasyCL::createForIndexedGpu( int gpu, bool verbose ) {
     cl_uint num_platforms;
     error = clGetPlatformIDs(10, platform_ids, &num_platforms);
     if (error != CL_SUCCESS) {
-       throw std::runtime_error( "Error getting platforms ids: " + errorMessage(error) );
+       throw std::runtime_error( "Error getting OpenCL platforms ids, OpenCL errorcode: " + errorMessage(error) );
     }
     if( num_platforms == 0 ) {
-       throw std::runtime_error( "Error: no platforms available" );
+       throw std::runtime_error( "Error: no OpenCL platforms available" );
     }
     for( int platform =  0; platform < (int)num_platforms; platform++ ) {
         cl_platform_id platform_id = platform_ids[platform];
@@ -137,9 +137,9 @@ EasyCL *EasyCL::createForIndexedGpu( int gpu, bool verbose ) {
         }
     }
     if( gpu == 0 ) {
-        throw std::runtime_error("No gpus found" );
+        throw std::runtime_error("No OpenCL-enabled GPUs found" );
     } else {
-        throw std::runtime_error("Not enough gpus found to satisfy gpu index: " + toString( gpu ) );
+        throw std::runtime_error("Not enough OpenCL-enabled GPUs found to satisfy gpu index: " + toString( gpu ) );
     }
 }
 
@@ -154,10 +154,10 @@ EasyCL *EasyCL::createForIndexedDevice( int device, bool verbose ) {
     cl_uint num_platforms;
     error = clGetPlatformIDs(10, platform_ids, &num_platforms);
     if (error != CL_SUCCESS) {
-       throw std::runtime_error( "Error getting platforms ids: " + errorMessage(error) );
+       throw std::runtime_error( "Error getting OpenCL platforms ids, OpenCL errorcode: " + errorMessage(error) );
     }
     if( num_platforms == 0 ) {
-       throw std::runtime_error( "Error: no platforms available" );
+       throw std::runtime_error( "Error: no OpenCL platforms available" );
     }
     for( int platform =  0; platform < (int)num_platforms; platform++ ) {
         cl_platform_id platform_id = platform_ids[platform];
@@ -176,9 +176,9 @@ EasyCL *EasyCL::createForIndexedDevice( int device, bool verbose ) {
         }
     }
     if( device == 0 ) {
-        throw std::runtime_error("No devices found" );
+        throw std::runtime_error("No OpenCL devices found" );
     } else {
-        throw std::runtime_error("Not enough devices found to satisfy gpu index: " + toString( device ) );
+        throw std::runtime_error("Not enough OpenCL devices found to satisfy gpu index: " + toString( device ) );
     }
 }
 
@@ -193,26 +193,26 @@ EasyCL *EasyCL::createForPlatformDeviceIndexes(int platformIndex, int deviceInde
     cl_uint num_platforms;
     error = clGetPlatformIDs(10, platform_ids, &num_platforms);
     if (error != CL_SUCCESS) {
-       throw std::runtime_error( "Error getting platforms ids: " + errorMessage(error) );
+       throw std::runtime_error( "Error getting OpenCL platforms ids, OpenCL errorcode: " + errorMessage(error) );
     }
     if( num_platforms == 0 ) {
-       throw std::runtime_error( "Error: no platforms available" );
+       throw std::runtime_error( "Error: no OpenCL platforms available" );
     }
     if( platformIndex >= (int)num_platforms ) {
-       throw std::runtime_error( "Error: platform index " + toString( platformIndex ) + " not available. There are only: " + toString( num_platforms ) + " platforms available" );
+       throw std::runtime_error( "Error: OpenCL platform index " + toString( platformIndex ) + " not available. There are only: " + toString( num_platforms ) + " platforms available" );
     }
     cl_platform_id platform_id = platform_ids[platformIndex];
     cl_device_id device_ids[100];
     cl_uint num_devices;
     error = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_ALL, 100, device_ids, &num_devices);
     if (error != CL_SUCCESS) {
-       throw std::runtime_error( "Error getting device ids for platform index " + toString( platformIndex ) + ": " + errorMessage(error) );
+       throw std::runtime_error( "Error getting OpenCL device ids for platform index " + toString( platformIndex ) + ": OpenCL errorcode: " + errorMessage(error) );
     }
     if( num_devices == 0 ) {
-       throw std::runtime_error( "Error: no devices available for platform index " + toString( platformIndex ) );
+       throw std::runtime_error( "Error: no OpenCL devices available for platform index " + toString( platformIndex ) );
     }
     if( deviceIndex >= (int)num_devices ) {
-       throw std::runtime_error( "Error: device index " + toString(deviceIndex) + " goes beyond the available devices on platform index " + toString( platformIndex ) + ", which has " + toString( num_devices ) + " devices" );
+       throw std::runtime_error( "Error: OpenCL device index " + toString(deviceIndex) + " goes beyond the available devices on platform index " + toString( platformIndex ) + ", which has " + toString( num_devices ) + " devices" );
     }
     return new EasyCL( platform_id, device_ids[deviceIndex] );
 }
@@ -240,22 +240,22 @@ void EasyCL::init(int gpuIndex, bool verbose ) {
 //        std::cout << "num platforms: " << num_platforms << std::endl;
 //        assert (num_platforms == 1);
     if (error != CL_SUCCESS) {
-       throw std::runtime_error( "Error getting platforms ids: " + errorMessage(error) );
+       throw std::runtime_error( "Error getting OpenCL platforms ids: " + errorMessage(error) );
     }
     if( num_platforms == 0 ) {
-       throw std::runtime_error( "Error: no platforms available" );
+       throw std::runtime_error( "Error: no OpenCL platforms available" );
     }
 
     cl_uint num_devices;
     error = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_GPU | CL_DEVICE_TYPE_ACCELERATOR , 0, 0, &num_devices);
     if (error != CL_SUCCESS) {
-       throw std::runtime_error( "Error getting device ids: " + errorMessage(error) );
+       throw std::runtime_error( "Error getting OpenCL device ids: " + errorMessage(error) );
     }
 //      std::cout << "num devices: " << num_devices << std::endl;
     cl_device_id *device_ids = new cl_device_id[num_devices];
     error = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_GPU | CL_DEVICE_TYPE_ACCELERATOR, num_devices, device_ids, &num_devices);
     if (error != CL_SUCCESS) {
-       throw std::runtime_error( "Error getting device ids: " + errorMessage(error) );
+       throw std::runtime_error( "Error getting OpenCL device ids: " + errorMessage(error) );
     }
 
     if( gpuIndex >= static_cast<int>( num_devices ) ) {
@@ -268,13 +268,13 @@ void EasyCL::init(int gpuIndex, bool verbose ) {
     context = new cl_context();
     *context = clCreateContext(0, 1, &device, NULL, NULL, &error);
     if (error != CL_SUCCESS) {
-       throw std::runtime_error( "Error creating context: " + errorMessage(error) );
+       throw std::runtime_error( "Error creating OpenCL context, OpenCL errorcode: " + errorMessage(error) );
     }
     // Command-queue
     queue = new cl_command_queue;
     *queue = clCreateCommandQueue(*context, device, 0, &error);
     if (error != CL_SUCCESS) {
-       throw std::runtime_error( "Error creating command queue: " + errorMessage(error) );
+       throw std::runtime_error( "Error creating OpenCL command queue, OpenCL errorcode: " + errorMessage(error) );
     }
 }
 
@@ -379,7 +379,7 @@ CLKernel *EasyCL::buildKernelFromString( string source, string kernelname, strin
                 exceptionMessage = sourceWithNumbers + "\nInvalid kernel name, code -46, kernel " + kernelname + "\n" + buildLogMessage;
                 break;
             default:
-                exceptionMessage = sourceWithNumbers + "\nSomething went wrong with clCreateKernel, code " + toString( error ) + "\n" + buildLogMessage;
+                exceptionMessage = sourceWithNumbers + "\nSomething went wrong with clCreateKernel, OpenCL erorr code " + toString( error ) + "\n" + buildLogMessage;
                 break;
         }
         cout << "kernel build error:\n" << exceptionMessage << endl;
@@ -508,7 +508,7 @@ void EasyCL::checkError( cl_int error ) {
                 message = "CL_INVALID_BUFFER_SIZE";
                 break;
         }
-        throw std::runtime_error( std::string("error: ") + message );
+        throw std::runtime_error( std::string("OpenCL error, code: ") + message );
     }
 }
 
