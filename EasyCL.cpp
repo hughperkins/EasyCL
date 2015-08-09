@@ -501,6 +501,8 @@ void EasyCL::checkError( cl_int error ) {
     if( error != CL_SUCCESS ) {
         std::string message = toString(error);
         switch( error ) {
+            case CL_MEM_OBJECT_ALLOCATION_FAILURE:
+                message = "CL_MEM_OBJECT_ALLOCATION_FAILURE";
             case CL_INVALID_ARG_SIZE:
                 message = "CL_INVALID_ARG_SIZE";
                 break;
