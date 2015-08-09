@@ -503,6 +503,7 @@ void EasyCL::checkError( cl_int error ) {
         switch( error ) {
             case CL_MEM_OBJECT_ALLOCATION_FAILURE:
                 message = "CL_MEM_OBJECT_ALLOCATION_FAILURE";
+                break;
             case CL_INVALID_ARG_SIZE:
                 message = "CL_INVALID_ARG_SIZE";
                 break;
