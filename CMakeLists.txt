@@ -61,7 +61,7 @@ add_library( EasyCL SHARED EasyCL.cpp CLKernel.cpp CLWrapper.cpp platforminfo_he
   ${lua_src}
   ${TEMPLATESRC} )
 if(WIN32)
-    link_libraries(winmm) # needed for timeGetTime
+    target_link_libraries(EasyCL winmm) # needed for timeGetTime
 endif()
 target_link_libraries( EasyCL ${CLEW_LIBRARIES} )
 if( ON_LINUX )
