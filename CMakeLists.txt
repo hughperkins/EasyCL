@@ -17,6 +17,12 @@ OPTION(BUILD_TESTS "Build unit-tests." OFF)
 OPTION(DEV_RUN_COG "Only EasyCL maintainers need this, otherwise set to 'OFF'." OFF)
 OPTION(PROVIDE_LUA_ENGINE "eg for Torch, we use Torch's engine." ON)
 
+IF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  SET(CMAKE_INSTALL_PREFIX
+    "${CMAKE_CURRENT_SOURCE_DIR}/dist" CACHE PATH "Installation prefix, default 'dist'" FORCE
+    )
+ENDIF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+
 if(BUILD_TESTS AND NOT PROVIDE_LUA_ENGINE)
   # find_library(Lua51 REQUIRED)
   message("Error: if building tests, need to enable PROVIDE_LUA_ENGINE")
