@@ -82,7 +82,7 @@ public:
     static void dump(bool force = false) {
         instance()->_dump(force);
     }
-    static void timeCheck(string state ) {
+    static void timeCheck(std::string state ) {
         if(enabled) {
            instance()->_timeCheck( state );
         }
