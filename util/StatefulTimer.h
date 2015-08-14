@@ -82,6 +82,11 @@ public:
     static void dump(bool force = false) {
         instance()->_dump(force);
     }
+    static void timeCheck(string state ) {
+        if(enabled) {
+           instance()->_timeCheck( state );
+        }
+    }
     static void timeCheck(const char *state ) {
         if(enabled) {
            instance()->_timeCheck( state );
