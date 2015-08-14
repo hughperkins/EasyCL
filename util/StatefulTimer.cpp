@@ -1,5 +1,18 @@
 #include "StatefulTimer.h"
 
+//#if (_MSC_VER == 1500 || _MSC_VER == 1600 ) // visual studio 2008 or 2010
+#ifdef _MSC_VER // make consistent across all msvc versions, so dont have to retest on different msvc versions...
+#define WINNOCHRONO
+//#include <ctime>
+#define NOMINMAX // prevents errors compiling std::max and std::min
+#include <Windows.h>
+#else
+#include <sys/time.h>
+#include <stdio.h>
+#include <unistd.h>
+//#include <chrono>
+#endif
+
 #undef VIRTUAL
 #define VIRTUAL
 #undef STATIC
