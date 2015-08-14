@@ -18,13 +18,15 @@
 #define STATIC static
 
 class EasyCL_EXPORT StatefulTimer {
+public:
+    std::string prefix;
+
 private:
     static bool enabled;
     double last;
 
     std::map< std::string, double > timeByState;
     std::map< std::string, int > countByState;
-    std::string prefix;
 
     // [[[cog
     // import cog_addheaders
