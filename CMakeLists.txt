@@ -60,7 +60,7 @@ add_library( EasyCL SHARED EasyCL.cpp CLKernel.cpp CLWrapper.cpp platforminfo_he
   util/easycl_stringhelper.cpp util/StatefulTimer.cpp
   ${lua_src}
   ${TEMPLATESRC} )
-if(ON_WINDOWS)
+if(WIN32)
     link_libraries(winmm) # needed for timeGetTime
 endif()
 target_link_libraries( EasyCL ${CLEW_LIBRARIES} )
