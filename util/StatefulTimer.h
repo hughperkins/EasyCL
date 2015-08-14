@@ -76,6 +76,11 @@ public:
             instance()->prefix = _prefix;
         }
     }
+    static void setPrefix(std::string _prefix) {
+        if(instance()->enabled) {
+            instance()->prefix = _prefix;
+        }
+    }
     static void setEnabled(bool _enabled) {
         enabled = _enabled;
     }
