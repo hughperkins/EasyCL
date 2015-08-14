@@ -23,7 +23,7 @@ if(WIN32)
 	SET(CLEW_LIBRARIES ${CMAKE_INSTALL_PREFIX}/lib/clew$.lib)
 else()
 	SET(CLEW_LIBRARIES ${CMAKE_INSTALL_PREFIX}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}clew${CMAKE_SHARED_LIBRARY_SUFFIX})
-end()
+endif()
 SET(CLEW_FOUND ON)
 
 add_custom_target(clew_delete_stamp ALL 
