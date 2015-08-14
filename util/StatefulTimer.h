@@ -27,13 +27,11 @@
 
 #include "EasyCL_export.h"
 
-class EasyCL_EXPORT StatefulTimer {
-public:
-    static StatefulTimer *instance() {
-        static StatefulTimer *_instance = new StatefulTimer();
-        return _instance;
-    }
+#define VIRTUAL virtual
+#define STATIC static
 
+class EasyCL_EXPORT StatefulTimer {
+private:
     static bool enabled;
     double last;
 
@@ -41,102 +39,32 @@ public:
     std::map< std::string, int > countByState;
     std::string prefix;
 
-    StatefulTimer() : prefix("") {
-//      std::cout<< "statefultimer v0.6" << std::endl;
-        last = getSystemMilliseconds();
-//        enabled = false;
-    }
-    ~StatefulTimer() {
-        std::cout << "StatefulTimer readings:" << std::endl;
-        for( std::map< std::string, double >::iterator it = timeByState.begin(); it != timeByState.end(); it++ ) {
-            std::cout << "   " << it->first << ": " << it->second << std::endl;
-        }
-    }
-    void _dump(bool force = false) {
-        if(!enabled) {
-            return;
-        }
-        double totalTimings = 0;
-        for( std::map< std::string, double >::iterator it = timeByState.begin(); it != timeByState.end(); it++ ) {
-//            std::cout << "   " << it->first << ": " << it->second << std::endl;
-            totalTimings += it->second;
-        }
-        if( !force && totalTimings < 800 ) {
-            return;
-        }
-        std::cout << "StatefulTimer readings:" << std::endl;
-        for( std::map< std::string, double >::iterator it = timeByState.begin(); it != timeByState.end(); it++ ) {
-            if( it->second > 0 ) {
-                std::cout << "   " << it->first << ": " << it->second << "ms" << " count=" << countByState[it->first] << std::endl;
-            }
-        }
-        timeByState.clear();
-        countByState.clear();
-    }
-    static void setPrefix(const char *_prefix) {
-        if(instance()->enabled) {
-            instance()->prefix = _prefix;
-        }
-    }
-    static void setPrefix(std::string _prefix) {
-        if(instance()->enabled) {
-            instance()->prefix = _prefix;
-        }
-    }
-    static void setEnabled(bool _enabled) {
-        enabled = _enabled;
-    }
-    static void dump(bool force = false) {
-        instance()->_dump(force);
-    }
-    static void timeCheck(std::string state ) {
-        if(enabled) {
-           instance()->_timeCheck( state );
-        }
-    }
-    static void timeCheck(const char *state ) {
-        if(enabled) {
-           instance()->_timeCheck( state );
-        }
-    }
-    static double getSystemMilliseconds() {
-        // ok I fought for ages with chrono, but vs2010 doesnt support chrono anyway
-        // so lets use the simpler normal functions :-P
-        #ifdef WINNOCHRONO
-          DWORD thistime = timeGetTime();
-          return thistime;
-        #else // linux etc
-          struct timeval now;
-          gettimeofday(&now, NULL);
-          double mtime = now.tv_sec * 1000.0 + now.tv_usec/1000.0;
-          return mtime;
-        #endif
-    }
-    void _timeCheck(std::string _state) {
-        if(!enabled) {
-            return;
-        }
-        std::string state = prefix + _state;
-        double now = getSystemMilliseconds();
-        //std::cout << "now " << now << std::endl;
-        double change = now - last;
-        //std::cout << "change " << change << std::endl;
-        timeByState[state] += change;
-        countByState[state]++;
-        last = now;
-	}
-    void _timeCheck(const char *_state) {
-        if(!enabled) {
-            return;
-        }
-        std::string state = prefix + _state;
-        double now = getSystemMilliseconds();
-        //std::cout << "now " << now << std::endl;
-        double change = now - last;
-        //std::cout << "change " << change << std::endl;
-        timeByState[state] += change;
-        countByState[state]++;
-        last = now;
-    }
+    // [[[cog
+    // import cog_addheaders
+    // cog_addheaders.addv2()
+    // ]]]
+    // generated, using cog:
+
+    public:
+    STATIC StatefulTimer *instance();
+    StatefulTimer();
+    ~StatefulTimer();
+    STATIC void setPrefix(const char *_prefix);
+    STATIC void setPrefix(std::string _prefix);
+    STATIC void setEnabled(bool _enabled);
+    STATIC void dump();
+    STATIC void dump(bool force);
+    STATIC void timeCheck(std::string state );
+    STATIC void timeCheck(const char *state );
+    STATIC double getSystemMilliseconds();
+
+    private:
+    void _dump();
+    void _dump(bool force);
+    void _timeCheck(std::string _state);
+    void _timeCheck(const char *_state);
+
+	// [[[end]]]
+
 };
 
