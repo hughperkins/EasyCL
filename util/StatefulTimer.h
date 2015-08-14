@@ -76,11 +76,21 @@ public:
             instance()->prefix = _prefix;
         }
     }
+    static void setPrefix(std::string _prefix) {
+        if(instance()->enabled) {
+            instance()->prefix = _prefix;
+        }
+    }
     static void setEnabled(bool _enabled) {
         enabled = _enabled;
     }
     static void dump(bool force = false) {
         instance()->_dump(force);
+    }
+    static void timeCheck(std::string state ) {
+        if(enabled) {
+           instance()->_timeCheck( state );
+        }
     }
     static void timeCheck(const char *state ) {
         if(enabled) {
@@ -100,6 +110,19 @@ public:
           return mtime;
         #endif
     }
+    void _timeCheck(std::string _state) {
+        if(!enabled) {
+            return;
+        }
+        std::string state = prefix + _state;
+        double now = getSystemMilliseconds();
+        //std::cout << "now " << now << std::endl;
+        double change = now - last;
+        //std::cout << "change " << change << std::endl;
+        timeByState[state] += change;
+        countByState[state]++;
+        last = now;
+	}
     void _timeCheck(const char *_state) {
         if(!enabled) {
             return;
