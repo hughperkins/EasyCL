@@ -25,7 +25,9 @@
 #include <map>
 #include <string>
 
-class StatefulTimer {
+#include "EasyCL_export.h"
+
+class EasyCL_EXPORT StatefulTimer {
 public:
     static StatefulTimer *instance() {
         static StatefulTimer *_instance = new StatefulTimer();
