@@ -100,6 +100,19 @@ public:
           return mtime;
         #endif
     }
+    void _timeCheck(std::string _state) {
+        if(!enabled) {
+            return;
+        }
+        std::string state = prefix + _state;
+        double now = getSystemMilliseconds();
+        //std::cout << "now " << now << std::endl;
+        double change = now - last;
+        //std::cout << "change " << change << std::endl;
+        timeByState[state] += change;
+        countByState[state]++;
+        last = now;
+	}
     void _timeCheck(const char *_state) {
         if(!enabled) {
             return;
