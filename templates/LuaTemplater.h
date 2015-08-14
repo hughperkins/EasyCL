@@ -30,6 +30,7 @@ private:
     LuaTemplater();
     ~LuaTemplater();
     void set( std::string name, std::string value );
+    void set( std::string name, int value );
     void set( std::string name, float value );
     void set( std::string name, std::vector< std::string> &values );
     void set( std::string name, std::vector< int> &values );

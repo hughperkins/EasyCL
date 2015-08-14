@@ -44,6 +44,10 @@ PUBLIC void LuaTemplater::set( std::string name, float value ) {
     lua_pushnumber(L, value);
     lua_setglobal(L, name.c_str());
 }
+PUBLIC void LuaTemplater::set( std::string name, int value ) {
+    lua_pushnumber(L, value);
+    lua_setglobal(L, name.c_str());
+}
 PUBLIC void LuaTemplater::set( std::string name, std::vector< std::string> &values ) {
     lua_newtable(L);
     for( int i = 0; i < (int)values.size(); i++ ) {

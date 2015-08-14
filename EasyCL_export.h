@@ -9,4 +9,3 @@
 #else 
 # define EasyCL_EXPORT
 #endif
-

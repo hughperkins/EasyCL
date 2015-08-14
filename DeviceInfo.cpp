@@ -13,10 +13,10 @@ namespace easycl {
         platformName = getPlatformInfoString( platformId, CL_PLATFORM_NAME );
 //        this->deviceId = deviceId;
         deviceType = getDeviceInfoInt( deviceId, CL_DEVICE_TYPE );
-        globalMemSize = getDeviceInfoLong( deviceId, CL_DEVICE_GLOBAL_MEM_SIZE );
+        globalMemSize = getDeviceInfoInt64( deviceId, CL_DEVICE_GLOBAL_MEM_SIZE );
         localMemSize = getDeviceInfoInt( deviceId, CL_DEVICE_LOCAL_MEM_SIZE );
         globalMemCachelineSize = getDeviceInfoInt( deviceId, CL_DEVICE_GLOBAL_MEM_CACHELINE_SIZE );
-        maxMemAllocSize = getDeviceInfoLong( deviceId, CL_DEVICE_MAX_MEM_ALLOC_SIZE );
+        maxMemAllocSize = getDeviceInfoInt64( deviceId, CL_DEVICE_MAX_MEM_ALLOC_SIZE );
         maxComputeUnits = getDeviceInfoInt( deviceId, CL_DEVICE_MAX_COMPUTE_UNITS );
         maxWorkGroupSize = getDeviceInfoInt( deviceId, CL_DEVICE_MAX_WORK_GROUP_SIZE );
         maxWorkItemDimensions = getDeviceInfoInt( deviceId, CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS );
