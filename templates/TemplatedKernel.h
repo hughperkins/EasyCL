@@ -33,19 +33,20 @@ public:
     // generated, using cog:
 
     public:
-    TemplatedKernel( EasyCL *cl );
+    TemplatedKernel(EasyCL *cl);
     ~TemplatedKernel();
-    TemplatedKernel &set( std::string name, int value );
-    TemplatedKernel &set( std::string name, float value );
-    TemplatedKernel &set( std::string name, std::string value );
-    TemplatedKernel &set( std::string name, std::vector< std::string > &value );
-    TemplatedKernel &set( std::string name, std::vector< int > &value );
-    TemplatedKernel &set( std::string name, std::vector< float > &value );
-    CLKernel *buildKernel( std::string uniqueName, std::string filename, std::string templateSource, std::string kernelName );
-    std::string getRenderedKernel( std::string templateSource );
+    TemplatedKernel &set(std::string name, int value);
+    TemplatedKernel &set(std::string name, float value);
+    TemplatedKernel &set(std::string name, std::string value);
+    TemplatedKernel &set(std::string name, std::vector< std::string > &value);
+    TemplatedKernel &set(std::string name, std::vector< int > &value);
+    TemplatedKernel &set(std::string name, std::vector< float > &value);
+    CLKernel *buildKernel(std::string uniqueName, std::string filename, std::string templateSource, std::string kernelName);
+    CLKernel *buildKernel(std::string uniqueName, std::string filename, std::string templateSource, std::string kernelName, bool useKernelStore);
+    std::string getRenderedKernel(std::string templateSource);
 
     private:
-    void _buildKernel( std::string uniqueName, std::string filename, std::string templateSource, std::string kernelName );
+    CLKernel *_buildKernel(std::string uniqueName, std::string filename, std::string templateSource, std::string kernelName, bool useKernelStore);
 
     // [[[end]]]
 };

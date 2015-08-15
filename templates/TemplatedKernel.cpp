@@ -18,58 +18,64 @@ using namespace std;
 #define STATIC
 #define PUBLIC
 
-PUBLIC TemplatedKernel::TemplatedKernel( EasyCL *cl ) :
-        cl( cl ) {
+PUBLIC TemplatedKernel::TemplatedKernel(EasyCL *cl) :
+        cl(cl) {
     templater = new LuaTemplater();
 }
 PUBLIC TemplatedKernel::~TemplatedKernel() {
     delete templater;
 }
-PUBLIC TemplatedKernel &TemplatedKernel::set( std::string name, int value ) {
-    templater->set( name, value );
+PUBLIC TemplatedKernel &TemplatedKernel::set(std::string name, int value) {
+    templater->set(name, value);
     return *this;
 }
-PUBLIC TemplatedKernel &TemplatedKernel::set( std::string name, float value ) {
-    templater->set( name, value );
+PUBLIC TemplatedKernel &TemplatedKernel::set(std::string name, float value) {
+    templater->set(name, value);
     return *this;
 }
-PUBLIC TemplatedKernel &TemplatedKernel::set( std::string name, std::string value ) {
-    templater->set( name, value );
+PUBLIC TemplatedKernel &TemplatedKernel::set(std::string name, std::string value) {
+    templater->set(name, value);
     return *this;
 }
-PUBLIC TemplatedKernel &TemplatedKernel::set( std::string name, std::vector< std::string > &value ) {
-    templater->set( name, value );
+PUBLIC TemplatedKernel &TemplatedKernel::set(std::string name, std::vector< std::string > &value) {
+    templater->set(name, value);
     return *this;
 }
-PUBLIC TemplatedKernel &TemplatedKernel::set( std::string name, std::vector< int > &value ) {
-    templater->set( name, value );
+PUBLIC TemplatedKernel &TemplatedKernel::set(std::string name, std::vector< int > &value) {
+    templater->set(name, value);
     return *this;
 }
-PUBLIC TemplatedKernel &TemplatedKernel::set( std::string name, std::vector< float > &value ) {
-    templater->set( name, value );
+PUBLIC TemplatedKernel &TemplatedKernel::set(std::string name, std::vector< float > &value) {
+    templater->set(name, value);
     return *this;
+}
+PUBLIC CLKernel *TemplatedKernel::buildKernel(std::string uniqueName, std::string filename, std::string templateSource, std::string kernelName) {
+	return buildKernel(uniqueName, filename, templateSource, kernelName, true);
 }
 // we have to include both filename and sourcecode because:
 // - we want to 'stirngify' the kernels, so we dont have to copy the .cl files around at dpeloyment, so we need
 //   the sourcecode stringified, at build time
 // - we want the filename, for lookup purposes, and for debugging messages too
  // do NOT delete the reutrned kernel, or yo uwill get a crash ;-)
-PUBLIC CLKernel *TemplatedKernel::buildKernel( std::string uniqueName, std::string filename, std::string templateSource, std::string kernelName ) {
+PUBLIC CLKernel *TemplatedKernel::buildKernel(std::string uniqueName, std::string filename, std::string templateSource, std::string kernelName, bool useKernelStore) {
 //    string instanceName = createInstanceName();
-    if( !cl->kernelExists( uniqueName ) ) {
-        _buildKernel( uniqueName, filename, templateSource, kernelName);
+    if(!useKernelStore || !cl->kernelExists(uniqueName)) {
+        return _buildKernel(uniqueName, filename, templateSource, kernelName, useKernelStore);
     }
-    return cl->getKernel( uniqueName );
+    return cl->getKernel(uniqueName);
 }
-void TemplatedKernel::_buildKernel( std::string uniqueName, std::string filename, std::string templateSource, std::string kernelName ) {
+CLKernel *TemplatedKernel::_buildKernel(std::string uniqueName, std::string filename, std::string templateSource, std::string kernelName, bool useKernelStore) {
     // cout << "building kernel " << uniqueName << endl;
     string renderedKernel = templater->render(templateSource);
     // cout << "renderedKernel=" << renderedKernel << endl;
-    CLKernel *kernel = cl->buildKernelFromString( renderedKernel, kernelName, "", filename );
-    cl->storeKernel( uniqueName, kernel, true );
+    CLKernel *kernel = cl->buildKernelFromString(renderedKernel, kernelName, "", filename);
+	if(useKernelStore) {
+	    cl->storeKernel(uniqueName, kernel, true);
+	}
+	return kernel;
 }
 // this is mostly for debugging purposes really
-PUBLIC std::string TemplatedKernel::getRenderedKernel( std::string templateSource ) {
+PUBLIC std::string TemplatedKernel::getRenderedKernel(std::string templateSource) {
     return templater->render(templateSource);
 }
 

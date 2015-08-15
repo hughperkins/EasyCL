@@ -255,16 +255,15 @@ This is a new feature, as of May 15 2015, and might have some bugs prior to May 
 
 # templated kernels
 
-* If you activate build option `KERNEL_TEMPLATING`, then you can use templating with kernels, at runtime, using Lua
+* You can use templating with kernels, at runtime, using the build-in Lua engine
 * Simple variable substitution by using eg `{{some_variable_name}}`
-* Embed lua code, including loops, if statements etc, ... using eg '{% for i=0,5 do %}... code here ... {% end %}`
+* Embed lua code, including loops, if statements etc, ... using eg `{% for i=0,5 do %}... code here ... {% end %}`
 * The magic is done using the [templates/TemplatedKernel.h](templates/TemplatedKernel.h] class
 * See examples in [test/testTemplatedKernel.cpp](test/testTemplatedKernel.cpp)
 * Note that this templating method is based on John Nachtimwald's work at [https://john.nachtimwald.com/2014/08/06/using-lua-as-a-templating-engine/](https://john.nachtimwald.com/2014/08/06/using-lua-as-a-templating-engine/) ( [MIT License](https://john.nachtimwald.com/files/2008/11/MIT.txt) )
 
 # passing structs
 
-* Turns out this can be important, and is actually already available, just embedded in the cpp files, locked away
 * Simply `#include` new `"CLKernel_structs.h"` header, in order to be able to pass structs
 * See [test/testStructs.cpp](test/testStructs.cpp) for an example
 
@@ -281,6 +280,14 @@ This is a new feature, as of May 15 2015, and might have some bugs prior to May 
 
 ## How to build
 
+### Build options
+
+|Option|Description|
+|-------|---------|
+|`PROVIDE_LUA_ENGINE| If you want to call EasyCL from within Lua, then choose option `PROVIDE_LUA_ENGINE=OFF`, otherwise leave it as `ON` |
+| `DEV_RUN_COG` | Only for EasyCL maintainers, leave as `OFF` otherwise |
+| `BUILD_TESTS` | whether to build unit tests|
+
 ### Building on linux
 
 #### Pre-requisites
@@ -294,10 +301,6 @@ CL implementation .so file
 - cmake
 - g++
 
-#### Optional requirements
-
-* if you want to use Kernel templating, then you need Lua5.1 library installed, otherwise choose cmake option `KERNEL_TEMPLATING` = `OFF`
-
 #### Procedure
 
 ```bash
@@ -306,9 +309,10 @@ cd EasyCL
 mkdir build
 cd build
 cmake ..
-make
+make install
 ```
-* Dont forget the `--recursive`, otherwise you will see odd errors about `clew/src/clew.c` missing!
+* the executables will be in the `../dist/bin` folder, and the .so files in `../dist/lib`
+* Dont forget the `--recursive`, otherwise you will see odd errors about `clew/src/clew.c` missing
   * If this happens, you can try `git submodule init` and then `git submodule update`.
 
 ### Building on Windows
@@ -319,10 +323,6 @@ make
 - git  (only needed to obtain the source-code)
 - cmake
 - Visual Studio (tested with Visual Studio 2013 Community Edition)
-
-#### Optional requirements
-
-* if you want to use Kernel templating, then you need Lua5.1 library present, otherwise choose cmake option `KERNEL_TEMPLATING` = `OFF`
 
 #### Procedure
 
@@ -336,6 +336,7 @@ make
   * open any of the projects in the `build-win32` or `build-win64` build directory
   * change build type from `Debug` to `Release`
   * from `build` menu, choose `build solution`
+  * right-click 'INSTALL' project, and select 'Build'
 * after building, you will need to copy the *.cl files from the `test` directory into the directory where you will run the tests from (if you can figure out a way to automate this, please send a pull request :-) )
 
 How to run self-tests
@@ -343,21 +344,27 @@ How to run self-tests
 
 To check clew library is working ok (ie finding and loading the opencl library, etc):
 
-    ./gpuinfo
+linux:
+```
+    LD_LIBRARY_PATH=../dist/lib ..dist/bin/gpuinfo
+```
+Windows:
+```
+    ..dist/bin/gpuinfo
+```
 
 ... should print some information about your graphics card
 
 *Unit-tests:*
 
-To run:
+Linux:
 ```
-make easycl_unittests
-./easycl_unittests
+    LD_LIBRARY_PATH=../dist/lib ..dist/bin/easycl_unittests
 ```
-
-* unit-tests are created using [googletest](https://code.google.com/p/googletest/wiki/V1_7_Primer)
-* you dont need to download/install googletest though, since the necessary files are included in the `thirdparty`
-directory.  Just build EasyCL, and run `unittests`!
+Windows:
+```
+    ..dist/bin/easycl_unittests
+```
 
 How to check my OpenCL installation/configuration?
 --------------------------------------------------
@@ -391,6 +398,8 @@ What if I just have a question?
 
 # Recent changes
 
+* 2015 Aug 15th:
+  * builds again on Windows (as well as on Ubuntu 14.04)
 * 2015 Aug 8th:
   * merged development branches into master.  changes include:
     * clew is now a git submodule again.  Make sure to do `git submodule init` and `git submodulate update` to download it
