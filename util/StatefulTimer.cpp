@@ -13,6 +13,11 @@
 //#include <chrono>
 #endif
 
+#include <iostream>
+#include <string>
+
+using namespace std;
+
 #undef VIRTUAL
 #define VIRTUAL
 #undef STATIC
@@ -22,17 +27,17 @@
 bool StatefulTimer::enabled = false;
 
 PUBLIC STATIC StatefulTimer *StatefulTimer::instance() {
-    STATIC StatefulTimer *_instance = new StatefulTimer();
+    static StatefulTimer *_instance = new StatefulTimer();
     return _instance;
 }
 PUBLIC StatefulTimer::StatefulTimer() : 
 		prefix("") {
-//      std::cout<< "statefultimer v0.6" << std::endl;
+    cout<< "statefultimer v0.7" << endl;
     last = getSystemMilliseconds();
 //        enabled = false;
 }
 PUBLIC StatefulTimer::~StatefulTimer() {
-    std::cout << "StatefulTimer readings:" << std::endl;
+    std::cout << "~StatefulTimer() StatefulTimer readings:" << std::endl;
     for( std::map< std::string, double >::iterator it = timeByState.begin(); it != timeByState.end(); it++ ) {
         std::cout << "   " << it->first << ": " << it->second << std::endl;
     }
@@ -41,6 +46,7 @@ void StatefulTimer::_dump() {
 	_dump(false);
 }
 void StatefulTimer::_dump(bool force) {
+    cout << "dump enabled=" << enabled << endl;
     if(!enabled) {
         return;
     }
