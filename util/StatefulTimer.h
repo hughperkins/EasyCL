@@ -20,9 +20,9 @@
 class EasyCL_EXPORT StatefulTimer {
 public:
     std::string prefix;
+    static bool enabled;
 
 private:
-    static bool enabled;
     double last;
 
     std::map< std::string, double > timeByState;
