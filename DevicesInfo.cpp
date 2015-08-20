@@ -107,5 +107,48 @@ namespace easycl {
         }
         return numDevices;
     }
+    void DevicesInfo::getIdForIndexedGpu(int gpu, cl_platform_id *p_platformId, cl_device_id *p_deviceId) {
+        getDeviceIds(gpu, CL_DEVICE_TYPE_GPU | CL_DEVICE_TYPE_ACCELERATOR, p_platformId, p_deviceId);
+    }
+    void DevicesInfo::getIdForIndexedDevice(int device, cl_platform_id *p_platformId, cl_device_id *p_deviceId) {
+        getDeviceIds(device, CL_DEVICE_TYPE_ALL, p_platformId, p_deviceId);
+    }
+    void DevicesInfo::getIdForIndexedPlatformDevice(int platform, int device, int types, cl_platform_id *p_platformId, cl_device_id *p_deviceId) {
+        bool clpresent = 0 == clewInit();
+        if(!clpresent) {
+            throw std::runtime_error("OpenCL library not found");
+        }
+        cl_int error;
+        cl_platform_id platform_ids[10];
+        cl_uint num_platforms;
+        error = clGetPlatformIDs(10, platform_ids, &num_platforms);
+        if (error != CL_SUCCESS) {
+            throw std::runtime_error("Error getting platforms ids: " + errorMessage(error));
+        }
+        if(num_platforms == 0) {
+            throw std::runtime_error("Error: no platforms available");
+        }
+        if(platform < 0) {
+            throw std::runtime_error("Error: platform index must be non-negative");
+        }
+        if(platform >= (int)num_platforms) {
+            throw runtime_error("Error: not enough platforms available to satisfy index");
+        }
+        cl_platform_id platform_id = platform_ids[platform];        
+        cl_device_id device_ids[100];
+        cl_uint num_devices;
+        error = clGetDeviceIDs(platform_id, types, 100, device_ids, &num_devices);
+        if (error != CL_SUCCESS) {
+            throw std::runtime_error("Error getting device ids for platform " + EasyCL::toString(platform) + ": " + errorMessage(error));
+        }
+        if(device < 0) {
+            throw runtime_error("Error: device must be non-negative");
+        }
+        if(device >= (int)num_devices) {
+            throw runtime_error("Error: device index greater than number available devices");
+        }
+        *p_platformId = platform_id;
+        *p_deviceId  = device_ids[device];
+    }
 }
 

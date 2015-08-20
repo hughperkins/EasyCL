@@ -15,6 +15,10 @@ namespace easycl {
         static DeviceInfo getGpuInfo(int gpuIndex);
         static DeviceInfo getDeviceInfo(int Index, int types);
         static void getDeviceIds(int index, int types, cl_platform_id *p_platformId, cl_device_id *p_deviceId);
+
+        static void getIdForIndexedGpu(int gpu, cl_platform_id *p_platformId, cl_device_id *p_deviceId);
+        static void getIdForIndexedDevice(int device, cl_platform_id *p_platformId, cl_device_id *p_deviceId);
+        static void getIdForIndexedPlatformDevice(int platform, int device, int types, cl_platform_id *p_platformId, cl_device_id *p_deviceId);
     };
 }
 
