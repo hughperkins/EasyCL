@@ -65,7 +65,7 @@ public:
     EasyCL(bool verbose);
     EasyCL(cl_platform_id platformId, cl_device_id deviceId);
     EasyCL(cl_platform_id platformId, cl_device_id deviceId, bool verbose);
-    ~EasyCL();
+    virtual ~EasyCL();
 
     static bool isOpenCLAvailable();
     static int roundUp(int quantization, int minimum);
