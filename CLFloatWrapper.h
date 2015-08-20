@@ -17,22 +17,22 @@ class CLFloatWrapper : public CLWrapper {
 protected:
     float *hostarray;  // NOT owned by this object, do NOT free :-)
 public:
-    CLFloatWrapper( int N, float *_hostarray, EasyCL *easycl ) : 
-             CLWrapper( N, easycl),
+    CLFloatWrapper(int N, float *_hostarray, EasyCL *easycl) : 
+             CLWrapper(N, easycl),
              hostarray(_hostarray)
               {
     }
-    CLFloatWrapper( const CLFloatWrapper &source ) :
-        CLWrapper( 0, 0 ), hostarray(0) { // copy constructor
+    CLFloatWrapper(const CLFloatWrapper &source) :
+        CLWrapper(0, 0), hostarray(0) { // copy constructor
         throw std::runtime_error("can't assign these...");
     }
-    CLFloatWrapper &operator=( const CLFloatWrapper &two ) { // assignment operator
-       if( this == &two ) { // self-assignment
+    CLFloatWrapper &operator=(const CLFloatWrapper &two) { // assignment operator
+       if(this == &two) { // self-assignment
           return *this;
        }
        throw std::runtime_error("can't assign these...");
     }
-    inline float get( int index ) {
+    inline float get(int index) {
         return hostarray[index];
     }
     virtual ~CLFloatWrapper() {

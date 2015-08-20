@@ -20,11 +20,11 @@
 class EasyCL_EXPORT StatefulTimer {
 public:
 #ifdef _WIN32
-#pragma warning( disable: 4251 )
+#pragma warning(disable: 4251)
 #endif
     std::string prefix;
 #ifdef _WIN32
-#pragma warning( default: 4251 )
+#pragma warning(default: 4251)
 #endif
     static bool enabled;
 
@@ -32,12 +32,12 @@ private:
     double last;
 
 #ifdef _WIN32
-#pragma warning( disable: 4251 )
+#pragma warning(disable: 4251)
 #endif
     std::map< std::string, double > timeByState;
     std::map< std::string, int > countByState;
 #ifdef _WIN32
-#pragma warning( default: 4251 )
+#pragma warning(default: 4251)
 #endif
 
     // [[[cog
@@ -55,8 +55,8 @@ private:
     STATIC void setEnabled(bool _enabled);
     STATIC void dump();
     STATIC void dump(bool force);
-    STATIC void timeCheck(std::string state );
-    STATIC void timeCheck(const char *state );
+    STATIC void timeCheck(std::string state);
+    STATIC void timeCheck(const char *state);
     STATIC double getSystemMilliseconds();
 
     private:

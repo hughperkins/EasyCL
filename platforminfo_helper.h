@@ -11,8 +11,8 @@
 
 #include "clew.h"
 
-void printPlatformInfoString( std::string valuename, cl_platform_id platformId, cl_platform_info name );
-void printPlatformInfo( std::string valuename, cl_platform_id platformId, cl_platform_info name );
-std::string getPlatformInfoString( cl_platform_id platformId, cl_platform_info name );
+void printPlatformInfoString(std::string valuename, cl_platform_id platformId, cl_platform_info name);
+void printPlatformInfo(std::string valuename, cl_platform_id platformId, cl_platform_info name);
+std::string getPlatformInfoString(cl_platform_id platformId, cl_platform_info name);
 
 

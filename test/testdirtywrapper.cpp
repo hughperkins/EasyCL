@@ -16,8 +16,8 @@
 
 using namespace std;
 
-TEST( testdirtywrapper, main ) {
-    if( !EasyCL::isOpenCLAvailable() ) {
+TEST(testdirtywrapper, main) {
+    if(!EasyCL::isOpenCLAvailable()) {
         cout << "opencl library not found" << endl;
         exit(-1);
     }
@@ -26,36 +26,36 @@ TEST( testdirtywrapper, main ) {
     EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
     CLKernel *kernel = cl->buildKernel("testeasycl.cl", "test");
     float in[5];
-    for( int i = 0; i < 5; i++ ) {
+    for(int i = 0; i < 5; i++) {
         in[i] = i * 3;
     }
     float out[5];
     CLWrapper *inwrapper = cl->wrap(5, in);
     CLWrapper *outwrapper = cl->wrap(5, out);
-    EXPECT_FALSE( inwrapper->isDeviceDirty() );
-    EXPECT_FALSE( outwrapper->isDeviceDirty() );
+    EXPECT_FALSE(inwrapper->isDeviceDirty());
+    EXPECT_FALSE(outwrapper->isDeviceDirty());
 
     inwrapper->copyToDevice();
-    EXPECT_FALSE( inwrapper->isDeviceDirty() );
-    EXPECT_FALSE( outwrapper->isDeviceDirty() );
+    EXPECT_FALSE(inwrapper->isDeviceDirty());
+    EXPECT_FALSE(outwrapper->isDeviceDirty());
 
-    kernel->input( inwrapper );
-    kernel->output( outwrapper );
-    EXPECT_FALSE( inwrapper->isDeviceDirty() );
-    EXPECT_FALSE( outwrapper->isDeviceDirty() );
+    kernel->input(inwrapper);
+    kernel->output(outwrapper);
+    EXPECT_FALSE(inwrapper->isDeviceDirty());
+    EXPECT_FALSE(outwrapper->isDeviceDirty());
 
-    kernel->run_1d( 5, 5 );
-    EXPECT_FALSE( inwrapper->isDeviceDirty() );
-    EXPECT_TRUE( outwrapper->isDeviceDirty() );
+    kernel->run_1d(5, 5);
+    EXPECT_FALSE(inwrapper->isDeviceDirty());
+    EXPECT_TRUE(outwrapper->isDeviceDirty());
 
     outwrapper->copyToHost();
-    EXPECT_FALSE( outwrapper->isDeviceDirty() );
+    EXPECT_FALSE(outwrapper->isDeviceDirty());
 
-    assertEquals( out[0] , 7 );
-    assertEquals( out[1] , 10 );
-    assertEquals( out[2] , 13 );
-    assertEquals( out[3] , 16 );
-    assertEquals( out[4] , 19 );
+    assertEquals(out[0] , 7);
+    assertEquals(out[1] , 10);
+    assertEquals(out[2] , 13);
+    assertEquals(out[3] , 16);
+    assertEquals(out[4] , 19);
     cout << "tests completed ok" << endl;
 
     delete inwrapper;

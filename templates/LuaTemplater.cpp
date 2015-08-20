@@ -30,49 +30,49 @@ PUBLIC LuaTemplater::LuaTemplater() {
 
     if(luaL_dostring(L, getTemplaterSource().c_str())) {
         string error = lua_tostring(L, -1);
-        throw runtime_error("Could not load templater source: " + error );
+        throw runtime_error("Could not load templater source: " + error);
     }
 }
 PUBLIC LuaTemplater::~LuaTemplater() {
     lua_close(L);
 }
-PUBLIC void LuaTemplater::set( std::string name, std::string value ) {
+PUBLIC void LuaTemplater::set(std::string name, std::string value) {
     lua_pushstring(L, value.c_str());
     lua_setglobal(L, name.c_str());
 }
-PUBLIC void LuaTemplater::set( std::string name, float value ) {
+PUBLIC void LuaTemplater::set(std::string name, float value) {
     lua_pushnumber(L, value);
     lua_setglobal(L, name.c_str());
 }
-PUBLIC void LuaTemplater::set( std::string name, int value ) {
+PUBLIC void LuaTemplater::set(std::string name, int value) {
     lua_pushnumber(L, value);
     lua_setglobal(L, name.c_str());
 }
-PUBLIC void LuaTemplater::set( std::string name, std::vector< std::string> &values ) {
+PUBLIC void LuaTemplater::set(std::string name, std::vector< std::string> &values) {
     lua_newtable(L);
-    for( int i = 0; i < (int)values.size(); i++ ) {
+    for(int i = 0; i < (int)values.size(); i++) {
         lua_pushstring(L, values[i].c_str());
         lua_rawseti(L, -2, i + 1);
     }
     lua_setglobal(L, name.c_str());
 }
-PUBLIC void LuaTemplater::set( std::string name, std::vector< int> &values ) {
+PUBLIC void LuaTemplater::set(std::string name, std::vector< int> &values) {
     lua_newtable(L);
-    for( int i = 0; i < (int)values.size(); i++ ) {
+    for(int i = 0; i < (int)values.size(); i++) {
         lua_pushnumber(L, values[i]);
         lua_rawseti(L, -2, i + 1);
     }
     lua_setglobal(L, name.c_str());
 }
-PUBLIC void LuaTemplater::set( std::string name, std::vector< float> &values ) {
+PUBLIC void LuaTemplater::set(std::string name, std::vector< float> &values) {
     lua_newtable(L);
-    for( int i = 0; i < (int)values.size(); i++ ) {
+    for(int i = 0; i < (int)values.size(); i++) {
         lua_pushnumber(L, values[i]);
         lua_rawseti(L, -2, i + 1);
     }
     lua_setglobal(L, name.c_str());
 }
-PUBLIC std::string LuaTemplater::render( std::string template_string ) {
+PUBLIC std::string LuaTemplater::render(std::string template_string) {
     lua_getfield(L, -1, "compile");
     lua_pushstring(L, template_string.c_str());
     if (lua_pcall(L, 1, 1, 0) != 0) {
@@ -88,7 +88,7 @@ PUBLIC std::string LuaTemplater::render( std::string template_string ) {
 std::string LuaTemplater::getTemplaterSource() {
     // [[[cog
     // import stringify
-    // stringify.stringify( "templaterSource", "templates/templater.lua" )
+    // stringify.stringify("templaterSource", "templates/templater.lua")
     // ]]]
     // generated using cog, from templates/templater.lua:
     const char * templaterSource =  

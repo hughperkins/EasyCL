@@ -10,15 +10,15 @@ using namespace std;
 
 static const char *kernelSource = 
 "kernel void test(int N, global float *in){\n"
-"    if( get_global_id(0) >= N ) {\n"
+"    if(get_global_id(0) >= N) {\n"
 "        return;\n"
 "    }\n"
 "    in[get_global_id(0)] += 1.0f;\n"
 "}\n"
 ;
 
-TEST( teststatefultimer, basic ) {
-    if( !EasyCL::isOpenCLAvailable() ) {
+TEST(teststatefultimer, basic) {
+    if(!EasyCL::isOpenCLAvailable()) {
         cout << "opencl library not found" << endl;
         exit(-1);
     }
@@ -29,7 +29,7 @@ TEST( teststatefultimer, basic ) {
     CLKernel *kernel = cl->buildKernelFromString(kernelSource, "test", "", "source1");
     const int N = 8 * 1024 * 1024;
     float *in = new float[N];
-    for( int i = 0; i < N; i++ ) {
+    for(int i = 0; i < N; i++) {
         in[i] = i * 3;
     }
     CLWrapper *inwrapper = cl->wrap(N, in);
@@ -40,10 +40,10 @@ TEST( teststatefultimer, basic ) {
     StatefulTimer::timeCheck("start");
 
     const int its = 16;
-    for( int i = 0 ; i < its; i++ ) {
+    for(int i = 0 ; i < its; i++) {
       kernel->in(N);
-      kernel->inout( inwrapper );
-      kernel->run_1d( ((N+64-1)/64) * 64, 64 );
+      kernel->inout(inwrapper);
+      kernel->run_1d(((N+64-1)/64) * 64, 64);
       StatefulTimer::timeCheck("foo");
     }
     cl->finish();
@@ -61,8 +61,8 @@ TEST( teststatefultimer, basic ) {
     delete cl;
 }
 
-TEST( teststatefultimer, notiming ) {
-    if( !EasyCL::isOpenCLAvailable() ) {
+TEST(teststatefultimer, notiming) {
+    if(!EasyCL::isOpenCLAvailable()) {
         cout << "opencl library not found" << endl;
         exit(-1);
     }
@@ -73,7 +73,7 @@ TEST( teststatefultimer, notiming ) {
     CLKernel *kernel = cl->buildKernelFromString(kernelSource, "test", "", "source1");
     const int N = 8 * 1024 * 1024;
     float *in = new float[N];
-    for( int i = 0; i < N; i++ ) {
+    for(int i = 0; i < N; i++) {
         in[i] = i * 3;
     }
     CLWrapper *inwrapper = cl->wrap(N, in);
@@ -82,10 +82,10 @@ TEST( teststatefultimer, notiming ) {
     StatefulTimer::dump(true);
     double start = StatefulTimer::getSystemMilliseconds();
     const int its = 16;
-    for( int i = 0 ; i < its; i++ ) {
+    for(int i = 0 ; i < its; i++) {
       kernel->in(N);
-      kernel->inout( inwrapper );
-      kernel->run_1d( ((N+64-1)/64) * 64, 64 );
+      kernel->inout(inwrapper);
+      kernel->run_1d(((N+64-1)/64) * 64, 64);
       StatefulTimer::timeCheck("foo");
     }
     cl->finish();

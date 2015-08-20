@@ -10,11 +10,11 @@ namespace easycl {
     public:
         static int getNumDevices();
         static int getNumGpus();
-        static int getNumDevices( int types );
-        static DeviceInfo getDeviceInfo( int index );
-        static DeviceInfo getGpuInfo( int gpuIndex );
-        static DeviceInfo getDeviceInfo( int Index, int types );
-        static void getDeviceIds( int index, int types, cl_platform_id *p_platformId, cl_device_id *p_deviceId );
+        static int getNumDevices(int types);
+        static DeviceInfo getDeviceInfo(int index);
+        static DeviceInfo getGpuInfo(int gpuIndex);
+        static DeviceInfo getDeviceInfo(int Index, int types);
+        static void getDeviceIds(int index, int types, cl_platform_id *p_platformId, cl_device_id *p_deviceId);
     };
 }
 

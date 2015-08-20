@@ -18,22 +18,22 @@ class CLArrayFloat : public CLArray {
 protected:
     float *hostarray;
 public:
-    CLArrayFloat( int N, EasyCL *easycl ) :
-            CLArray( N, easycl ) {
+    CLArrayFloat(int N, EasyCL *easycl) :
+            CLArray(N, easycl) {
         hostarray = 0;
     }
-    CLArrayFloat( const CLArrayFloat &source ) :
-        CLArray( 0, 0 ) { // copy constructor
+    CLArrayFloat(const CLArrayFloat &source) :
+        CLArray(0, 0) { // copy constructor
         throw std::runtime_error("can't assign these...");
     }
-    CLArrayFloat &operator=( const CLArrayFloat &two ) { // assignment operator
-       if( this == &two ) { // self-assignment
+    CLArrayFloat &operator=(const CLArrayFloat &two) { // assignment operator
+       if(this == &two) { // self-assignment
           return *this;
        }
        throw std::runtime_error("can't assign these...");
     }
     virtual ~CLArrayFloat() {
-        if( onHost ) {
+        if(onHost) {
             deleteHostArray();
         }
     }
@@ -50,14 +50,14 @@ public:
         onHost = false;
     }
     virtual int getElementSize() {
-        return sizeof( float );
+        return sizeof(float);
     }
     virtual void *getHostArray() {
         return hostarray;
     }
-//    float const &operator[]( int n ) {
-//        if( !onHost ) {
-//            if( !onDevice ) {
+//    float const &operator[](int n) {
+//        if(!onHost) {
+//            if(!onDevice) {
 //                createOnHost();
 //            } else {
 //                copyToHost();
@@ -65,9 +65,9 @@ public:
 //        }
 //        return hostarray[n];
 //    }
-    float &operator[]( int n ) {
-        if( !onHost ) {
-            if( !onDevice ) {
+    float &operator[](int n) {
+        if(!onHost) {
+            if(!onDevice) {
                 createOnHost();
             } else {
                 moveToHost();

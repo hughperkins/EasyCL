@@ -1,6 +1,6 @@
 #include "StatefulTimer.h"
 
-//#if (_MSC_VER == 1500 || _MSC_VER == 1600 ) // visual studio 2008 or 2010
+//#if (_MSC_VER == 1500 || _MSC_VER == 1600) // visual studio 2008 or 2010
 #ifdef _MSC_VER // make consistent across all msvc versions, so dont have to retest on different msvc versions...
 #define WINNOCHRONO
 //#include <ctime>
@@ -38,7 +38,7 @@ PUBLIC StatefulTimer::StatefulTimer() :
 }
 PUBLIC StatefulTimer::~StatefulTimer() {
     std::cout << "~StatefulTimer() StatefulTimer readings:" << std::endl;
-    for( std::map< std::string, double >::iterator it = timeByState.begin(); it != timeByState.end(); it++ ) {
+    for(std::map< std::string, double >::iterator it = timeByState.begin(); it != timeByState.end(); it++) {
         std::cout << "   " << it->first << ": " << it->second << std::endl;
     }
 }
@@ -51,16 +51,16 @@ void StatefulTimer::_dump(bool force) {
         return;
     }
     double totalTimings = 0;
-    for( std::map< std::string, double >::iterator it = timeByState.begin(); it != timeByState.end(); it++ ) {
+    for(std::map< std::string, double >::iterator it = timeByState.begin(); it != timeByState.end(); it++) {
 //            std::cout << "   " << it->first << ": " << it->second << std::endl;
         totalTimings += it->second;
     }
-    if( !force && totalTimings < 800 ) {
+    if(!force && totalTimings < 800) {
         return;
     }
     std::cout << "StatefulTimer readings:" << std::endl;
-    for( std::map< std::string, double >::iterator it = timeByState.begin(); it != timeByState.end(); it++ ) {
-        if( it->second > 0 ) {
+    for(std::map< std::string, double >::iterator it = timeByState.begin(); it != timeByState.end(); it++) {
+        if(it->second > 0) {
             std::cout << "   " << it->first << ": " << it->second << "ms" << " count=" << countByState[it->first] << std::endl;
         }
     }
@@ -86,14 +86,14 @@ PUBLIC STATIC void StatefulTimer::dump() {
 PUBLIC STATIC void StatefulTimer::dump(bool force) {
     instance()->_dump(force);
 }
-PUBLIC STATIC void StatefulTimer::timeCheck(std::string state ) {
+PUBLIC STATIC void StatefulTimer::timeCheck(std::string state) {
     if(enabled) {
-       instance()->_timeCheck( state );
+       instance()->_timeCheck(state);
     }
 }
-PUBLIC STATIC void StatefulTimer::timeCheck(const char *state ) {
+PUBLIC STATIC void StatefulTimer::timeCheck(const char *state) {
     if(enabled) {
-       instance()->_timeCheck( state );
+       instance()->_timeCheck(state);
     }
 }
 PUBLIC STATIC double StatefulTimer::getSystemMilliseconds() {

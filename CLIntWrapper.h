@@ -16,20 +16,20 @@ class CLIntWrapper : public CLWrapper {
 protected:
     int *hostarray;  // NOT owned by this object, do NOT free :-)
 public:
-    CLIntWrapper( int N, int *_hostarray, EasyCL *easycl ) : 
-             CLWrapper( N, easycl),
+    CLIntWrapper(int N, int *_hostarray, EasyCL *easycl) : 
+             CLWrapper(N, easycl),
              hostarray(_hostarray) 
               {
         error = CL_SUCCESS;
 
         onDevice = false;
     }
-    CLIntWrapper( const CLIntWrapper &source ) :
-        CLWrapper( 0, 0 ), hostarray(0) { // copy constructor
+    CLIntWrapper(const CLIntWrapper &source) :
+        CLWrapper(0, 0), hostarray(0) { // copy constructor
         throw std::runtime_error("can't assign these...");
     }
-    CLIntWrapper &operator=( const CLIntWrapper &two ) { // assignment operator
-       if( this == &two ) { // self-assignment
+    CLIntWrapper &operator=(const CLIntWrapper &two) { // assignment operator
+       if(this == &two) { // self-assignment
           return *this;
        }
        throw std::runtime_error("can't assign these...");

@@ -17,20 +17,20 @@ class CLUCharWrapper : public CLWrapper {
 protected:
     unsigned char *hostarray;  // NOT owned by this object, do NOT free :-)
 public:
-    CLUCharWrapper( int N, unsigned char *_hostarray, EasyCL *easycl ) : 
-             CLWrapper( N, easycl),
+    CLUCharWrapper(int N, unsigned char *_hostarray, EasyCL *easycl) : 
+             CLWrapper(N, easycl),
              hostarray(_hostarray) 
               {
         error = CL_SUCCESS;
 
         onDevice = false;
     }
-    CLUCharWrapper( const CLUCharWrapper &source ) :
-        CLWrapper( 0, 0 ), hostarray(0) { // copy constructor
+    CLUCharWrapper(const CLUCharWrapper &source) :
+        CLWrapper(0, 0), hostarray(0) { // copy constructor
         throw std::runtime_error("can't assign these...");
     }
-    CLUCharWrapper &operator=( const CLUCharWrapper &two ) { // assignment operator
-       if( this == &two ) { // self-assignment
+    CLUCharWrapper &operator=(const CLUCharWrapper &two) { // assignment operator
+       if(this == &two) { // self-assignment
           return *this;
        }
        throw std::runtime_error("can't assign these...");

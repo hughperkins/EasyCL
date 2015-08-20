@@ -17,17 +17,17 @@ class CLFloatWrapperConst : public CLWrapper {
 protected:
     float const*hostarray;  // NOT owned by this object, do NOT free :-)
 public:
-    CLFloatWrapperConst( int N, float const *_hostarray, EasyCL *easycl ) : 
-             CLWrapper( N, easycl), 
+    CLFloatWrapperConst(int N, float const *_hostarray, EasyCL *easycl) : 
+             CLWrapper(N, easycl), 
              hostarray(_hostarray)
               {
     }
-    CLFloatWrapperConst( const CLFloatWrapperConst &source ) :
-        CLWrapper( 0, 0 ), hostarray(0) { // copy constructor
+    CLFloatWrapperConst(const CLFloatWrapperConst &source) :
+        CLWrapper(0, 0), hostarray(0) { // copy constructor
         throw std::runtime_error("can't assign these...");
     }
-    CLFloatWrapperConst &operator=( const CLFloatWrapperConst &two ) { // assignment operator
-       if( this == &two ) { // self-assignment
+    CLFloatWrapperConst &operator=(const CLFloatWrapperConst &two) { // assignment operator
+       if(this == &two) { // self-assignment
           return *this;
        }
        throw std::runtime_error("can't assign these...");
@@ -37,7 +37,7 @@ public:
     virtual int getElementSize() {
         return sizeof(hostarray[0]);
     }
-    inline float get( int index ) {
+    inline float get(int index) {
         return hostarray[index];
     }
     virtual void *getHostArray() {

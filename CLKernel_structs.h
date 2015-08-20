@@ -28,7 +28,7 @@ CLKernel *CLKernel::output(int N, T *data) {
 	buffers.push_back(buffer);
 	//outputArgNums.push_back(nextArg);
 	outputArgBuffers.push_back(buffer);
-	outputArgPointers.push_back( (void *)data);
+	outputArgPointers.push_back((void *)data);
 	outputArgSizes.push_back(sizeof(T) * N);
 	nextArg++;
 	return this;
@@ -45,7 +45,7 @@ CLKernel *CLKernel::inout(int N, T *data) {
 	easycl->checkError(error);
 	buffers.push_back(buffer);
 	outputArgBuffers.push_back(buffer);
-	outputArgPointers.push_back( (void *)( data ) );
+	outputArgPointers.push_back((void *)(data) );
 	outputArgSizes.push_back(sizeof(T) * N);
 	nextArg++;
 	return this;

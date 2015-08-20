@@ -15,31 +15,31 @@
 
 using namespace std;
 
-void printPlatformInfoString( string valuename, cl_platform_id platformId, cl_platform_info name ) {
+void printPlatformInfoString(string valuename, cl_platform_id platformId, cl_platform_info name) {
     char buffer[256];
     buffer[0] = 0;
     clGetPlatformInfo(platformId, name, 256, buffer, 0);
     cout << valuename << ": " << buffer << endl;    
 }
 
-string getPlatformInfoString( cl_platform_id platformId, cl_platform_info name ) {
+string getPlatformInfoString(cl_platform_id platformId, cl_platform_info name) {
     char buffer[257];
     buffer[0] = 0;
     size_t namesize;
-    cl_int error = clGetPlatformInfo(platformId, name, 256, buffer, &namesize );
-    if( error != CL_SUCCESS ) {
-        if( error == CL_INVALID_PLATFORM ) {
-            throw runtime_error("Failed to obtain platform info for platform id " + EasyCL::toString( platformId ) + ": invalid platform" );
-        } else if( error == CL_INVALID_VALUE ) {
-            throw runtime_error("Failed to obtain platform info " + EasyCL::toString( name ) + " for platform id " + EasyCL::toString( platformId ) + ": invalid value" );
+    cl_int error = clGetPlatformInfo(platformId, name, 256, buffer, &namesize);
+    if(error != CL_SUCCESS) {
+        if(error == CL_INVALID_PLATFORM) {
+            throw runtime_error("Failed to obtain platform info for platform id " + EasyCL::toString(platformId) + ": invalid platform");
+        } else if(error == CL_INVALID_VALUE) {
+            throw runtime_error("Failed to obtain platform info " + EasyCL::toString(name) + " for platform id " + EasyCL::toString(platformId) + ": invalid value");
         } else {
-            throw runtime_error("Failed to obtain platform info " + EasyCL::toString( name ) + " for platform id " + EasyCL::toString( platformId ) + ": unknown error code: " + EasyCL::toString( error ) );
+            throw runtime_error("Failed to obtain platform info " + EasyCL::toString(name) + " for platform id " + EasyCL::toString(platformId) + ": unknown error code: " + EasyCL::toString(error) );
         }
     }
-    return string( buffer );
+    return string(buffer);
 }
 
-void printPlatformInfo( string valuename, cl_platform_id platformId, cl_platform_info name ) {
+void printPlatformInfo(string valuename, cl_platform_id platformId, cl_platform_info name) {
     cl_ulong somelong = 0;
     clGetPlatformInfo(platformId, name, sizeof(cl_ulong), &somelong, 0);
     cout << valuename << ": " << somelong << endl;    

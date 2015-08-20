@@ -1,4 +1,4 @@
-kernel void foo( ) {
+kernel void foo() {
    someerrorxyz;
 }
 

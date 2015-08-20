@@ -60,21 +60,21 @@ public:
     CLKernel &operator=(const CLKernel &kernel);
     ~CLKernel();
 
-    CLKernel *input( CLArray *clarray1d );
-    CLKernel *inout( CLArray *clarray1d );
-    CLKernel *output( CLArray *clarray1d );
+    CLKernel *input(CLArray *clarray1d);
+    CLKernel *inout(CLArray *clarray1d);
+    CLKernel *output(CLArray *clarray1d);
 
     // synonyms, in case you prefer `in` instead of `input`:
-    CLKernel *in( CLArray *clarray1d ) { return input( clarray1d ); }
-    CLKernel *out( CLArray *clarray1d ) { return output( clarray1d ); }
+    CLKernel *in(CLArray *clarray1d) { return input(clarray1d); }
+    CLKernel *out(CLArray *clarray1d) { return output(clarray1d); }
 
-    CLKernel *input( CLWrapper *wrapper );
-    CLKernel *output( CLWrapper *wrapper );
-    CLKernel *inout( CLWrapper *wrapper );
+    CLKernel *input(CLWrapper *wrapper);
+    CLKernel *output(CLWrapper *wrapper);
+    CLKernel *inout(CLWrapper *wrapper);
 
     // synonyms, in case you prefer `in` instead of `input`:
-    CLKernel *in( CLWrapper *wrapper ) { return input( wrapper ); }
-    CLKernel *out( CLWrapper *wrapper ) { return output( wrapper ); }
+    CLKernel *in(CLWrapper *wrapper) { return input(wrapper); }
+    CLKernel *out(CLWrapper *wrapper) { return output(wrapper); }
 
     CLKernel *localFloats(int count);
     CLKernel *localInts(int count);

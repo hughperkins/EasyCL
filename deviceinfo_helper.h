@@ -13,13 +13,13 @@
 
 typedef long long int64;
 
-void printDeviceInfoKB( std::string valuename, cl_device_id deviceId, cl_device_info name );
-void printDeviceInfoMB( std::string valuename, cl_device_id deviceId, cl_device_info name );
-void printDeviceInfo( std::string valuename, cl_device_id deviceId, cl_device_info name );
-void printDeviceInfoArray( std::string valuename, cl_device_id deviceId, cl_device_info name, int length );
-void printDeviceInfoString( std::string valuename, cl_device_id deviceId, cl_device_info name );
+void printDeviceInfoKB(std::string valuename, cl_device_id deviceId, cl_device_info name);
+void printDeviceInfoMB(std::string valuename, cl_device_id deviceId, cl_device_info name);
+void printDeviceInfo(std::string valuename, cl_device_id deviceId, cl_device_info name);
+void printDeviceInfoArray(std::string valuename, cl_device_id deviceId, cl_device_info name, int length);
+void printDeviceInfoString(std::string valuename, cl_device_id deviceId, cl_device_info name);
 
-std::string getDeviceInfoString( cl_device_id deviceId, cl_device_info name );
-int getDeviceInfoInt( cl_device_id deviceId, cl_device_info name );
-int64 getDeviceInfoInt64( cl_device_id deviceId, cl_device_info name );
+std::string getDeviceInfoString(cl_device_id deviceId, cl_device_info name);
+int getDeviceInfoInt(cl_device_id deviceId, cl_device_info name);
+int64 getDeviceInfoInt64(cl_device_id deviceId, cl_device_info name);
 

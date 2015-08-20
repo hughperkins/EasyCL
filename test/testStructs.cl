@@ -4,8 +4,8 @@ typedef struct MyStruct {
     int threeints[3];
 } MyStruct;
 
-kernel void testStructs( global int *ints, global float *floats, global MyStruct *structs ) {
-    if( get_global_id(0) != 0 ) {
+kernel void testStructs(global int *ints, global float *floats, global MyStruct *structs) {
+    if(get_global_id(0) != 0) {
         return;
     }
     floats[0] = structs[0].afloat;

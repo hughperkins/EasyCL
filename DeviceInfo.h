@@ -32,7 +32,7 @@ namespace easycl {
         std::string deviceVersion;
         int maxClockFrequency;
 
-        void populate( cl_platform_id platformId, cl_device_id deviceId );
+        void populate(cl_platform_id platformId, cl_device_id deviceId);
         std::string toString();
     };
 }

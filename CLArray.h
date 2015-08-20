@@ -13,7 +13,7 @@ public:
 
     cl_int error;
 
-    CLArray( int N, EasyCL *easycl ) {
+    CLArray(int N, EasyCL *easycl) {
         this->N = N;
         this->easycl = easycl;
         error = CL_SUCCESS;
@@ -22,7 +22,7 @@ public:
         onHost = false;
     }
     virtual ~CLArray() {
-        if( onDevice ) {
+        if(onDevice) {
             clReleaseMemObject(devicearray);                    
         }
     }
@@ -32,17 +32,17 @@ public:
     void createOnDevice() {
         assert(!onHost && !onDevice);
         devicearray = clCreateBuffer(*(easycl->context), CL_MEM_READ_WRITE, getElementSize() * N, 0, &error);
-        assert( error == CL_SUCCESS );        
+        assert(error == CL_SUCCESS);        
         onDevice = true;        
     }
     void copyToDevice() {
-        assert( onHost && !onDevice );
+        assert(onHost && !onDevice);
         devicearray = clCreateBuffer(*(easycl->context), CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, getElementSize() * N, getHostArray(), &error);
         easycl->checkError(error);
         onDevice = true;
     }
     void moveToDevice() {
-        assert( onHost && !onDevice );
+        assert(onHost && !onDevice);
         devicearray = clCreateBuffer(*(easycl->context), CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, getElementSize() * N, getHostArray(), &error);
         assert(error == CL_SUCCESS);
         deleteHostArray();
@@ -54,13 +54,13 @@ public:
        deleteFromDevice();
     }
     void copyToHost() {
-        assert( onDevice );
-        if( !onHost ) {
+        assert(onDevice);
+        if(!onHost) {
             allocateHostArray(N);
             onHost = true;                
         }
         error = clEnqueueReadBuffer(*(easycl->queue), devicearray, CL_TRUE, 0, getElementSize() * N, getHostArray(), 0, NULL, NULL);    
-        easycl->checkError( error );
+        easycl->checkError(error);
     }
     void deleteFromHost(){
         assert(onHost);
@@ -68,8 +68,8 @@ public:
         onHost = false;
     }
     cl_mem *getDeviceArray() {
-        if( !onDevice ) {
-            assert( onHost );
+        if(!onDevice) {
+            assert(onHost);
             copyToDevice();
             deleteFromHost();
         }

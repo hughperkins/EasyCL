@@ -43,82 +43,82 @@ CLKernel::~CLKernel() {
 	clReleaseKernel(kernel);
 }
 
-CLKernel *CLKernel::input( CLArray *clarray1d ) {
-    assert( clarray1d != 0 );
-    if( !clarray1d->isOnDevice() ) {
+CLKernel *CLKernel::input(CLArray *clarray1d) {
+    assert(clarray1d != 0);
+    if(!clarray1d->isOnDevice()) {
         clarray1d->moveToDevice();
     }
-    if( clarray1d->isOnHost() ) {
+    if(clarray1d->isOnHost()) {
         clarray1d->deleteFromHost();
     }
     cl_mem *devicearray = clarray1d->getDeviceArray();
-    error = clSetKernelArg( kernel, nextArg, sizeof(cl_mem), devicearray );
+    error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), devicearray);
     easycl->checkError(error);
     nextArg++;
     return this;
 }
 
-CLKernel *CLKernel::output( CLArray *clarray1d ) {
-    assert( clarray1d != 0 );
-    if( clarray1d->isOnHost() ) {
+CLKernel *CLKernel::output(CLArray *clarray1d) {
+    assert(clarray1d != 0);
+    if(clarray1d->isOnHost()) {
         clarray1d->deleteFromHost();
     }
-    if( !clarray1d->isOnDevice() ) {
+    if(!clarray1d->isOnDevice()) {
         clarray1d->createOnDevice();
     }
-    assert( clarray1d->isOnDevice() && !clarray1d->isOnHost() );
-    error = clSetKernelArg( kernel, nextArg, sizeof(cl_mem), (clarray1d->getDeviceArray()) );
+    assert(clarray1d->isOnDevice() && !clarray1d->isOnHost());
+    error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), (clarray1d->getDeviceArray()));
     easycl->checkError(error);
     nextArg++;  
     return this;      
 }
 
-CLKernel *CLKernel::inout( CLArray *clarray1d ) {
-    assert( clarray1d != 0 );
-    if( !clarray1d->isOnDevice() ) {
+CLKernel *CLKernel::inout(CLArray *clarray1d) {
+    assert(clarray1d != 0);
+    if(!clarray1d->isOnDevice()) {
         clarray1d->moveToDevice();
     }
-    if( clarray1d->isOnHost() ) {
+    if(clarray1d->isOnHost()) {
         clarray1d->deleteFromHost();
     }
     cl_mem *devicearray = clarray1d->getDeviceArray();
-    error = clSetKernelArg( kernel, nextArg, sizeof(cl_mem), devicearray );
+    error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), devicearray);
     easycl->checkError(error);
     nextArg++;
     return this;
 }
 
-CLKernel *CLKernel::input( CLWrapper *wrapper ) {
-    assert( wrapper != 0 );
-    if( !wrapper->isOnDevice() ) {
+CLKernel *CLKernel::input(CLWrapper *wrapper) {
+    assert(wrapper != 0);
+    if(!wrapper->isOnDevice()) {
         throw std::runtime_error("need to copyToDevice() before calling kernel->input");
     }
     cl_mem *devicearray = wrapper->getDeviceArray();
-    error = clSetKernelArg( kernel, nextArg, sizeof(cl_mem), devicearray );
+    error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), devicearray);
     easycl->checkError(error);
     nextArg++;
     return this;
 }
 
-CLKernel *CLKernel::inout( CLWrapper *wrapper ) {
-    assert( wrapper != 0 );
-    if( !wrapper->isOnDevice() ) {
+CLKernel *CLKernel::inout(CLWrapper *wrapper) {
+    assert(wrapper != 0);
+    if(!wrapper->isOnDevice()) {
         throw std::runtime_error("need to copyToDevice() before calling kernel->input");
     }
     cl_mem *devicearray = wrapper->getDeviceArray();
-    error = clSetKernelArg( kernel, nextArg, sizeof(cl_mem), devicearray );
+    error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), devicearray);
     easycl->checkError(error);
     nextArg++;
-    wrappersToDirty.push_back( wrapper );
+    wrappersToDirty.push_back(wrapper);
     return this;
 }
 
-CLKernel *CLKernel::output( CLWrapper *wrapper ) {
-    assert( wrapper != 0 );
-    if( !wrapper->isOnDevice() ) {
+CLKernel *CLKernel::output(CLWrapper *wrapper) {
+    assert(wrapper != 0);
+    if(!wrapper->isOnDevice()) {
         wrapper->createOnDevice();
     }
-    error = clSetKernelArg( kernel, nextArg, sizeof(cl_mem), (wrapper->getDeviceArray()) );
+    error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), (wrapper->getDeviceArray()));
     easycl->checkError(error);
     nextArg++;
     wrappersToDirty.push_back(wrapper);
@@ -204,7 +204,7 @@ CLKernel *CLKernel::output(int N, T *data) {
 	buffers.push_back(buffer);
 	//outputArgNums.push_back(nextArg);
 	outputArgBuffers.push_back(buffer);
-	outputArgPointers.push_back( (void *)data);
+	outputArgPointers.push_back((void *)data);
 	outputArgSizes.push_back(sizeof(T) * N);
 	nextArg++;
 	return this;
@@ -221,7 +221,7 @@ CLKernel *CLKernel::inout(int N, T *data) {
 	easycl->checkError(error);
 	buffers.push_back(buffer);
 	outputArgBuffers.push_back(buffer);
-	outputArgPointers.push_back( (void *)( data ) );
+	outputArgPointers.push_back((void *)(data) );
 	outputArgSizes.push_back(sizeof(T) * N);
 	nextArg++;
 	return this;
@@ -242,10 +242,10 @@ void CLKernel::run(int ND, const size_t *global_ws, const size_t *local_ws) {
     easycl->pushEvent(sourceFilename + "." + kernelName, event);
   }
 	error = clEnqueueNDRangeKernel(*(easycl->queue), kernel, ND, NULL, global_ws, local_ws, 0, NULL, event);
-  if( error != 0 ) {
+  if(error != 0) {
       vector<std::string> splitSource = easycl::split(source, "\n");
       std::string sourceWithNumbers = "\nkernel source:\n";
-      for( int i = 0; i < (int)splitSource.size(); i++ ) {
+      for(int i = 0; i < (int)splitSource.size(); i++) {
           sourceWithNumbers += toString(i + 1) + ": " + splitSource[i] + "\n";
       }
 	    switch (error) {
@@ -286,7 +286,7 @@ void CLKernel::run(int ND, const size_t *global_ws, const size_t *local_ws) {
 		clReleaseMemObject(buffers[i]);
 	}
     // mark wrappers dirty:
-    for( int i = 0; i < (int)wrappersToDirty.size(); i++ ) {
+    for(int i = 0; i < (int)wrappersToDirty.size(); i++) {
         wrappersToDirty[i]->markDeviceDirty();
     }
 	buffers.clear();

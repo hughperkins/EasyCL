@@ -1,4 +1,4 @@
-kernel void testDefines( global float *out ) {
+kernel void testDefines(global float *out) {
     int globalId = get_global_id(0);
 #ifdef DOUBLE
     out[globalId] = SOME_VALUE * 2;

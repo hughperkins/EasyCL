@@ -7,28 +7,28 @@
 using namespace std;
 
 namespace easycl {
-    void DeviceInfo::populate( cl_platform_id platformId, cl_device_id deviceId ) {
+    void DeviceInfo::populate(cl_platform_id platformId, cl_device_id deviceId) {
 //        this->platformId = platformId;
-        platformVendor = getPlatformInfoString( platformId, CL_PLATFORM_VENDOR );
-        platformName = getPlatformInfoString( platformId, CL_PLATFORM_NAME );
+        platformVendor = getPlatformInfoString(platformId, CL_PLATFORM_VENDOR);
+        platformName = getPlatformInfoString(platformId, CL_PLATFORM_NAME);
 //        this->deviceId = deviceId;
-        deviceType = getDeviceInfoInt( deviceId, CL_DEVICE_TYPE );
-        globalMemSize = getDeviceInfoInt64( deviceId, CL_DEVICE_GLOBAL_MEM_SIZE );
-        localMemSize = getDeviceInfoInt( deviceId, CL_DEVICE_LOCAL_MEM_SIZE );
-        globalMemCachelineSize = getDeviceInfoInt( deviceId, CL_DEVICE_GLOBAL_MEM_CACHELINE_SIZE );
-        maxMemAllocSize = getDeviceInfoInt64( deviceId, CL_DEVICE_MAX_MEM_ALLOC_SIZE );
-        maxComputeUnits = getDeviceInfoInt( deviceId, CL_DEVICE_MAX_COMPUTE_UNITS );
-        maxWorkGroupSize = getDeviceInfoInt( deviceId, CL_DEVICE_MAX_WORK_GROUP_SIZE );
-        maxWorkItemDimensions = getDeviceInfoInt( deviceId, CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS );
-    //    maxWorkItemSizes = getDeviceInfoInt( deviceId, CL_MAX_WORK_ITEM_SIZES );
-        deviceName = getDeviceInfoString( deviceId, CL_DEVICE_NAME );
-        openClCVersion = getDeviceInfoString( deviceId, CL_DEVICE_OPENCL_C_VERSION );
-        deviceVersion = getDeviceInfoString( deviceId, CL_DEVICE_VERSION );
-        maxClockFrequency = getDeviceInfoInt( deviceId, CL_DEVICE_MAX_CLOCK_FREQUENCY );
+        deviceType = getDeviceInfoInt(deviceId, CL_DEVICE_TYPE);
+        globalMemSize = getDeviceInfoInt64(deviceId, CL_DEVICE_GLOBAL_MEM_SIZE);
+        localMemSize = getDeviceInfoInt(deviceId, CL_DEVICE_LOCAL_MEM_SIZE);
+        globalMemCachelineSize = getDeviceInfoInt(deviceId, CL_DEVICE_GLOBAL_MEM_CACHELINE_SIZE);
+        maxMemAllocSize = getDeviceInfoInt64(deviceId, CL_DEVICE_MAX_MEM_ALLOC_SIZE);
+        maxComputeUnits = getDeviceInfoInt(deviceId, CL_DEVICE_MAX_COMPUTE_UNITS);
+        maxWorkGroupSize = getDeviceInfoInt(deviceId, CL_DEVICE_MAX_WORK_GROUP_SIZE);
+        maxWorkItemDimensions = getDeviceInfoInt(deviceId, CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS);
+    //    maxWorkItemSizes = getDeviceInfoInt(deviceId, CL_MAX_WORK_ITEM_SIZES);
+        deviceName = getDeviceInfoString(deviceId, CL_DEVICE_NAME);
+        openClCVersion = getDeviceInfoString(deviceId, CL_DEVICE_OPENCL_C_VERSION);
+        deviceVersion = getDeviceInfoString(deviceId, CL_DEVICE_VERSION);
+        maxClockFrequency = getDeviceInfoInt(deviceId, CL_DEVICE_MAX_CLOCK_FREQUENCY);
     }
 
     string DeviceInfo::toString() {
-//        return "platformId: " + toString( platformId ) + "\n"
+//        return "platformId: " + toString(platformId) + "\n"
             return "platformVendor: " + platformVendor + "\n"
             + "platformName: " + platformName + "\n"
 //            + "deviceId: " + toString(deviceId) + "\n"

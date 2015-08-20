@@ -19,8 +19,8 @@ typedef struct MyStruct {
 
 // template EasyCL_EXPORT CLKernel *CLKernel::inout(int N, MyStruct *data);
 
-TEST( testStructs, main ) {
-    if( !EasyCL::isOpenCLAvailable() ) {
+TEST(testStructs, main) {
+    if(!EasyCL::isOpenCLAvailable()) {
         cout << "opencl library not found" << endl;
         exit(-1);
     }
@@ -37,7 +37,7 @@ TEST( testStructs, main ) {
     mystruct.threeints[1] = 3;
     mystruct.threeints[2] = 6;
     kernel->inout(3, ints)->inout(3, floats)->inout(1, &mystruct);
-    kernel->run_1d( 16, 16 );
+    kernel->run_1d(16, 16);
     cl->finish();
 
     cout << "ints[0] " << ints[0] << endl;
