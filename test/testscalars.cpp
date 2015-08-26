@@ -20,13 +20,13 @@ TEST(testscalars, test1) {
     CLKernel *kernel = cl->buildKernel("testscalars.cl", "test");
     int intout[5];
     unsigned int uintout[5];
-    int64_t int64out[5];
-    uint64_t uint64out[5];
+    int64 int64out[5];
+    uint64 uint64out[5];
     float floatout[5];
     kernel->in(-156);
     kernel->in((unsigned int)3000);
-    kernel->in((int64_t)-2524653l);
-    kernel->in((uint64_t)1353523545l);
+    kernel->in((int64)-2524653l);
+    kernel->in((uint64)1353523545l);
     kernel->in(1.234f);
     kernel->out(5, intout);
     kernel->out(5, uintout);
@@ -63,8 +63,8 @@ TEST(testscalars, test1) {
     assertEquals(intout[4], -152);
 
     assertEquals(uintout[2] , (unsigned int)3002);
-    assertEquals(int64out[2] ,  (int64_t)(-2524653ll) + 2);
-    assertEquals(uint64out[2] , (uint64_t)(1353523545ll + 2));
+    assertEquals(int64out[2] ,  (int64)(-2524653ll) + 2);
+    assertEquals(uint64out[2] , (uint64)(1353523545ll + 2));
 
     assertEquals(floatout[0] , 1.234f);
     assertEquals(floatout[1] , 2.234f);

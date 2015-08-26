@@ -16,6 +16,11 @@ endif()
 OPTION(BUILD_TESTS "Build unit-tests." OFF)
 OPTION(DEV_RUN_COG "Only EasyCL maintainers need this, otherwise set to 'OFF'." OFF)
 OPTION(PROVIDE_LUA_ENGINE "eg for Torch, we use Torch's engine." ON)
+set(TYPEDEF_INT64 int64_t CACHE STRING "typedef for int64")
+set(TYPEDEF_UINT64 uint64_t CACHE STRING "typedef for uint64")
+
+add_definitions(-DTYPEDEF_INT64=${TYPEDEF_INT64})
+add_definitions(-DTYPEDEF_UINT64=${TYPEDEF_UINT64})
 
 IF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   SET(CMAKE_INSTALL_PREFIX
@@ -29,7 +34,9 @@ if(BUILD_TESTS AND NOT PROVIDE_LUA_ENGINE)
 endif()
 
 # remove obsolete options, so dont clutter the ccmake config page
-unset( LUA_AVAILABLE CACHE)
+unset(INT64_TYPEDEF CACHE)
+unset(UINT64_TYPEDEF CACHE)
+unset(LUA_AVAILABLE CACHE)
 unset(KERNEL_TEMPLATING CACHE)
 unset(CLBLAS_DIR CACHE)
 unset(TEST_CLBLAS CACHE)

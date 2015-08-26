@@ -6,7 +6,7 @@
 
 #include "EasyCL_export.h"
 
-typedef int64_t int64;
+typedef TYPEDEF_INT64 int64;
 
 namespace easycl {
     class EasyCL_EXPORT DeviceInfo {

@@ -13,8 +13,8 @@
 
 typedef int int32;
 typedef unsigned int uint32;
-typedef int64_t int64;
-typedef uint64_t uint64;
+typedef TYPEDEF_INT64 int64;
+typedef TYPEDEF_UINT64 uint64;
 
 class EasyCL_EXPORT CLKernel {
     EasyCL *easycl; // NOT owned by this object, dont delete!
