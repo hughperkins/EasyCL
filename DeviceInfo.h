@@ -6,7 +6,11 @@
 
 #include "EasyCL_export.h"
 
+#ifdef _cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 namespace easycl {
     class EasyCL_EXPORT DeviceInfo {
