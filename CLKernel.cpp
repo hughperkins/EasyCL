@@ -151,10 +151,10 @@ CLKernel *CLKernel::input(TYPE value) { \
 CLKernel *CLKernel::in(TYPE value) { \
 	return input(value); \
 }
-CLKERNEL_CREATE_SCALAR_INPUT(int32, Int32);
-CLKERNEL_CREATE_SCALAR_INPUT(uint32, UInt32);
-CLKERNEL_CREATE_SCALAR_INPUT(int64, Int64);
-CLKERNEL_CREATE_SCALAR_INPUT(uint64, UInt64);
+CLKERNEL_CREATE_SCALAR_INPUT(int32_t, Int32);
+CLKERNEL_CREATE_SCALAR_INPUT(uint32_t, UInt32);
+CLKERNEL_CREATE_SCALAR_INPUT(int64_t, Int64);
+CLKERNEL_CREATE_SCALAR_INPUT(uint64_t, UInt64);
 CLKERNEL_CREATE_SCALAR_INPUT(float, Float);
 
 //CLKernel *CLKernel::input(unsigned int value) {
@@ -312,10 +312,10 @@ template EasyCL_EXPORT CLKernel *CLKernel::out(int N, TYPE *data); \
 template EasyCL_EXPORT CLKernel *CLKernel::inout(int N, TYPE *data);
 
 EASYCL_INSTANTIATE_FOR_TYPE(float);
-EASYCL_INSTANTIATE_FOR_TYPE(int32);
-EASYCL_INSTANTIATE_FOR_TYPE(uint32);
-EASYCL_INSTANTIATE_FOR_TYPE(int64);
-EASYCL_INSTANTIATE_FOR_TYPE(uint64);
+EASYCL_INSTANTIATE_FOR_TYPE(int32_t);
+EASYCL_INSTANTIATE_FOR_TYPE(uint32_t);
+EASYCL_INSTANTIATE_FOR_TYPE(int64_t);
+EASYCL_INSTANTIATE_FOR_TYPE(uint64_t);
 
 //template EasyCL_EXPORT CLKernel *CLKernel::input(int N, const float *data);
 //template EasyCL_EXPORT CLKernel *CLKernel::input(int N, const int *data);

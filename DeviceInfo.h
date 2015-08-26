@@ -7,7 +7,6 @@
 #include "EasyCL_export.h"
 
 #include <cstdint>
-typedef TYPEDEF_INT64 int64;
 
 namespace easycl {
     class EasyCL_EXPORT DeviceInfo {
@@ -20,10 +19,10 @@ namespace easycl {
         std::string platformName;
 //        long deviceId;
         int deviceType;
-        int64 globalMemSize;
+        int64_t globalMemSize;
         int localMemSize;
         int globalMemCachelineSize;
-        int64 maxMemAllocSize;
+        int64_t maxMemAllocSize;
         int maxComputeUnits;
         int maxWorkGroupSize;
         int maxWorkItemDimensions;

@@ -12,7 +12,6 @@
 #include "clew.h"
 
 #include <cstdint>
-typedef TYPEDEF_INT64 int64;
 
 void printDeviceInfoKB(std::string valuename, cl_device_id deviceId, cl_device_info name);
 void printDeviceInfoMB(std::string valuename, cl_device_id deviceId, cl_device_info name);
@@ -22,5 +21,5 @@ void printDeviceInfoString(std::string valuename, cl_device_id deviceId, cl_devi
 
 std::string getDeviceInfoString(cl_device_id deviceId, cl_device_info name);
 int getDeviceInfoInt(cl_device_id deviceId, cl_device_info name);
-int64 getDeviceInfoInt64(cl_device_id deviceId, cl_device_info name);
+int64_t getDeviceInfoInt64(cl_device_id deviceId, cl_device_info name);
 

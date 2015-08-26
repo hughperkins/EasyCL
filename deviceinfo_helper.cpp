@@ -79,8 +79,8 @@ int getDeviceInfoInt(cl_device_id deviceId, cl_device_info name) {
     }
     return (int)somelong;
 }
-int64 getDeviceInfoInt64(cl_device_id deviceId, cl_device_info name) {
-    int64 somelong = 0;
+int64_t getDeviceInfoInt64(cl_device_id deviceId, cl_device_info name) {
+    int64_t somelong = 0;
     cl_int error = clGetDeviceInfo(deviceId, name, sizeof(cl_ulong), &somelong, 0);
     if(error != CL_SUCCESS) {
         if(error == CL_INVALID_DEVICE) {

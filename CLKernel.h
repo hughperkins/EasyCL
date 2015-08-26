@@ -12,10 +12,6 @@
 #include "EasyCL_export.h"
 
 #include <cstdint>
-typedef int int32;
-typedef unsigned int uint32;
-typedef TYPEDEF_INT64 int64;
-typedef TYPEDEF_UINT64 uint64;
 
 class EasyCL_EXPORT CLKernel {
     EasyCL *easycl; // NOT owned by this object, dont delete!
@@ -33,10 +29,10 @@ class EasyCL_EXPORT CLKernel {
 
     std::vector<cl_mem> buffers;
 
-    std::vector<int32> inputArgInt32s;
-    std::vector<uint32> inputArgUInt32s;
-    std::vector<int64> inputArgInt64s;
-    std::vector<uint64> inputArgUInt64s;
+    std::vector<int32_t> inputArgInt32s;
+    std::vector<uint32_t> inputArgUInt32s;
+    std::vector<int64_t> inputArgInt64s;
+    std::vector<uint64_t> inputArgUInt64s;
     std::vector<float> inputArgFloats;
 
     std::vector<cl_mem> outputArgBuffers;
@@ -83,16 +79,16 @@ public:
 
     template<typename T> CLKernel *input(int N, const T *data);
     template<typename T> CLKernel *in(int N, const T *data);
-    CLKernel *input(int32 value);
-    CLKernel *in(int32 value);
+    CLKernel *input(int32_t value);
+    CLKernel *in(int32_t value);
     CLKernel *input(float value);
     CLKernel *in(float value);
-    CLKernel *input(int64 value);
-    CLKernel *in(int64 value);
-    CLKernel *input(uint64 value);
-    CLKernel *in(uint64 value);
-    CLKernel *input(uint32 value);
-    CLKernel *in(uint32 value);
+    CLKernel *input(int64_t value);
+    CLKernel *in(int64_t value);
+    CLKernel *input(uint64_t value);
+    CLKernel *in(uint64_t value);
+    CLKernel *input(uint32_t value);
+    CLKernel *in(uint32_t value);
     template<typename T> CLKernel *output(int N, T *data);
     template<typename T> CLKernel *out(int N, T *data);
     template<typename T> CLKernel *inout(int N, T *data);
