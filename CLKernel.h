@@ -11,6 +11,7 @@
 
 #include "EasyCL_export.h"
 
+#include <cstdint>
 typedef int int32;
 typedef unsigned int uint32;
 typedef TYPEDEF_INT64 int64;

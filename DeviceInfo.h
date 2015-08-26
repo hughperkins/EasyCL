@@ -6,6 +6,7 @@
 
 #include "EasyCL_export.h"
 
+#include <cstdint>
 typedef TYPEDEF_INT64 int64;
 
 namespace easycl {
