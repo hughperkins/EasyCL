@@ -11,11 +11,7 @@
 
 #include "EasyCL_export.h"
 
-#ifdef _cplusplus
-#include <cstdint>
-#else
-#include <stdint.h>
-#endif
+#include "mystdint.h"
 
 class EasyCL_EXPORT CLKernel {
     EasyCL *easycl; // NOT owned by this object, dont delete!

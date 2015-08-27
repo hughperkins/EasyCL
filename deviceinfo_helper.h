@@ -11,11 +11,7 @@
 
 #include "clew.h"
 
-#ifdef _cplusplus
-#include <cstdint>
-#else
-#include <stdint.h>
-#endif
+#include "mystdint.h"
 
 void printDeviceInfoKB(std::string valuename, cl_device_id deviceId, cl_device_info name);
 void printDeviceInfoMB(std::string valuename, cl_device_id deviceId, cl_device_info name);
