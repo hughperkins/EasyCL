@@ -6,6 +6,12 @@
 
 #pragma once
 
+#ifdef USE_CLEW
+#include "clew.h"
+#else
+#include "CL/cl.h"
+#endif
+
 #include <cstdlib>
 #include <cassert>
 #include <iostream>
@@ -17,7 +23,6 @@
 #include <stdexcept>
 #include <map>
 
-#include "clew.h"
 #include "deviceinfo_helper.h"
 #include "platforminfo_helper.h"
 

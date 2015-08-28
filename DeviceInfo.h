@@ -2,7 +2,8 @@
 
 #include <string>
 #include "DeviceInfo.h"
-#include "clew.h"
+//#include "clew.h"
+#include "CL/cl.h"
 
 #include "EasyCL_export.h"
 

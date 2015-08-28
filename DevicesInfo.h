@@ -1,6 +1,7 @@
 #pragma once
 
-#include "clew.h"
+//#include "clew.h"
+#include "CL/cl.h"
 #include "DeviceInfo.h"
 
 #include "EasyCL_export.h"

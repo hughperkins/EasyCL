@@ -9,7 +9,11 @@
 #include <algorithm>
 #include <string>
 
-#include "clew.h"
+//#ifdef USE_CLEW
+//#include "clew.h"
+//#else
+#include "CL/cl.h"
+//#endif
 
 #include "mystdint.h"
 

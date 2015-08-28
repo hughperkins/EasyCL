@@ -8,6 +8,12 @@
 #include <stdexcept>
 using namespace std;
 
+#ifdef USE_CLEW
+#include "clew.h"
+#else
+#include "CL/cl.h"
+#endif
+
 #include "EasyCL.h"
 
 #include "CLArrayFloat.h"
@@ -38,10 +44,12 @@ void EasyCL::commonConstructor(cl_platform_id platform_id, cl_device_id device, 
     context = 0;
     profilingOn = false;
 
-    bool clpresent = 0 == clewInit();
-    if(!clpresent) {
-        throw std::runtime_error("OpenCL library not found");
-    }
+    #ifdef USE_CLEW
+        bool clpresent = 0 == clewInit();
+        if(!clpresent) {
+            throw std::runtime_error("OpenCL library not found");
+        }
+    #endif
     this->platform_id = platform_id;
     this->device = device;
 
@@ -104,10 +112,12 @@ EasyCL *EasyCL::createForIndexedDevice(int device) {
 
 EasyCL *EasyCL::createForIndexedGpu(int gpu, bool verbose) {
 //  cout << "createForindexedgpu gpu=" << gpu << " verbose=" << verbose << endl;
-    bool clpresent = 0 == clewInit();
-    if(!clpresent) {
-        throw std::runtime_error("OpenCL library not found");
-    }
+    #ifdef USE_CLEW
+        bool clpresent = 0 == clewInit();
+        if(!clpresent) {
+            throw std::runtime_error("OpenCL library not found");
+        }
+    #endif
     cl_int error;
     int currentGpuIndex = 0;
     cl_platform_id platform_ids[10];
@@ -144,10 +154,12 @@ EasyCL *EasyCL::createForIndexedGpu(int gpu, bool verbose) {
 }
 
 EasyCL *EasyCL::createForIndexedDevice(int device, bool verbose) {
-    bool clpresent = 0 == clewInit();
-    if(!clpresent) {
-        throw std::runtime_error("OpenCL library not found");
-    }
+    #ifdef USE_CLEW
+        bool clpresent = 0 == clewInit();
+        if(!clpresent) {
+            throw std::runtime_error("OpenCL library not found");
+        }
+    #endif
     cl_int error;
     int currentGpuIndex = 0;
     cl_platform_id platform_ids[10];
@@ -183,10 +195,12 @@ EasyCL *EasyCL::createForIndexedDevice(int device, bool verbose) {
 }
 
 EasyCL *EasyCL::createForPlatformDeviceIndexes(int platformIndex, int deviceIndex) {
-    bool clpresent = 0 == clewInit();
-    if(!clpresent) {
-        throw std::runtime_error("OpenCL library not found");
-    }
+    #ifdef USE_CLEW
+        bool clpresent = 0 == clewInit();
+        if(!clpresent) {
+            throw std::runtime_error("OpenCL library not found");
+        }
+    #endif
     cl_int error;
 //    int currentGpuIndex = 0;
     cl_platform_id platform_ids[10];
@@ -222,10 +236,12 @@ EasyCL *EasyCL::createForPlatformDeviceIds(cl_platform_id platformId, cl_device_
 }
 
 void EasyCL::init(int gpuIndex, bool verbose) {
-    bool clpresent = 0 == clewInit();
-    if(!clpresent) {
-        throw std::runtime_error("OpenCL library not found");
-    }
+    #ifdef USE_CLEW
+        bool clpresent = 0 == clewInit();
+        if(!clpresent) {
+            throw std::runtime_error("OpenCL library not found");
+        }
+    #endif
 
 //        std::cout << "this: " << this << std::endl;
 //        this->gpuIndex = gpuindex;
@@ -391,7 +407,11 @@ CLKernel *EasyCL::buildKernelFromString(string source, string kernelname, string
 }
 
 bool EasyCL::isOpenCLAvailable() {
-    return 0 == clewInit();
+    #ifdef USE_CLEW
+        return 0 == clewInit();
+    #else
+        return true; // I guess?
+    #endif
 }
 
 int EasyCL::getPower2Upperbound(int value) {

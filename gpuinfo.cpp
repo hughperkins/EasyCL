@@ -9,17 +9,23 @@
 #include <cstdlib>
 using namespace std;
 
+#ifdef USE_CLEW
 #include "clew.h"
+#else
+#include "CL/cl.h"
+#endif
 
 #include "deviceinfo_helper.h"
 #include "platforminfo_helper.h"
 
 int main(int argc, char *argv[]) {
-    bool clpresent = 0 == clewInit();
-    if(!clpresent) {
-        cout << "opencl library not found." << endl;
-        return -1;
-    }
+    #ifdef USE_CLEW
+        bool clpresent = 0 == clewInit();
+        if(!clpresent) {
+            cout << "opencl library not found." << endl;
+            return -1;
+        }
+    #endif
 
     cl_int error = 0;   // Used to handle error codes
     cl_platform_id platform_ids[10];

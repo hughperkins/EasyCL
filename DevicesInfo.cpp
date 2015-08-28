@@ -1,4 +1,9 @@
+#ifdef USE_CLEW
 #include "clew.h"
+#else
+#include "CL/cl.h"
+#endif
+
 #include "deviceinfo_helper.h"
 #include "platforminfo_helper.h"
 #include <stdexcept>
@@ -28,10 +33,12 @@ namespace easycl {
         return info;
     }
     void DevicesInfo::getDeviceIds(int index, int types, cl_platform_id *p_platformId, cl_device_id *p_deviceId) {
-        bool clpresent = 0 == clewInit();
-        if(!clpresent) {
-            throw std::runtime_error("OpenCL library not found");
-        }
+        #ifdef USE_CLEW
+            bool clpresent = 0 == clewInit();
+            if(!clpresent) {
+                throw std::runtime_error("OpenCL library not found");
+            }
+        #endif
         cl_int error;
         int currentGpuIndex = 0;
         cl_platform_id platform_ids[10];
@@ -75,10 +82,12 @@ namespace easycl {
         return getNumDevices(CL_DEVICE_TYPE_ALL);
     }
     int DevicesInfo::getNumDevices(int types) {
-        bool clpresent = 0 == clewInit();
-        if(!clpresent) {
-            throw std::runtime_error("OpenCL library not found");
-        }
+        #ifdef USE_CLEW
+            bool clpresent = 0 == clewInit();
+            if(!clpresent) {
+                throw std::runtime_error("OpenCL library not found");
+            }
+        #endif
         cl_int error;
 //        int currentGpuIndex = 0;
         cl_platform_id platform_ids[10];
@@ -114,10 +123,12 @@ namespace easycl {
         getDeviceIds(device, CL_DEVICE_TYPE_ALL, p_platformId, p_deviceId);
     }
     void DevicesInfo::getIdForIndexedPlatformDevice(int platform, int device, int types, cl_platform_id *p_platformId, cl_device_id *p_deviceId) {
-        bool clpresent = 0 == clewInit();
-        if(!clpresent) {
-            throw std::runtime_error("OpenCL library not found");
-        }
+        #ifdef USE_CLEW
+            bool clpresent = 0 == clewInit();
+            if(!clpresent) {
+                throw std::runtime_error("OpenCL library not found");
+            }
+        #endif
         cl_int error;
         cl_platform_id platform_ids[10];
         cl_uint num_platforms;

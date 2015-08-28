@@ -1,6 +1,16 @@
+#ifdef USE_CLEW
+#include "clew.h"
+#endif
+
+//#ifdef USE_CLEW
+//#include "clew.h"
+//#else
+#include "CL/cl.h"
+//#endif
+
 #include "DeviceInfo.h"
 #include "EasyCL.h"
-#include "clew.h"
+//#include "clew.h"
 #include "platforminfo_helper.h"
 #include "deviceinfo_helper.h"
 

@@ -29,6 +29,10 @@ class EasyCL_EXPORT CLKernel {
 
     std::vector<cl_mem> buffers;
 
+//    std::vector<int> inputArgInts;
+//    std::vector<unsigned int> inputArgUInts;
+//    std::vector<long long> inputArgLongLongs;
+//    std::vector<unsigned long long> inputArgULongLongs;
     std::vector<int32_t> inputArgInt32s;
     std::vector<uint32_t> inputArgUInt32s;
     std::vector<int64_t> inputArgInt64s;
@@ -79,16 +83,26 @@ public:
 
     template<typename T> CLKernel *input(int N, const T *data);
     template<typename T> CLKernel *in(int N, const T *data);
-    CLKernel *input(int32_t value);
-    CLKernel *in(int32_t value);
+//    CLKernel *input(int value);
+//    CLKernel *in(int value);
+//    CLKernel *input(unsigned int value);
+//    CLKernel *in(unsigned int value);
+//    CLKernel *input(long long value);
+//    CLKernel *in(long long value);
+//    CLKernel *input(unsigned long long value);
+//    CLKernel *in(unsigned long long value);
     CLKernel *input(float value);
     CLKernel *in(float value);
+
+    CLKernel *input(int32_t value);
+    CLKernel *in(int32_t value);
     CLKernel *input(int64_t value);
     CLKernel *in(int64_t value);
     CLKernel *input(uint64_t value);
     CLKernel *in(uint64_t value);
     CLKernel *input(uint32_t value);
     CLKernel *in(uint32_t value);
+
     template<typename T> CLKernel *output(int N, T *data);
     template<typename T> CLKernel *out(int N, T *data);
     template<typename T> CLKernel *inout(int N, T *data);

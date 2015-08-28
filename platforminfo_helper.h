@@ -9,7 +9,11 @@
 #include <algorithm>
 #include <string>
 
-#include "clew.h"
+//#ifdef USE_CLEW
+//#include "clew.h"
+//#else
+#include "CL/cl.h"
+//#endif
 
 void printPlatformInfoString(std::string valuename, cl_platform_id platformId, cl_platform_info name);
 void printPlatformInfo(std::string valuename, cl_platform_id platformId, cl_platform_info name);
