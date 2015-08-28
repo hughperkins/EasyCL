@@ -398,6 +398,8 @@ What if I just have a question?
 
 # Recent changes
 
+* 2015 Aug 28th:
+  * add USE_CLEW option, default 'ON', but can disable, to link directly with OpenCL libraries, rather than via clew
 * 2015 Aug 26th:
   * int64 and uint64 are now typedef'd to `int64_t` and `uint64_t`, instead of `long long` and `unsigned long long`.  This is configurable in cmake options, though the default is that the typedef changes.  I'm not 100% sure if changing the default is a good idea, but it seems better than having `int64` and `int64_t` be two different types...
 * 2015 Aug 15th:
