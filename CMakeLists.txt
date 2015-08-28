@@ -57,7 +57,7 @@ include_directories(thirdparty/lua-5.1.5/src)
 set(TEMPLATESRC templates/LuaTemplater.cpp templates/TemplatedKernel.cpp )
 set(TEMPLATETESTS test/testLuaTemplater.cpp test/testTemplatedKernel.cpp )
 
-SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules")
+SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 if(USE_CLEW)
     INCLUDE("${CMAKE_MODULE_PATH}/build_clew.cmake")
