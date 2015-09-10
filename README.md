@@ -398,6 +398,9 @@ What if I just have a question?
 
 # Recent changes
 
+* 2015 Sep 10th:
+  * fix mac build
+  * merge to master
 * 2015 Aug 28th:
   * add USE_CLEW option, default 'ON', but can disable, to link directly with OpenCL libraries, rather than via clew
 * 2015 Aug 26th:
