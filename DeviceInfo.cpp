@@ -2,15 +2,14 @@
 #include "clew.h"
 #endif
 
-//#ifdef USE_CLEW
-//#include "clew.h"
-//#else
-#include "CL/cl.h"
-//#endif
+#if defined(__APPLE__) || defined(__MACOSX)
+#include <OpenCL/cl.h>
+#else
+#include <CL/cl.h>
+#endif
 
-#include "DeviceInfo.h"
 #include "EasyCL.h"
-//#include "clew.h"
+#include "DeviceInfo.h"
 #include "platforminfo_helper.h"
 #include "deviceinfo_helper.h"
 

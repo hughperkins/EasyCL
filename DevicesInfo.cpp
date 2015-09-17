@@ -1,16 +1,19 @@
 #ifdef USE_CLEW
 #include "clew.h"
 #else
-#include "CL/cl.h"
+#if defined(__APPLE__) || defined(__MACOSX)
+#include <OpenCL/cl.h>
+#else
+#include <CL/cl.h>
+#endif
 #endif
 
+#include "EasyCL.h"
+#include "DeviceInfo.h"
+#include "DevicesInfo.h"
 #include "deviceinfo_helper.h"
 #include "platforminfo_helper.h"
 #include <stdexcept>
-#include "EasyCL.h"
-
-#include "DevicesInfo.h"
-#include "DeviceInfo.h"
 
 using namespace std;
 

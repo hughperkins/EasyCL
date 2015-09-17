@@ -1,9 +1,12 @@
 #pragma once
 
-//#include "clew.h"
-#include "CL/cl.h"
-#include "DeviceInfo.h"
+#if defined(__APPLE__) || defined(__MACOSX)
+#include <OpenCL/cl.h>
+#else
+#include <CL/cl.h>
+#endif
 
+#include "DeviceInfo.h"
 #include "EasyCL_export.h"
 
 namespace easycl {
