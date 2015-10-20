@@ -502,19 +502,19 @@ void EasyCL::dumpProfiling() {
   profilingEvents.clear();
 }
 int EasyCL::getComputeUnits() {
-    return (int)getDeviceInfoInt(CL_DEVICE_MAX_COMPUTE_UNITS);
+    return (int)this->getDeviceInfoInt64(CL_DEVICE_MAX_COMPUTE_UNITS);
 }
 int EasyCL::getLocalMemorySize() {
-    return (int)getDeviceInfoInt(CL_DEVICE_LOCAL_MEM_SIZE);
+    return (int)this->getDeviceInfoInt64(CL_DEVICE_LOCAL_MEM_SIZE);
 }
 int EasyCL::getLocalMemorySizeKB() {
-    return (int)(getDeviceInfoInt(CL_DEVICE_LOCAL_MEM_SIZE) / 1024);
+    return (int)(this->getDeviceInfoInt64(CL_DEVICE_LOCAL_MEM_SIZE) / 1024);
 }
 int EasyCL::getMaxWorkgroupSize() {
-    return (int)getDeviceInfoInt(CL_DEVICE_MAX_WORK_GROUP_SIZE);
+    return (int)this->getDeviceInfoInt64(CL_DEVICE_MAX_WORK_GROUP_SIZE);
 }
 int EasyCL::getMaxAllocSizeMB() {
-    return (int)(getDeviceInfoInt(CL_DEVICE_MAX_MEM_ALLOC_SIZE) / 1024 / 1024);
+    return (int)(this->getDeviceInfoInt64(CL_DEVICE_MAX_MEM_ALLOC_SIZE) / 1024 / 1024);
 }
 
 std::string EasyCL::errorMessage(cl_int error) {
@@ -546,10 +546,16 @@ std::string EasyCL::getFileContents(std::string filename) {
     return buffer.str();
 }
 
-long EasyCL::getDeviceInfoInt(cl_device_info name) {
+//long EasyCL::getDeviceInfoInt(cl_device_info name) {
+//    cl_ulong value = 0;
+//    clGetDeviceInfo(device, name, sizeof(cl_ulong), &value, 0);
+//    return static_cast<long>(value);
+//}
+
+int64_t EasyCL::getDeviceInfoInt64(cl_device_info name) {
     cl_ulong value = 0;
     clGetDeviceInfo(device, name, sizeof(cl_ulong), &value, 0);
-    return static_cast<long>(value);
+    return static_cast<int64_t>(value);
 }
 
 void EasyCL::storeKernel(std::string name, CLKernel *kernel) {
