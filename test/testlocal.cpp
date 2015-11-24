@@ -6,9 +6,11 @@ using namespace std;
 
 // #include "Timer.h"
 
+static const char *getKernel();
+
 TEST(testlocal, uselocal) {
     EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
-    CLKernel *kernel = cl->buildKernel("testlocal.cl", "useLocal");
+    CLKernel *kernel = cl->buildKernelFromString(getKernel(), "useLocal", "");
     int workgroupSize = 64;
     float *myarray = new float[workgroupSize];
 
@@ -24,7 +26,7 @@ TEST(testlocal, uselocal) {
 
 TEST(testlocal, notUselocal) {
     EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
-    CLKernel *kernel = cl->buildKernel("testlocal.cl", "notUseLocal");
+    CLKernel *kernel = cl->buildKernelFromString(getKernel(), "notUseLocal", "");
     int workgroupSize = 64;
     float *myarray = new float[workgroupSize];
 
@@ -39,7 +41,7 @@ TEST(testlocal, notUselocal) {
 
 TEST(testlocal, globalreduce) {
     EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
-    CLKernel *kernel = cl->buildKernel("testlocal.cl", "reduceGlobal");
+    CLKernel *kernel = cl->buildKernelFromString(getKernel(), "reduceGlobal", "");
     int workgroupSize = min(512, cl->getMaxWorkgroupSize());
     float *myarray = new float[workgroupSize];
 //    Timer timer;
@@ -64,7 +66,7 @@ TEST(testlocal, globalreduce) {
 
 TEST(testlocal, localreduce) {
     EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
-    CLKernel *kernel = cl->buildKernel("testlocal.cl", "reduceViaScratch");
+    CLKernel *kernel = cl->buildKernelFromString(getKernel(), "reduceViaScratch", "");
     int workgroupSize = min(512, cl->getMaxWorkgroupSize());
     float *myarray = new float[workgroupSize];
 //    Timer timer;
@@ -89,7 +91,7 @@ TEST(testlocal, localreduce) {
 
 TEST(testlocal, reduceviascratch_multipleworkgroups) {
     EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
-    CLKernel *kernel = cl->buildKernel("testlocal.cl", "reduceViaScratch_multipleworkgroups");
+    CLKernel *kernel = cl->buildKernelFromString(getKernel(), "reduceViaScratch_multipleworkgroups", "");
     int workgroupSize = min(512, cl->getMaxWorkgroupSize());
     const int numWorkgroups = workgroupSize;
     const int N = workgroupSize * numWorkgroups;
@@ -135,7 +137,7 @@ TEST(testlocal, reduceviascratch_multipleworkgroups) {
 
 TEST(testlocal, reduceviascratch_multipleworkgroups_ints) {
     EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
-    CLKernel *kernel = cl->buildKernel("testlocal.cl", "reduceViaScratch_multipleworkgroups_ints");
+    CLKernel *kernel = cl->buildKernelFromString(getKernel(), "reduceViaScratch_multipleworkgroups_ints", "");
     int workgroupSize = min(512, cl->getMaxWorkgroupSize());
     const int numWorkgroups = workgroupSize;
     const int N = workgroupSize * numWorkgroups;
@@ -192,7 +194,7 @@ TEST(testlocal, reduceviascratch_multipleworkgroups_ints) {
 
 TEST(testlocal, reduce_multipleworkgroups_ints_noscratch) {
     EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
-    CLKernel *kernel = cl->buildKernel("testlocal.cl", "reduce_multipleworkgroups_ints_noscratch");
+    CLKernel *kernel = cl->buildKernelFromString(getKernel(), "reduce_multipleworkgroups_ints_noscratch", "");
     int workgroupSize = min(512, cl->getMaxWorkgroupSize());
     const int numWorkgroups = workgroupSize;
     const int N = workgroupSize * numWorkgroups;
@@ -247,7 +249,7 @@ TEST(testlocal, reduce_multipleworkgroups_ints_noscratch) {
 
 TEST(SLOW_testlocal, reduce_noscratch_multipleworkgroups_ints_3levels) {
     EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
-    CLKernel *kernel = cl->buildKernel("testlocal.cl", "reduce_multipleworkgroups_ints_noscratch");
+    CLKernel *kernel = cl->buildKernelFromString(getKernel(), "reduce_multipleworkgroups_ints_noscratch", "");
     int workgroupSize = min(512, cl->getMaxWorkgroupSize());
     const int numWorkgroups = workgroupSize;
     const int level3size = numWorkgroups / 4;
@@ -312,7 +314,7 @@ TEST(SLOW_testlocal, reduce_noscratch_multipleworkgroups_ints_3levels) {
 
 TEST(SLOW_testlocal, reduceviascratch_multipleworkgroups_ints_3levels) {
     EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
-    CLKernel *kernel = cl->buildKernel("testlocal.cl", "reduceViaScratch_multipleworkgroups_ints");
+    CLKernel *kernel = cl->buildKernelFromString(getKernel(), "reduceViaScratch_multipleworkgroups_ints", "");
     int workgroupSize = min(512, cl->getMaxWorkgroupSize());
     const int numWorkgroups = workgroupSize;
     const int level3size = numWorkgroups / 4;
@@ -436,7 +438,7 @@ TEST(SLOW_testlocal, selfdot_3levels_withscratch) {
 
 TEST(SLOW_testlocal, selfdot_3levels_withoutscratch) {
     EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
-    CLKernel *kernel = cl->buildKernel("testlocal.cl", "selfdot_ints_withoutscratch");
+    CLKernel *kernel = cl->buildKernelFromString(getKernel(), "selfdot_ints_withoutscratch", "");
     int workgroupSize = min(512, cl->getMaxWorkgroupSize());
     const int numWorkgroups = workgroupSize;
     const int level3size = numWorkgroups / 4;
@@ -489,5 +491,213 @@ TEST(SLOW_testlocal, selfdot_3levels_withoutscratch) {
     delete[]myarray;
     delete kernel;
     delete cl;
+}
+
+static const char *getKernel() {
+    // [[[cog
+    // import stringify
+    // stringify.stringify("source", "test/testlocal.cl")
+    // ]]]
+    // generated using cog, from test/testlocal.cl:
+    const char * source =  
+    "kernel void useLocal(int N, global float *inout, local float *_buffer) {\n" 
+    "    if(get_global_id(0) < N) {\n" 
+    "        inout[get_global_id(0)] += 1.0f;\n" 
+    "    }\n" 
+    "}\n" 
+    "\n" 
+    "kernel void notUseLocal(int N, global float *inout) {\n" 
+    "    if(get_global_id(0) < N) {\n" 
+    "        inout[get_global_id(0)] += 1.0f;\n" 
+    "    }\n" 
+    "}\n" 
+    "\n" 
+    "kernel void reduceGlobal(global float *inout) {\n" 
+    "    // simply going to reduce inout values into inout[0]\n" 
+    "    int localId = get_local_id(0);\n" 
+    "    int workgroupSize = get_local_size(0);\n" 
+    "\n" 
+    "    for(int offset = (workgroupSize >> 1); offset > 0; offset >>= 1) {\n" 
+    "        if(localId < offset) {\n" 
+    "            inout[localId] = inout[localId] + inout[localId + offset];\n" 
+    "        }\n" 
+    "        barrier(CLK_LOCAL_MEM_FENCE);\n" 
+    "    }\n" 
+    "}\n" 
+    "\n" 
+    "kernel void reduceViaScratch(global float *inout, local float *scratch) {\n" 
+    "    // simply going to reduce inout values into inout[0], via scratch, to test 'local'\n" 
+    "    int localId = get_local_id(0);\n" 
+    "    int workgroupSize = get_local_size(0);\n" 
+    "\n" 
+    "    scratch[localId] = inout[localId];\n" 
+    "    barrier(CLK_LOCAL_MEM_FENCE);\n" 
+    "\n" 
+    "    for(int offset = (workgroupSize >> 1); offset > 0; offset >>= 1) {\n" 
+    "        if(localId < offset) {\n" 
+    "            scratch[localId] = scratch[localId] + scratch[localId + offset];\n" 
+    "        }\n" 
+    "        barrier(CLK_LOCAL_MEM_FENCE);\n" 
+    "    }\n" 
+    "\n" 
+    "    inout[localId] = scratch[localId];\n" 
+    "}\n" 
+    "\n" 
+    "\n" 
+    "kernel void reduceViaScratch_noif(global float *inout, local float *scratch) {\n" 
+    "    // simply going to reduce inout values into inout[0], via scratch, to test 'local'\n" 
+    "    int localId = get_local_id(0);\n" 
+    "    int workgroupSize = get_local_size(0);\n" 
+    "    scratch[localId] = inout[localId];\n" 
+    "\n" 
+    "    for(int offset = (workgroupSize >> 1); offset > 0; offset >>= 1) {\n" 
+    "        scratch[localId] = localId < offset ? scratch[localId] + scratch[localId + offset] : scratch[localId];\n" 
+    "        barrier(CLK_LOCAL_MEM_FENCE);\n" 
+    "    }\n" 
+    "\n" 
+    "    inout[localId] = scratch[localId];\n" 
+    "}\n" 
+    "\n" 
+    "kernel void reduceViaScratch_noif2(global float *inout, local float *scratch) {\n" 
+    "    // simply going to reduce inout values into inout[0], via scratch, to test 'local'\n" 
+    "    int localId = get_local_id(0);\n" 
+    "    int workgroupSize = get_local_size(0);\n" 
+    "    scratch[localId] = inout[localId];\n" 
+    "\n" 
+    "    for(int offset = (workgroupSize >> 1); offset > 0; offset >>= 1) {\n" 
+    "        scratch[localId] = scratch[localId] + scratch[localId + offset];\n" 
+    "        barrier(CLK_LOCAL_MEM_FENCE);\n" 
+    "    }\n" 
+    "\n" 
+    "    inout[localId] = scratch[localId];\n" 
+    "}\n" 
+    "\n" 
+    "kernel void reduceViaScratch_multipleworkgroups(global float *inout, global float *out, local float *scratch) {\n" 
+    "    // simply going to reduce inout values into inout[0], via scratch, to test 'local'\n" 
+    "    int globalId = get_global_id(0);\n" 
+    "    int localId = get_local_id(0);\n" 
+    "    int workgroupSize = get_local_size(0);\n" 
+    "    int workgroupid = get_group_id(0);\n" 
+    "\n" 
+    "    scratch[localId] = inout[globalId];\n" 
+    "    barrier(CLK_LOCAL_MEM_FENCE);\n" 
+    "    for(int offset = (workgroupSize >> 1); offset > 0; offset >>= 1) {\n" 
+    "        if(localId < offset) {\n" 
+    "            scratch[localId] = scratch[localId] + scratch[localId + offset];\n" 
+    "        }\n" 
+    "        barrier(CLK_LOCAL_MEM_FENCE);\n" 
+    "    }\n" 
+    "\n" 
+    "    inout[globalId] = scratch[localId];\n" 
+    "    if(localId == 0) {\n" 
+    "        out[workgroupid] = scratch[0];\n" 
+    "    }\n" 
+    "}\n" 
+    "\n" 
+    "kernel void reduceViaScratch_multipleworkgroups_ints(global int *inout, global int *out, local int *scratch) {\n" 
+    "    // simply going to reduce inout values into inout[0], via scratch, to test 'local'\n" 
+    "    int globalId = get_global_id(0);\n" 
+    "    int localId = get_local_id(0);\n" 
+    "    int workgroupSize = get_local_size(0);\n" 
+    "    int workgroupid = get_group_id(0);\n" 
+    "\n" 
+    "    scratch[localId] = inout[globalId];\n" 
+    "    barrier(CLK_LOCAL_MEM_FENCE);\n" 
+    "    for(int offset = (workgroupSize >> 1); offset > 0; offset >>= 1) {\n" 
+    "        if(localId < offset) {\n" 
+    "            scratch[localId] = scratch[localId] + scratch[localId + offset];\n" 
+    "        }\n" 
+    "        barrier(CLK_LOCAL_MEM_FENCE);\n" 
+    "    }\n" 
+    "\n" 
+    "    inout[globalId] = scratch[localId];\n" 
+    "    if(localId == 0) {\n" 
+    "        out[workgroupid] = scratch[0];\n" 
+    "    }\n" 
+    "}\n" 
+    "\n" 
+    "kernel void reduce_multipleworkgroups_ints_noscratch(global int *inout, global int *out) {\n" 
+    "    // simply going to reduce inout values into inout[0], via scratch, to test 'local'\n" 
+    "    int globalId = get_global_id(0);\n" 
+    "    int localId = get_local_id(0);\n" 
+    "    int workgroupSize = get_local_size(0);\n" 
+    "    int workgroupid = get_group_id(0);\n" 
+    "\n" 
+    "//    scratch[localId] = inout[globalId];\n" 
+    "    barrier(CLK_LOCAL_MEM_FENCE);\n" 
+    "    for(int offset = (workgroupSize >> 1); offset > 0; offset >>= 1) {\n" 
+    "        if(localId < offset) {\n" 
+    "            inout[globalId] = inout[globalId] + inout[globalId + offset];\n" 
+    "        }\n" 
+    "        barrier(CLK_LOCAL_MEM_FENCE);\n" 
+    "    }\n" 
+    "\n" 
+    "//    inout[globalId] = scratch[localId];\n" 
+    "    if(localId == 0) {\n" 
+    "        out[workgroupid] = inout[globalId];\n" 
+    "    }\n" 
+    "}\n" 
+    "\n" 
+    "kernel void selfdot_ints_withscratch(global int *in, global int *out, local int *scratch1, local int *scratch2) {\n" 
+    "    // simply going to reduce inout values into inout[0], via scratch, to test 'local'\n" 
+    "    int globalId = get_global_id(0);\n" 
+    "    int localId = get_local_id(0);\n" 
+    "    int workgroupSize = get_local_size(0);\n" 
+    "    int workgroupid = get_group_id(0);\n" 
+    "\n" 
+    "    scratch1[localId] = in[globalId];\n" 
+    "    barrier(CLK_LOCAL_MEM_FENCE);\n" 
+    "    int sum = 0;\n" 
+    "    int us = scratch1[localId];\n" 
+    "    for(int i = 0; i < workgroupSize; i++) {\n" 
+    "        sum += us * scratch1[i];\n" 
+    "    }\n" 
+    "    scratch2[localId] = sum;\n" 
+    "    barrier(CLK_LOCAL_MEM_FENCE);\n" 
+    "    for(int offset = (workgroupSize >> 1); offset > 0; offset >>= 1) {\n" 
+    "        if(localId < offset) {\n" 
+    "            scratch2[localId] = scratch2[localId] + scratch2[localId + offset];\n" 
+    "        }\n" 
+    "        barrier(CLK_LOCAL_MEM_FENCE);\n" 
+    "    }\n" 
+    "\n" 
+    "//    inout[globalId] = scratch[localId];\n" 
+    "    if(localId == 0) {\n" 
+    "        out[workgroupid] = scratch2[0];\n" 
+    "    }\n" 
+    "}\n" 
+    "\n" 
+    "kernel void selfdot_ints_withoutscratch(global int *inout, global int *second, global int *out) {\n" 
+    "    // simply going to reduce inout values into inout[0], via scratch, to test 'local'\n" 
+    "    int globalId = get_global_id(0);\n" 
+    "    int localId = get_local_id(0);\n" 
+    "    int workgroupSize = get_local_size(0);\n" 
+    "    int workgroupid = get_group_id(0);\n" 
+    "\n" 
+    "    const int workgroupOffset = workgroupid * workgroupSize;\n" 
+    "\n" 
+    "    int sum = 0;\n" 
+    "    int us = inout[globalId];\n" 
+    "    for(int i = 0; i < workgroupSize; i++) {\n" 
+    "        sum += inout[workgroupOffset + i] * us;\n" 
+    "    }\n" 
+    "    second[globalId] = sum;\n" 
+    "    barrier(CLK_LOCAL_MEM_FENCE);\n" 
+    "    for(int offset = (workgroupSize >> 1); offset > 0; offset >>= 1) {\n" 
+    "        if(localId < offset) {\n" 
+    "            second[globalId] = second[globalId] + second[globalId + offset];\n" 
+    "        }\n" 
+    "        barrier(CLK_LOCAL_MEM_FENCE);\n" 
+    "    }\n" 
+    "\n" 
+    "    if(localId == 0) {\n" 
+    "        out[workgroupid] = second[globalId];\n" 
+    "    }\n" 
+    "}\n" 
+    "\n" 
+    "\n" 
+    "";
+    // [[[end]]]
+    return source;
 }
 

@@ -11,6 +11,8 @@ using namespace std;
 
 #include "CLKernel_structs.h"
 
+static const char *getKernel();
+
 typedef struct MyStruct {
     int anint;
     float afloat;
@@ -27,7 +29,7 @@ TEST(testStructs, main) {
     cout << "found opencl library" << endl;
 
     EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
-    CLKernel *kernel = cl->buildKernel("../test/testStructs.cl", "testStructs");
+    CLKernel *kernel = cl->buildKernelFromString(getKernel(), "testStructs", "");
 
     int ints[3];
     float floats[3];
@@ -46,5 +48,32 @@ TEST(testStructs, main) {
 
     delete kernel;
     delete cl;
+}
+
+static const char *getKernel() {
+    // [[[cog
+    // import stringify
+    // stringify.stringify("source", "test/testStructs.cl")
+    // ]]]
+    // generated using cog, from test/testStructs.cl:
+    const char * source =  
+    "typedef struct MyStruct {\n" 
+    "    int anint;\n" 
+    "    float afloat;\n" 
+    "    int threeints[3];\n" 
+    "} MyStruct;\n" 
+    "\n" 
+    "kernel void testStructs(global int *ints, global float *floats, global MyStruct *structs) {\n" 
+    "    if(get_global_id(0) != 0) {\n" 
+    "        return;\n" 
+    "    }\n" 
+    "    floats[0] = structs[0].afloat;\n" 
+    "    ints[0] = structs[0].anint;\n" 
+    "    structs[0].threeints[0] = structs[0].threeints[1] + structs[0].threeints[2];\n" 
+    "}\n" 
+    "\n" 
+    "";
+    // [[[end]]]
+    return source;
 }
 

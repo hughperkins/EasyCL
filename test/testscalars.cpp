@@ -9,6 +9,8 @@ using namespace std;
 
 #include "test/asserts.h"
 
+static const char *getKernel();
+
 TEST(testscalars, test1) {
     if(!EasyCL::isOpenCLAvailable()) {
         cout << "opencl library not found" << endl;
@@ -17,7 +19,7 @@ TEST(testscalars, test1) {
     cout << "found opencl library" << endl;
 
     EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
-    CLKernel *kernel = cl->buildKernel("testscalars.cl", "test");
+    CLKernel *kernel = cl->buildKernelFromString(getKernel(), "test", "");
     int intout[5];
     unsigned int uintout[5];
     int64_t int64out[5];
@@ -75,5 +77,36 @@ TEST(testscalars, test1) {
 
     delete kernel;
     delete cl;
+}
+
+static const char *getKernel() {
+    // [[[cog
+    // import stringify
+    // stringify.stringify("source", "test/testscalars.cl")
+    // ]]]
+    // generated using cog, from test/testscalars.cl:
+    const char * source =  
+    "kernel void test(const int aint, const unsigned auint,\n" 
+    "    long along, unsigned long aulong,\n" 
+    "  const float afloat,\n" 
+    "  global int *intout,\n" 
+    "  global unsigned int *uintout,\n" 
+    "  global long *longout,\n" 
+    "  global unsigned long *ulongout,\n" 
+    "  global float *floatout\n" 
+    " ) {\n" 
+    "    const int globalid = get_global_id(0);\n" 
+    "\n" 
+    "    intout[globalid] = aint + globalid;\n" 
+    "    uintout[globalid] = auint + globalid;\n" 
+    "    longout[globalid] = along + globalid;\n" 
+    "    ulongout[globalid] = aulong + globalid;\n" 
+    "\n" 
+    "    floatout[globalid] = afloat + globalid;\n" 
+    "}\n" 
+    "\n" 
+    "";
+    // [[[end]]]
+    return source;
 }
 
