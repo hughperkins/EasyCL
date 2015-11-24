@@ -140,7 +140,9 @@ endif(BUILD_TESTS)
 if(DEV_RUN_COG)
     add_custom_target(
         cog
-        python ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/cogapp/cog.py -q -I ${CMAKE_CURRENT_SOURCE_DIR}/cog-batteries -r ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/templates/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/*.h ${CMAKE_CURRENT_SOURCE_DIR}/templates/*.h ${CMAKE_CURRENT_SOURCE_DIR}/util/*.h
+        python ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/cogapp/cog.py -q -I ${CMAKE_CURRENT_SOURCE_DIR}/cog-batteries -r ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
+${CMAKE_CURRENT_SOURCE_DIR}/test/*.cpp
+${CMAKE_CURRENT_SOURCE_DIR}/templates/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/*.h ${CMAKE_CURRENT_SOURCE_DIR}/templates/*.h ${CMAKE_CURRENT_SOURCE_DIR}/util/*.h
     )
     add_dependencies( EasyCL cog )
 endif(DEV_RUN_COG)
