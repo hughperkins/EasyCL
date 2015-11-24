@@ -166,7 +166,6 @@ INSTALL(FILES ${HEADERS_TEMPLATES} DESTINATION include/easycl/templates)
 INSTALL(FILES ${HEADERS_UTIL} DESTINATION include/easycl/util)
 INSTALL(PROGRAMS easycl_activate.sh DESTINATION bin)
 if(BUILD_TESTS)
-   FILE(GLOB CLFILES test/*.cl)
    INSTALL(FILES ${CLFILES} DESTINATION bin)
    INSTALL(TARGETS easycl_gtest easycl_unittests gpuinfo
       LIBRARY DESTINATION lib
