@@ -9,6 +9,8 @@ using namespace std;
 
 #include "test/asserts.h"
 
+static const char *getKernel();
+
 TEST(testinout, main) {
     if(!EasyCL::isOpenCLAvailable()) {
         cout << "opencl library not found" << endl;
@@ -17,7 +19,7 @@ TEST(testinout, main) {
     cout << "found opencl library" << endl;
 
     EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
-    CLKernel *kernel = cl->buildKernel("testinout.cl", "test");
+    CLKernel *kernel = cl->buildKernelFromString(getKernel(), "test", "");
     float inout[5];
     for(int i = 0; i < 5; i++) {
         inout[i] = i * 3;
@@ -35,5 +37,22 @@ TEST(testinout, main) {
 
     delete kernel;
     delete cl;
+}
+
+static const char *getKernel() {
+    // [[[cog
+    // import stringify
+    // stringify.stringify("source", "test/testinout.cl")
+    // ]]]
+    // generated using cog, from test/testinout.cl:
+    const char * source =  
+    "kernel void test(global float *inout) {\n" 
+    "    const int globalid = get_global_id(0);\n" 
+    "    inout[globalid] = inout[globalid] + 7;\n" 
+    "}\n" 
+    "\n" 
+    "";
+    // [[[end]]]
+    return source;
 }
 

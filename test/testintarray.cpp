@@ -9,6 +9,8 @@ using namespace std;
 
 #include "test/asserts.h"
 
+static const char *getKernel();
+
 TEST(testintarray, main) {
     if(!EasyCL::isOpenCLAvailable()) {
         cout << "opencl library not found" << endl;
@@ -17,7 +19,7 @@ TEST(testintarray, main) {
     cout << "found opencl library" << endl;
 
     EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
-    CLKernel *kernel = cl->buildKernel("testintarray.cl", "test");
+    CLKernel *kernel = cl->buildKernelFromString(getKernel(), "test", "");
     int in[5];
     int inout[5];
     int out[5];
@@ -55,5 +57,27 @@ TEST(testintarray, main) {
 
     delete kernel;
     delete cl;
+}
+
+static const char *getKernel() {
+    // [[[cog
+    // import stringify
+    // stringify.stringify("source", "test/testintarray.cl")
+    // ]]]
+    // generated using cog, from test/testintarray.cl:
+    const char * source =  
+    "kernel void test(global int *in, global int *out, global int *inout) {\n" 
+    "    const int globalid = get_global_id(0);\n" 
+    "    inout[globalid] = inout[globalid] + 7;\n" 
+    "    out[globalid] = in[globalid] + 5;\n" 
+    "    if(globalid == 2) {\n" 
+    "        out[globalid] = 26;\n" 
+    "        inout[globalid] = 34;\n" 
+    "    }\n" 
+    "}\n" 
+    "\n" 
+    "";
+    // [[[end]]]
+    return source;
 }
 
