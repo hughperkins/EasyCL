@@ -9,7 +9,7 @@ using namespace std;
 
 static const char *kernelSource = 
 "kernel void test(int N, global float *in){\n"
-"    if(get_global_id(0) >= N) {\n"
+"    if((int)get_global_id(0) >= N) {\n"
 "        return;\n"
 "    }\n"
 "    in[get_global_id(0)] += 1.0f;\n"

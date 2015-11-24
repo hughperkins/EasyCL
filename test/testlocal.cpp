@@ -501,13 +501,13 @@ static const char *getKernel() {
     // generated using cog, from test/testlocal.cl:
     const char * source =  
     "kernel void useLocal(int N, global float *inout, local float *_buffer) {\n" 
-    "    if(get_global_id(0) < N) {\n" 
+    "    if((int)get_global_id(0) < N) {\n" 
     "        inout[get_global_id(0)] += 1.0f;\n" 
     "    }\n" 
     "}\n" 
     "\n" 
     "kernel void notUseLocal(int N, global float *inout) {\n" 
-    "    if(get_global_id(0) < N) {\n" 
+    "    if((int)get_global_id(0) < N) {\n" 
     "        inout[get_global_id(0)] += 1.0f;\n" 
     "    }\n" 
     "}\n" 

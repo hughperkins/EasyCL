@@ -1,11 +1,11 @@
 kernel void useLocal(int N, global float *inout, local float *_buffer) {
-    if(get_global_id(0) < N) {
+    if((int)get_global_id(0) < N) {
         inout[get_global_id(0)] += 1.0f;
     }
 }
 
 kernel void notUseLocal(int N, global float *inout) {
-    if(get_global_id(0) < N) {
+    if((int)get_global_id(0) < N) {
         inout[get_global_id(0)] += 1.0f;
     }
 }
