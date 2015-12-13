@@ -17,7 +17,7 @@ static const char *getKernel();
 
 TEST(SLOW_testintwrapper_huge, testreadnonwrapper) {
     EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
-    CLKernel *kernel = cl->buildKernel("testeasycl.cl", "test_read");
+    CLKernel *kernel = cl->buildKernelFromString(getKernel(), "test_read", "");
 //    const int N = 4500000;
 //    const int N = (4500000/512)*512;
     int N = 100000;
@@ -49,7 +49,7 @@ TEST(SLOW_testintwrapper_huge, testreadnonwrapper) {
 TEST(SLOW_testintwrapper_huge, testread) {
 //    Timer timer;
     EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
-    CLKernel *kernel = cl->buildKernel("testeasycl.cl", "test_read");
+    CLKernel *kernel = cl->buildKernelFromString(getKernel(), "test_read", "");
 //    const int N = 4500000;
 //    const int N = (4500000/512)*512;
     int N = 100000;
