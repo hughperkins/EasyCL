@@ -288,6 +288,33 @@ This is a new feature, as of May 15 2015, and might have some bugs prior to May 
 | `DEV_RUN_COG` | Only for EasyCL maintainers, leave as `OFF` otherwise |
 | `BUILD_TESTS` | whether to build unit tests|
 
+### Building on Mac OS X
+
+(tested on Travis https://travis-ci.org/hughperkins/EasyCL )
+
+#### Pre-requisites
+
+- git
+- cmake
+- g++
+- (maybe) OpenCL (not sure if installed by default?  Travis worked ok without explicitly installing it)
+
+#### Procedure
+
+#### Procedure
+
+```bash
+git clone --recursive https://github.com/hughperkins/EasyCL.git
+cd EasyCL
+mkdir build
+cd build
+cmake ..
+make install
+```
+* the executables will be in the `../dist/bin` folder, and the .dylib files in `../dist/lib`
+* Dont forget the `--recursive`, otherwise you will see odd errors about `clew/src/clew.c` missing
+  * If this happens, you can try `git submodule init` and then `git submodule update`.
+
 ### Building on linux
 
 #### Pre-requisites
@@ -398,6 +425,8 @@ What if I just have a question?
 
 # Recent changes
 
+* 2016 Jan 3rd:
+  * create Mac OS X build on Travis https://travis-ci.org/hughperkins/EasyCL , which passes
 * 2015 Sep 10th:
   * fix mac build
   * merge to master
