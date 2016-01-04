@@ -21,8 +21,12 @@ script:
   - env
   - mkdir build
   - cd build
-  - cmake ..
+  - cmake .. -DBUILD_TESTS=ON
   - make -j 4
+  - make install
+  - source ../dist/bin/easycl_activate.sh
+  - gpuinfo
+  - easycl_unittests tests=-SLOW*:testlocal*:testnewinstantiations*
 
 notifications:
   email:
