@@ -288,6 +288,8 @@ This is a new feature, as of May 15 2015, and might have some bugs prior to May 
 | `DEV_RUN_COG` | Only for EasyCL maintainers, leave as `OFF` otherwise |
 | `BUILD_TESTS` | whether to build unit tests|
 
+[![Build Status](https://travis-ci.org/hughperkins/EasyCL.svg?branch=master)](https://travis-ci.org/hughperkins/EasyCL)
+
 ### Building on Mac OS X
 
 (tested on Travis https://travis-ci.org/hughperkins/EasyCL )
@@ -298,8 +300,6 @@ This is a new feature, as of May 15 2015, and might have some bugs prior to May 
 - cmake
 - g++
 - (maybe) OpenCL (not sure if installed by default?  Travis worked ok without explicitly installing it)
-
-#### Procedure
 
 #### Procedure
 
