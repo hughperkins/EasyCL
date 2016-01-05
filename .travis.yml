@@ -21,7 +21,7 @@ script:
   - make install
   - source ../dist/bin/easycl_activate.sh
   - gpuinfo
-  - easycl_unittests tests=-SLOW*:testlocal*:testnewinstantiations.createForFirstGpu:testnewinstantiations.createForIndexedGpu
+  - easycl_unittests tests=-SLOW*:testnewinstantiations.createForFirstGpu:testnewinstantiations.createForIndexedGpu
 
 notifications:
   email:
