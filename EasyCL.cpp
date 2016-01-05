@@ -511,7 +511,13 @@ int EasyCL::getLocalMemorySizeKB() {
     return (int)(this->getDeviceInfoInt64(CL_DEVICE_LOCAL_MEM_SIZE) / 1024);
 }
 int EasyCL::getMaxWorkgroupSize() {
-    return (int)this->getDeviceInfoInt64(CL_DEVICE_MAX_WORK_GROUP_SIZE);
+    int maxWorkgroupSize = (int)this->getDeviceInfoInt64(CL_DEVICE_MAX_WORK_GROUP_SIZE);
+    int deviceType = getDeviceInfoInt(deviceId, CL_DEVICE_TYPE);
+    if(deviceType == 2) {  // hack for intel cpus, which return workgroupsize 1024, but only support 128 (eg Xeon X5570, on Apple Mac)
+        return maxWorkgroupSize > 128 ? 128 : maxWorkgroupSize;
+    } else {
+        return maxWorkgroupSize;
+    }
 }
 int EasyCL::getMaxAllocSizeMB() {
     return (int)(this->getDeviceInfoInt64(CL_DEVICE_MAX_MEM_ALLOC_SIZE) / 1024 / 1024);
