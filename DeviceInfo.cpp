@@ -37,7 +37,7 @@ namespace easycl {
 
         // hack for intel cpus, which return workgroupsize 1024, but only support 128 (eg Xeon X5570, on Apple Mac)
         if(deviceType == 2) {  
-            maxWorkGroupSize = maxWorkGroupSize > 128 ? 128 : maxWorkGroupSize;
+            maxWorkGroupSize = maxWorkGroupSize > 32 ? 32 : maxWorkGroupSize;
         }
     }
 
