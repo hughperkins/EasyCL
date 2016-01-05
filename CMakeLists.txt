@@ -124,7 +124,8 @@ if(BUILD_TESTS)
       add_library( easycl_gtest thirdparty/gtest/gtest-all.cc )
   endif()
 
-  add_executable( easycl_unittests test/testscalars.cpp test/testintarray.cpp test/testfloatwrapper.cpp
+  add_executable( easycl_unittests test/testworkgroupsize.cpp
+      test/testscalars.cpp test/testintarray.cpp test/testfloatwrapper.cpp
       test/testclarray.cpp test/testfloatwrapperconst.cpp test/testintwrapper.cpp test/test_scenario_te42kyfo.cpp
       test/testfloatarray.cpp test/testeasycl.cpp test/testinout.cpp test/testintwrapper_huge.cpp
       test/testlocal.cpp test/testdefines.cpp test/testbuildlog.cpp test/testnewinstantiations.cpp

@@ -34,6 +34,11 @@ namespace easycl {
         openClCVersion = getDeviceInfoString(deviceId, CL_DEVICE_OPENCL_C_VERSION);
         deviceVersion = getDeviceInfoString(deviceId, CL_DEVICE_VERSION);
         maxClockFrequency = getDeviceInfoInt(deviceId, CL_DEVICE_MAX_CLOCK_FREQUENCY);
+
+        // hack for intel cpus, which return workgroupsize 1024, but only support 128 (eg Xeon X5570, on Apple Mac)
+        if(deviceType == 2) {  
+            maxWorkGroupSize = maxWorkGroupSize > 128 ? 128 : maxWorkGroupSize;
+        }
     }
 
     string DeviceInfo::toString() {

@@ -43,6 +43,7 @@ TEST(testlocal, globalreduce) {
     EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
     CLKernel *kernel = cl->buildKernelFromString(getKernel(), "reduceGlobal", "");
     int workgroupSize = min(512, cl->getMaxWorkgroupSize());
+    cout << "workgroupSize=" << workgroupSize << " cl->getMaxWorkgroupSize() = " << cl->getMaxWorkgroupSize() << endl;
     float *myarray = new float[workgroupSize];
 //    Timer timer;
     for(int i = 0; i < 2000; i++) {

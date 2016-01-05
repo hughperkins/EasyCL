@@ -146,6 +146,7 @@ private:
     static std::string getFileContents(std::string filename);
 //    long getDeviceInfoInt(cl_device_info name);
     int64_t getDeviceInfoInt64(cl_device_info name);
+    int getDeviceInfoInt(cl_device_info name);
 };
 
 #include "CLIntWrapper.h"
