@@ -512,7 +512,7 @@ int EasyCL::getLocalMemorySizeKB() {
 }
 int EasyCL::getMaxWorkgroupSize() {
     int maxWorkgroupSize = (int)this->getDeviceInfoInt64(CL_DEVICE_MAX_WORK_GROUP_SIZE);
-    int deviceType = getDeviceInfoInt(deviceId, CL_DEVICE_TYPE);
+    int deviceType = this->getDeviceInfoInt(CL_DEVICE_TYPE);
     if(deviceType == 2) {  // hack for intel cpus, which return workgroupsize 1024, but only support 128 (eg Xeon X5570, on Apple Mac)
         return maxWorkgroupSize > 128 ? 128 : maxWorkgroupSize;
     } else {
@@ -562,6 +562,12 @@ int64_t EasyCL::getDeviceInfoInt64(cl_device_info name) {
     cl_ulong value = 0;
     clGetDeviceInfo(device, name, sizeof(cl_ulong), &value, 0);
     return static_cast<int64_t>(value);
+}
+
+int EasyCL::getDeviceInfoInt(cl_device_info name) {
+    cl_uint value = 0;
+    clGetDeviceInfo(device, name, sizeof(cl_uint), &value, 0);
+    return static_cast<int>(value);
 }
 
 void EasyCL::storeKernel(std::string name, CLKernel *kernel) {
