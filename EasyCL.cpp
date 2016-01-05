@@ -514,12 +514,16 @@ int EasyCL::getMaxWorkgroupSize() {
     int maxWorkgroupSize = (int)this->getDeviceInfoInt64(CL_DEVICE_MAX_WORK_GROUP_SIZE);
     cl_device_type deviceType;
     clGetDeviceInfo(device, CL_DEVICE_TYPE, sizeof(cl_device_type), &deviceType, 0);
-    cout << "EasyCL::getMaxWorkgroupSize() deviceType=" << deviceType << " mws=" << maxWorkgroupSize << endl;
-    if(deviceType == 2) {  // hack for intel cpus, which return workgroupsize 1024, but only support 128 (eg Xeon X5570, on Apple Mac)
-        return maxWorkgroupSize > 128 ? 128 : maxWorkgroupSize;
-    } else {
-        return maxWorkgroupSize;
+    // hack for intel cpus, which return workgroupsize 1024, but only support 128 (eg Xeon X5570, on Apple Mac)
+    if(deviceType == 2 && maxWorkgroupSize > 128) {
+        static int givenWarning = 0;
+        if(!givenWarning) {
+            cout << "device type CPU, forcing maxworkgroupsize to 128, since some CPUs incorrectly report 1024, which will crash the kernels" << endl;
+            givenWarning = 1;
+        }
+        return 128;
     }
+    return maxWorkgroupSize;
 }
 int EasyCL::getMaxAllocSizeMB() {
     return (int)(this->getDeviceInfoInt64(CL_DEVICE_MAX_MEM_ALLOC_SIZE) / 1024 / 1024);
