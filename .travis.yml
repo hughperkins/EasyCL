@@ -8,17 +8,8 @@ matrix:
 
 before_install:
   - if [ -f ".git/shallow" ]; then travis_retry git fetch --unshallow; fi
-  - whoami
-  - pwd
-  - ls
-  - git status
-  - ls ~
-  - echo $HOME
-  - env
 
 script:
-  - echo hello
-  - env
   - mkdir build
   - cd build
   - cmake .. -DBUILD_TESTS=ON
