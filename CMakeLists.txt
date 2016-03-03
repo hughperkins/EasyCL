@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8)
 
 if("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
     set(ON_LINUX 1)
