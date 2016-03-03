@@ -23,6 +23,12 @@ OPTION(USE_CLEW "Use clew, for dynamic runtime linking with opencl." ON)
 add_definitions(-DTYPEDEF_INT64=${TYPEDEF_INT64})
 add_definitions(-DTYPEDEF_UINT64=${TYPEDEF_UINT64})
 
+# https://cmake.org/Wiki/CMake_RPATH_handling
+SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+
+SET(CMAKE_MACOSX_RPATH TRUE)
+
 IF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   SET(CMAKE_INSTALL_PREFIX
     "${CMAKE_CURRENT_SOURCE_DIR}/dist" CACHE PATH "Installation prefix, default 'dist'" FORCE
@@ -155,12 +161,6 @@ if(USE_CLEW)
     target_link_libraries(gpuinfo clew)
 else()
 endif()
-
-# https://cmake.org/Wiki/CMake_RPATH_handling
-SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
-SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-
-SET(CMAKE_MACOSX_RPATH TRUE)
 
 INSTALL(TARGETS EasyCL EXPORT EasyCL-targets
      RUNTIME DESTINATION bin
