@@ -25,10 +25,10 @@ script:
   - make -j 4
   - make install
   - # source ../dist/bin/easycl_activate.sh
-  - otools -L ../dist/bin/easycl_unittests
-  - otools -l ../dist/bin/easycl_unittests | grep RPATH -A2
-  - otools -L ../dist/lib/libEasyCL.so
-  - otools -l ../dist/lib/libEasyCL.so | grep RPATH -A2
+  - otool -L ../dist/bin/easycl_unittests
+  - otool -l ../dist/bin/easycl_unittests | grep RPATH -A2
+  - otool -L ../dist/lib/libEasyCL.so
+  - otool -l ../dist/lib/libEasyCL.so | grep RPATH -A2
   - ../dist/bin/gpuinfo
   - ../dist/bin/easycl_unittests tests=-SLOW*:testlocal*:testnewinstantiations.createForFirstGpu:testnewinstantiations.createForIndexedGpu
 
