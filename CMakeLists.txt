@@ -161,6 +161,49 @@ if(USE_CLEW)
 else()
 endif()
 
+
+# Get all propreties that cmake supports
+execute_process(COMMAND cmake --help-property-list OUTPUT_VARIABLE CMAKE_PROPERTY_LIST)
+
+# Convert command output into a CMake list
+STRING(REGEX REPLACE ";" "\\\\;" CMAKE_PROPERTY_LIST ${CMAKE_PROPERTY_LIST}")
+STRING(REGEX REPLACE "\n" ";" CMAKE_PROPERTY_LIST ${CMAKE_PROPERTY_LIST}")
+
+function(print_properties)
+    message ("CMAKE_PROPERTY_LIST = ${CMAKE_PROPERTY_LIST}")
+endfunction(print_properties)
+
+function(print_target_properties tgt)
+    message("print_target_properties() ${tgt}")
+    if(NOT TARGET ${tgt})
+      message("There is no target named '${tgt}'")
+      return()
+    endif()
+
+    foreach (prop ${CMAKE_PROPERTY_LIST})
+        message("prop ${prop}")
+        string(REPLACE "<CONFIG>" "${CMAKE_BUILD_TYPE}" prop ${prop})
+        # message ("Checking ${prop}")
+        #get_property(propval TARGET ${tgt} PROPERTY ${prop} SET)
+        #if (propval)
+            get_target_property(propval ${tgt} ${prop})
+            message ("value ${tgt} ${prop} = ${propval}")
+        #endif()
+    endforeach(prop)
+endfunction(print_target_properties)
+
+#message("print properties EasyCL ==============")
+#print_target_properties(EasyCL)
+#message("print properties clew ==============")
+#print_target_properties(clew)
+
+foreach(prop MACOSX_RPATH SKIP_BUILD_RPATH RUNTIME_OUTPUT_DIRECTORY RUNTIME_OUTPUT_NAME PREFIX OUTPUT_NAME NO_SONAME NAME MACOSX_BUNDLE LOCATION LINK_FLAGS LINK_DIRECTORIES LIBRARY_OUTPUT_DIRECTORY LIBRARY_OUTPUT_NAME INSTALL_RPATH_USE_LINK_PATH INSTALL_RPATH INSTALL_NAME_DIR IMPORTED_SONAME  IMPORTED_LOCATION BUILD_WITH_INSTALL_RPATH)
+  foreach(tgt EasyCL clew)
+    get_target_property(foo ${tgt} ${prop})
+    message("${tgt} ${prop} ${foo}")
+  endforeach()
+endforeach()
+
 INSTALL(TARGETS EasyCL EXPORT EasyCL-targets
      RUNTIME DESTINATION bin
      ARCHIVE DESTINATION lib
