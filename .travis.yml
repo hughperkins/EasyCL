@@ -27,8 +27,8 @@ script:
   - # source ../dist/bin/easycl_activate.sh
   - otool -L ../dist/bin/easycl_unittests
   - otool -l ../dist/bin/easycl_unittests | grep RPATH -A2
-  - otool -L ../dist/lib/libEasyCL.so
-  - otool -l ../dist/lib/libEasyCL.so | grep RPATH -A2
+  - otool -L ../dist/lib/libEasyCL.dylib
+  - otool -l ../dist/lib/libEasyCL.dylib | grep RPATH -A2
   - ../dist/bin/gpuinfo
   - ../dist/bin/easycl_unittests tests=-SLOW*:testlocal*:testnewinstantiations.createForFirstGpu:testnewinstantiations.createForIndexedGpu
 
