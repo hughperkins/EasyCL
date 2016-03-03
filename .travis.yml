@@ -20,6 +20,8 @@ script:
   - otool -l ../dist/bin/easycl_unittests | grep RPATH -A2
   - otool -L ../dist/lib/libEasyCL.dylib
   - otool -l ../dist/lib/libEasyCL.dylib | grep RPATH -A2
+  - otool -D ../dist/lib/libEasyCL.dylib
+  - otool -D ../dist/lib/libclew.1.0.0.dylib
   - ../dist/bin/gpuinfo
   - ../dist/bin/easycl_unittests tests=-SLOW*:testlocal*:testnewinstantiations.createForFirstGpu:testnewinstantiations.createForIndexedGpu
 
