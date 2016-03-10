@@ -131,7 +131,7 @@ if(BUILD_TESTS)
       test/testucharwrapper.cpp test/testkernelstore.cpp test/testdirtywrapper.cpp test/testDeviceInfo.cpp
       ${TEMPLATETESTS} test/easycl_stringhelper.cpp test/testStructs.cpp
       test/asserts.cpp test/gtest_main.cpp test/GtestGlobals.cpp test/testprofiling.cpp
-      test/testcopybuffer.cpp test/teststatefultimer.cpp
+      test/testcopybuffer.cpp test/teststatefultimer.cpp test/testbuildprogram.cpp
       ${CLBLAS_TEST_SOURCES} )
   target_link_libraries( easycl_unittests easycl_gtest EasyCL ${CLEW_LIBRARIES} )
   target_include_directories( easycl_unittests PRIVATE thirdparty/gtest )

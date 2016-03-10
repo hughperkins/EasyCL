@@ -84,6 +84,7 @@ public:
     static int getNextPower2(int value); // eg pass in 320, it will return: 512
     static int getPower2Upperbound(int value);
     static EasyCL *createForFirstGpu();
+
     static EasyCL *createForFirstGpuOtherwiseCpu();
     static EasyCL *createForIndexedDevice(int device);
     static EasyCL *createForIndexedGpu(int gpu);
@@ -120,6 +121,17 @@ public:
     CLKernel *buildKernel(std::string kernelfilepath, std::string kernelname, std::string options);
     CLKernel *buildKernelFromString(std::string source, std::string kernelname, std::string options, std::string sourcefilename = "");
 
+    /**
+     @brief build CL source file and exports all kernels
+     @param programfilepath OpenCL source file
+     @param options compiler options
+     @note  returned kernel order is based on compiler
+     @return list of callable kernels
+    **/
+    std::vector<CLKernel *> buildProgram(std::string programfilepath, std::string options);
+
+    std::vector<CLKernel *> buildProgramFromString(std::string source,std::string options,std::string sourcefilename = "");
+
     // simple associate-array of kernels, specific to each EasyCL object
     // so we can cache them easily, if we want
     // good to make the cache per-connection, ie per-EasyCL object
@@ -146,6 +158,8 @@ private:
     static std::string getFileContents(std::string filename);
 //    long getDeviceInfoInt(cl_device_info name);
     int64_t getDeviceInfoInt64(cl_device_info name);
+    cl_program m_buildclprogram(std::string sourcefilename, std::string source,std::string options,std::string &buildlog);
+
 };
 
 #include "CLIntWrapper.h"

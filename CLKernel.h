@@ -61,6 +61,8 @@ public:
     CLKernel &operator=(const CLKernel &kernel);
     ~CLKernel();
 
+    const std::string getKernelName() const { return kernelName;}
+
     CLKernel *input(CLArray *clarray1d);
     CLKernel *inout(CLArray *clarray1d);
     CLKernel *output(CLArray *clarray1d);

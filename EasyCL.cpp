@@ -357,7 +357,53 @@ CLKernel *EasyCL::buildKernel(string kernelfilepath, string kernelname, string o
     return buildKernelFromString(source, kernelname, options, kernelfilepath);
 }
 
-CLKernel *EasyCL::buildKernelFromString(string source, string kernelname, string options, string sourcefilename) {
+std::vector<CLKernel *> EasyCL::buildProgramFromString(std::string source,std::string options,std::string sourcefilename){
+    std::string buildLogMessage;
+
+    cl_program program = m_buildclprogram(sourcefilename,source,options,buildLogMessage);
+
+    cl_kernel *krns;
+    cl_uint num = 1024;
+    cl_uint got;
+
+    cl_int err;
+    for(;;){
+       krns = new cl_kernel[num];
+       err = clCreateKernelsInProgram(program,num,krns,&got);
+       if (err == CL_INVALID_VALUE){ // Invalid value means, that these are more kernels than allocated space
+          delete krns;
+          num += 1024;
+          continue;
+       } else {
+          checkError(err);
+       }
+          break;
+    }
+
+    size_t i;
+    std::vector<CLKernel *> vv;
+    char kern_name[1024];
+    size_t kern_name_ret;
+    for(i=0;i<got;++i){
+       err = clGetKernelInfo(krns[i],CL_KERNEL_FUNCTION_NAME,sizeof(kern_name),kern_name,&kern_name_ret);
+       checkError(err);
+
+       CLKernel *k = new CLKernel(this, sourcefilename, kern_name, source, program, krns[i]);
+       vv.push_back(k);
+    }
+
+    delete krns;
+    return vv;
+
+}
+
+std::vector<CLKernel *> EasyCL::buildProgram(std::string programfilepath, std::string options){
+    std::string path = programfilepath.c_str();
+    std::string source = getFileContents(path);
+    return buildProgramFromString(source,options,programfilepath);
+}
+
+cl_program EasyCL::m_buildclprogram(string sourcefilename, string source,string options,string &buildLogMessage ){
     size_t src_size = 0;
     const char *source_char = source.c_str();
     src_size = strlen(source_char);
@@ -377,13 +423,20 @@ CLKernel *EasyCL::buildKernelFromString(string source, string kernelname, string
     error = clGetProgramBuildInfo(program, device, CL_PROGRAM_BUILD_LOG, log_size, build_log, NULL);
     checkError(error);
     build_log[log_size] = '\0';
-    string buildLogMessage = "";
+    buildLogMessage = "";
     if(log_size > 2) {
         buildLogMessage = sourcefilename + " build log: "  + "\n" + build_log;
         cout << buildLogMessage << endl;
     }
+
     delete[] build_log;
     checkError(error);
+    return program;
+}
+CLKernel *EasyCL::buildKernelFromString(string source, string kernelname, string options, string sourcefilename) {
+
+    std::string buildLogMessage;
+    cl_program program = m_buildclprogram(sourcefilename,source,options,buildLogMessage);
 
     cl_kernel kernel = clCreateKernel(program, kernelname.c_str(), &error);
     if(error != CL_SUCCESS) {
