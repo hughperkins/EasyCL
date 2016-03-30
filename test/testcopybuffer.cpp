@@ -137,8 +137,8 @@ TEST(SLOW_testcopybuffer, larger) {
     float *in = new float[bufferSize];
     float *in2 = new float[bufferSize];
     for(int i = 0; i < bufferSize; i++) {
-        in[i] = i * 3;
-        in2[i] = 23 + i;
+        in[i] = i * 3.0f;
+        in2[i] = 23.0f + i;
     }
     CLWrapper *inwrapper = cl->wrap(bufferSize, in);
     CLWrapper *in2wrapper = cl->wrap(bufferSize, in2);
@@ -201,7 +201,7 @@ TEST(testcopybuffer, throwsifnotondevice) {
     bool threw = false;
     try {
         inwrapper->copyTo(in2wrapper);
-    } catch(runtime_error &e) {
+    } catch(runtime_error &) {
         threw = true;
     }
     EXPECT_TRUE(threw);
