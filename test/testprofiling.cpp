@@ -32,7 +32,7 @@ TEST(testprofiling, basic) {
     const int N = 8 * 1024 * 1024;
     float *in = new float[N];
     for(int i = 0; i < N; i++) {
-        in[i] = i * 3;
+        in[i] = i * 3.0f;
     }
     CLWrapper *inwrapper = cl->wrap(N, in);
     inwrapper->copyToDevice();
@@ -76,7 +76,7 @@ TEST(testprofiling, noprofiling) {
     const int N = 2048;
     float *in = new float[N];
     for(int i = 0; i < N; i++) {
-        in[i] = i * 3;
+        in[i] = i * 3.0f;
     }
     CLWrapper *inwrapper = cl->wrap(N, in);
     inwrapper->copyToDevice();

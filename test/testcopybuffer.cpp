@@ -22,8 +22,8 @@ TEST(testcopybuffer, main) {
     float in[5];
     float in2[5];
     for(int i = 0; i < 5; i++) {
-        in[i] = i * 3;
-        in2[i] = 23 + i;
+        in[i] = i * 3.0f;
+        in2[i] = 23.0f + i;
     }
     float out[5];
     CLWrapper *inwrapper = cl->wrap(5, in);
@@ -38,26 +38,26 @@ TEST(testcopybuffer, main) {
   //  cl->finish();
     // check that in2 host-side unchanged:
     for(int i = 0; i < 5; i++) {
-        in[i] = i * 3;
-        EXPECT_EQ(23 + i, in2[i]);
+        in[i] = i * 3.0f;
+        EXPECT_EQ(23.0f + i, in2[i]);
     }
 
     in2wrapper->copyToHost();
     // check that in2 is now a copy of in:
     for(int i = 0; i < 5; i++) {
-        in[i] = i * 3;
-        EXPECT_EQ(i * 3, in2[i]);
+        in[i] = i * 3.0f;
+        EXPECT_EQ(i * 3.0f, in2[i]);
     }
 
     // check that modifying in2 doesnt modfiy in:
     in2[1] = 27;
     in2wrapper->copyToDevice();
     inwrapper->copyToHost();
-    EXPECT_EQ(1 * 3, in[1]);
+    EXPECT_EQ(1 * 3.0f, in[1]);
 
     in2wrapper->copyToHost();
-    EXPECT_EQ(1 * 3, in[1]);
-    EXPECT_EQ(27, in2[1]);
+    EXPECT_EQ(1 * 3.0f, in[1]);
+    EXPECT_EQ(27.0f, in2[1]);
     
     delete inwrapper;
     delete in2wrapper;
@@ -77,8 +77,8 @@ TEST(testcopybuffer, withoffset) {
     float in[10];
     float in2[10];
     for(int i = 0; i < 10; i++) {
-        in[i] = i * 3;
-        in2[i] = 23 + i;
+        in[i] = i * 3.0f;
+        in2[i] = 23.0f + i;
     }
     float out[10];
     CLWrapper *inwrapper = cl->wrap(10, in);
@@ -93,8 +93,8 @@ TEST(testcopybuffer, withoffset) {
   //  cl->finish();
     // check that in2 host-side unchanged:
     for(int i = 0; i < 10; i++) {
-        in[i] = i * 3;
-        EXPECT_EQ(23 + i, in2[i]);
+        in[i] = i * 3.0f;
+        EXPECT_EQ(23.0f + i, in2[i]);
     }
 
     in2wrapper->copyToHost();
@@ -102,21 +102,21 @@ TEST(testcopybuffer, withoffset) {
     for(int i = 0; i < 10; i++) {
 //        in[i] = i * 3;
         if(i >= 5 && i < 9) {
-          EXPECT_EQ((i-3) * 3, in2[i]);
+          EXPECT_EQ((i-3) * 3.0f, in2[i]);
         } else {
-          EXPECT_EQ(23 + i, in2[i]);
+          EXPECT_EQ(23.0f + i, in2[i]);
         }
     }
 
     // check that modifying in2 doesnt modfiy in:
-    in2[1] = 27;
+    in2[1] = 27.0f;
     in2wrapper->copyToDevice();
     inwrapper->copyToHost();
-    EXPECT_EQ(1 * 3, in[1]);
+    EXPECT_EQ(1 * 3.0f, in[1]);
 
     in2wrapper->copyToHost();
-    EXPECT_EQ(1 * 3, in[1]);
-    EXPECT_EQ(27, in2[1]);
+    EXPECT_EQ(1 * 3.0f, in[1]);
+    EXPECT_EQ(27.0f, in2[1]);
     
     delete inwrapper;
     delete in2wrapper;
@@ -149,26 +149,26 @@ TEST(SLOW_testcopybuffer, larger) {
 //    cl->finish();
     // check that in2 host-side unchanged:
     for(int i = 0; i < bufferSize; i++) {
-        in[i] = i * 3;
-        EXPECT_EQ(23 + i, in2[i]);
+        in[i] = i * 3.0f;
+        EXPECT_EQ(23.0f + i, in2[i]);
     }
 
     in2wrapper->copyToHost();
     // check that in2 is now a copy of in:
     for(int i = 0; i < bufferSize; i++) {
-        in[i] = i * 3;
-        EXPECT_EQ(i * 3, in2[i]);
+        in[i] = i * 3.0f;
+        EXPECT_EQ(i * 3.0f, in2[i]);
     }
 
     // check that modifying in2 doesnt modfiy in:
-    in2[1] = 27;
+    in2[1] = 27.0f;
     in2wrapper->copyToDevice();
     inwrapper->copyToHost();
-    EXPECT_EQ(1 * 3, in[1]);
+    EXPECT_EQ(1 * 3.0f, in[1]);
 
     in2wrapper->copyToHost();
-    EXPECT_EQ(1 * 3, in[1]);
-    EXPECT_EQ(27, in2[1]);
+    EXPECT_EQ(1 * 3.0f, in[1]);
+    EXPECT_EQ(27.0f, in2[1]);
     
     delete inwrapper;
     delete in2wrapper;
@@ -190,8 +190,8 @@ TEST(testcopybuffer, throwsifnotondevice) {
     float *in = new float[bufferSize];
     float *in2 = new float[bufferSize];
     for(int i = 0; i < bufferSize; i++) {
-        in[i] = i * 3;
-        in2[i] = 23 + i;
+        in[i] = i * 3.0f;
+        in2[i] = 23.0f + i;
     }
     CLWrapper *inwrapper = cl->wrap(bufferSize, in);
     CLWrapper *in2wrapper = cl->wrap(bufferSize, in2);
