@@ -32,6 +32,7 @@ if(WIN32)
 set_target_properties(clew PROPERTIES
   #INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib/clew.lib
   IMPORTED_LOCATION ${CMAKE_INSTALL_PREFIX}/lib/clew.lib
+  IMPORTED_IMPLIB "${CMAKE_INSTALL_PREFIX}/lib/clew.lib"
 )
 else()
 set_target_properties(clew PROPERTIES
