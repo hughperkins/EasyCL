@@ -152,14 +152,6 @@ ${CMAKE_CURRENT_SOURCE_DIR}/templates/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/*.h ${CM
     add_dependencies(EasyCL cog)
 endif(DEV_RUN_COG)
 
-if(USE_CLEW)
-    #ADD_DEPENDENCIES(EasyCL clew)
-    target_link_libraries(EasyCL clew)
-    #ADD_DEPENDENCIES(gpuinfo clew)
-    target_link_libraries(gpuinfo clew)
-else()
-endif()
-
 INSTALL(TARGETS EasyCL EXPORT EasyCL-targets
      RUNTIME DESTINATION bin
      ARCHIVE DESTINATION lib
@@ -181,8 +173,5 @@ if(BUILD_TESTS)
       ARCHIVE DESTINATION lib
       RUNTIME DESTINATION bin
   )
-    # Note: to run tests, need the .cl files currently, so need to install those
-    # too, and reference them appropriately from the code, ie correct path
 endif(BUILD_TESTS)
-
 
