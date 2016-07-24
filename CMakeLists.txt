@@ -84,6 +84,7 @@ add_library(EasyCL SHARED EasyCL.cpp CLKernel.cpp CLWrapper.cpp platforminfo_hel
   ${TEMPLATESRC})
 if(WIN32)
     target_link_libraries(EasyCL winmm) # needed for timeGetTime
+    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 endif()
 if(USE_CLEW)
     add_definitions(-DUSE_CLEW)
