@@ -35,10 +35,6 @@
 
 #include "EasyCL_export.h"
 
-#ifdef _WIN32
-#define _CRT_SECURE_NO_WARNINGS
-#endif
-
 class CLKernel;
 class CLArrayFloat;
 class CLArrayInt;
