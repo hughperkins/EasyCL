@@ -69,6 +69,8 @@ public:
     CLKernel *in(CLArray *clarray1d) { return input(clarray1d); }
     CLKernel *out(CLArray *clarray1d) { return output(clarray1d); }
 
+    CLKernel *inout(cl_mem *buf);
+
     CLKernel *input(CLWrapper *wrapper);
     CLKernel *output(CLWrapper *wrapper);
     CLKernel *inout(CLWrapper *wrapper);
@@ -109,5 +111,3 @@ public:
     void run_1d(int global_worksize, int local_worksize);
     void run(int ND, const size_t *global_ws, const size_t *local_ws);
 };
-
-

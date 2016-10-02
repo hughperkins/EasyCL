@@ -73,6 +73,21 @@ CLKernel *CLKernel::output(CLArray *clarray1d) {
     return this;      
 }
 
+CLKernel *CLKernel::inout(cl_mem *buf) {
+    // assert(clarray1d != 0);
+    // if(!clarray1d->isOnDevice()) {
+    //     clarray1d->moveToDevice();
+    // }
+    // if(clarray1d->isOnHost()) {
+    //     clarray1d->deleteFromHost();
+    // }
+    // cl_mem *devicearray = clarray1d->getDeviceArray();
+    error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), buf);
+    easycl->checkError(error);
+    nextArg++;
+    return this;
+}
+
 CLKernel *CLKernel::inout(CLArray *clarray1d) {
     assert(clarray1d != 0);
     if(!clarray1d->isOnDevice()) {
