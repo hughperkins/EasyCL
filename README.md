@@ -425,6 +425,8 @@ What if I just have a question?
 
 # Recent changes
 
+* 2016 Oct 15th:
+  * master, and versions 4.0.0 and above, are wrapped in a namespace `easycl` now.  Since it's a breaking change, in terms of compatibility, I've bumped the major version number
 * 2016 Jan 3rd:
   * create Mac OS X build on Travis https://travis-ci.org/hughperkins/EasyCL , which passes
 * 2015 Sep 10th:
