@@ -249,19 +249,39 @@ CLKernel *CLKernel::inout(int N, T *data) {
 #endif // _CLKERNEL_STRUCTS_H
 
 void CLKernel::run_1d(int global_worksize, int local_worksize) {
-	size_t global_ws = global_worksize;
-	size_t local_ws = local_worksize;
-	run(1, &global_ws, &local_ws);
+	// size_t global_ws = global_worksize;
+	// size_t local_ws = local_worksize;
+	run_1d(easycl->queue, global_worksize, local_worksize);
+}
+
+void CLKernel::run_1d(CLQueue *clqueue, int global_worksize, int local_worksize) {
+    // size_t global_ws = global_worksize;
+    // size_t local_ws = local_worksize;
+    run_1d(&clqueue->queue, global_worksize, local_worksize);
 }
 
 void CLKernel::run(int ND, const size_t *global_ws, const size_t *local_ws) {
+    run(easycl->queue, ND, global_ws, local_ws);
+}
+
+void CLKernel::run(CLQueue *clqueue, int ND, const size_t *global_ws, const size_t *local_ws) {
+    run(&clqueue->queue, ND, global_ws, local_ws);
+}
+
+void CLKernel::run_1d(cl_command_queue *queue, int global_worksize, int local_worksize) {
+    size_t global_ws = global_worksize;
+    size_t local_ws = local_worksize;
+    run(queue, 1, &global_ws, &local_ws);
+}
+
+void CLKernel::run(cl_command_queue *queue, int ND, const size_t *global_ws, const size_t *local_ws) {
 	//cout << "running kernel" << std::endl;
   cl_event *event = 0;
   if(easycl->profilingOn) {
     event = new cl_event();
     easycl->pushEvent(sourceFilename + "." + kernelName, event);
   }
-	error = clEnqueueNDRangeKernel(*(easycl->queue), kernel, ND, NULL, global_ws, local_ws, 0, NULL, event);
+	error = clEnqueueNDRangeKernel(*(queue), kernel, ND, NULL, global_ws, local_ws, 0, NULL, event);
   if(error != 0) {
       vector<std::string> splitSource = easycl::split(source, "\n");
       std::string sourceWithNumbers = "\nkernel source:\n";
@@ -298,7 +318,7 @@ void CLKernel::run(int ND, const size_t *global_ws, const size_t *local_ws) {
 
 	//void retrieveresultsandcleanup() {
 	for (int i = 0; i < (int)outputArgBuffers.size(); i++) {
-		clEnqueueReadBuffer(*(easycl->queue), outputArgBuffers[i], CL_TRUE, 0, outputArgSizes[i], outputArgPointers[i], 0, NULL, NULL);
+		clEnqueueReadBuffer(*(queue), outputArgBuffers[i], CL_TRUE, 0, outputArgSizes[i], outputArgPointers[i], 0, NULL, NULL);
 	}
 	//        std::cout << "done" << std::endl;
 

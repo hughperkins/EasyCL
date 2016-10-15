@@ -28,6 +28,16 @@ using namespace std;
 #include "CLKernel.h"
 #include "util/easycl_stringhelper.h"
 
+CLQueue::CLQueue(EasyCL *cl) : cl(cl) {
+    cl_int err;
+    this->queue = clCreateCommandQueue(*cl->context, cl->device, 0, &err);
+    cl->checkError(err);
+}
+CLQueue::~CLQueue() {
+    cl_int err = clReleaseCommandQueue(this->queue);
+    cl->checkError(err);
+}
+
 EasyCL::EasyCL(int gpu, bool verbose) {
     init(gpu, verbose);
 }
@@ -321,6 +331,10 @@ EasyCL::~EasyCL() {
         clReleaseContext(*context);        
         delete context;
     }
+}
+
+CLQueue *EasyCL::newQueue() {
+    return new CLQueue(this);
 }
 
 CLArrayFloat *EasyCL::arrayFloat(int N) {

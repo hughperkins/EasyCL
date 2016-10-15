@@ -76,7 +76,7 @@ if(PROVIDE_LUA_ENGINE)
     endforeach()
 endif(PROVIDE_LUA_ENGINE)
 
-#add_definitions(-DCL_USE_DEPRECATED_OPENCL_1_0_APIS)
+# add_definitions(-DCL_USE_DEPRECATED_OPENCL_1_0_APIS)
 
 add_library(EasyCL SHARED EasyCL.cpp CLKernel.cpp CLWrapper.cpp platforminfo_helper.cpp deviceinfo_helper.cpp DevicesInfo.cpp DeviceInfo.cpp 
   util/easycl_stringhelper.cpp util/StatefulTimer.cpp
@@ -131,7 +131,8 @@ if(BUILD_TESTS)
   endif()
 
   add_executable(easycl_unittests test/testscalars.cpp test/testintarray.cpp test/testfloatwrapper.cpp
-      test/testclarray.cpp test/testfloatwrapperconst.cpp test/testintwrapper.cpp test/test_scenario_te42kyfo.cpp
+      test/testqueues.cpp test/testclarray.cpp test/testfloatwrapperconst.cpp test/testintwrapper.cpp
+      test/test_scenario_te42kyfo.cpp
       test/testfloatarray.cpp test/testeasycl.cpp test/testinout.cpp test/testintwrapper_huge.cpp
       test/testlocal.cpp test/testdefines.cpp test/testbuildlog.cpp test/testnewinstantiations.cpp
       test/testucharwrapper.cpp test/testkernelstore.cpp test/testdirtywrapper.cpp test/testDeviceInfo.cpp

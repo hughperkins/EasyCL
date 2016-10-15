@@ -43,6 +43,17 @@ class CLFloatWrapper;
 class CLFloatWrapperConst;
 class CLUCharWrapper;
 
+class EasyCL;
+
+class EasyCL_EXPORT CLQueue {
+public:
+    CLQueue(EasyCL *cl);
+    ~CLQueue();
+
+    EasyCL *cl;
+    cl_command_queue queue;
+};
+
 class EasyCL_EXPORT EasyCL {
 public:
     bool verbose;
@@ -54,6 +65,7 @@ public:
 
     cl_context *context;
     cl_command_queue *queue;
+    // CLQueue *default_queue;
 
     bool profilingOn;
 
@@ -105,6 +117,9 @@ public:
     int getLocalMemorySizeKB();
     int getMaxWorkgroupSize();
     int getMaxAllocSizeMB();
+
+    CLQueue *newQueue(); // you own this, should delete it
+    // void destroyQueue()
 
     CLArrayFloat *arrayFloat(int N);
     CLArrayInt *arrayInt(int N);

@@ -13,6 +13,8 @@
 
 #include "mystdint.h"
 
+class CLQueue;
+
 class EasyCL_EXPORT CLKernel {
     EasyCL *easycl; // NOT owned by this object, dont delete!
 #ifdef _WIN32
@@ -108,6 +110,14 @@ public:
     template<typename T> CLKernel *output(int N, T *data);
     template<typename T> CLKernel *out(int N, T *data);
     template<typename T> CLKernel *inout(int N, T *data);
+    // void run_1d(int global_worksize, int local_worksize);
+    // void run(int ND, const size_t *global_ws, const size_t *local_ws);
+    // void run_1d(CLQueue *queue, int global_worksize, int local_worksize);
+    // void run(CLQueue *queue, int ND, const size_t *global_ws, const size_t *local_ws);
     void run_1d(int global_worksize, int local_worksize);
+    void run_1d(cl_command_queue *queue, int global_worksize, int local_worksize);
+    void run_1d(CLQueue *queue, int global_worksize, int local_worksize);
     void run(int ND, const size_t *global_ws, const size_t *local_ws);
+    void run(cl_command_queue *queue, int ND, const size_t *global_ws, const size_t *local_ws);
+    void run(CLQueue *queue, int ND, const size_t *global_ws, const size_t *local_ws);
 };
