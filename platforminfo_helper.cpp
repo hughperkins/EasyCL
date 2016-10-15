@@ -19,6 +19,8 @@
 
 using namespace std;
 
+namespace easycl {
+
 void printPlatformInfoString(string valuename, cl_platform_id platformId, cl_platform_info name) {
     char buffer[256];
     buffer[0] = 0;
@@ -49,4 +51,4 @@ void printPlatformInfo(string valuename, cl_platform_id platformId, cl_platform_
     cout << valuename << ": " << somelong << endl;    
 }
 
-
+}

@@ -16,6 +16,7 @@ struct lua_State;
 #define STATIC static
 #define VIRTUAL virtual
 
+namespace easycl {
 class EasyCL_EXPORT LuaTemplater {
 private:
     lua_State *L;
@@ -42,4 +43,4 @@ private:
 
     // [[[end]]]
 };
-
+}

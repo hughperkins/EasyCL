@@ -29,4 +29,3 @@ namespace easycl {
         static void getIdForIndexedPlatformDevice(int platform, int device, int types, cl_platform_id *p_platformId, cl_device_id *p_deviceId);
     };
 }
-

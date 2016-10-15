@@ -9,14 +9,16 @@
 #include <string>
 #include <vector>
 
-class EasyCL;
-class CLKernel;
-class LuaTemplater;
-
 #include "EasyCL_export.h"
 
 #define VIRTUAL virtual
 #define STATIC static
+
+namespace easycl {
+
+class EasyCL;
+class CLKernel;
+class LuaTemplater;
 
 // idea of htis is that it will behave a bit like the templates in CUDA, ie you give it a set of template parameters, and if that kernel has
 // already been built, for those parameters, then uses that, otherwise bulids for new parameters
@@ -50,4 +52,4 @@ public:
 
     // [[[end]]]
 };
-
+}

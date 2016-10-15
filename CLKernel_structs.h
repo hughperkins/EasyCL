@@ -2,16 +2,16 @@
 // otherwise no need
 // downside of including this is, increase your compile time very slightly
 
-#ifndef _CLKERNEL_STRUCTS_H
-#define _CLKERNEL_STRUCTS_H
+#pragma once
 
 #include "CLKernel.h"
 
+namespace easycl {
 template<typename T> CLKernel *CLKernel::input(int N, const T *data) {
-	cl_mem buffer = clCreateBuffer(*(easycl->context), CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(T) * N, (void *)data, &error);
-	easycl->checkError(error);
+	cl_mem buffer = clCreateBuffer(*(cl->context), CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(T) * N, (void *)data, &error);
+	cl->checkError(error);
 	error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), &buffer);
-	easycl->checkError(error);
+	cl->checkError(error);
 	buffers.push_back(buffer);
 	nextArg++;
 	return this;
@@ -22,8 +22,8 @@ CLKernel *CLKernel::in(int N, const T *data) {
 }
 template<typename T>
 CLKernel *CLKernel::output(int N, T *data) {
-	cl_mem buffer = clCreateBuffer(*(easycl->context), CL_MEM_WRITE_ONLY, sizeof(T) * N, 0, &error);
-	easycl->checkError(error);
+	cl_mem buffer = clCreateBuffer(*(cl->context), CL_MEM_WRITE_ONLY, sizeof(T) * N, 0, &error);
+	cl->checkError(error);
 	error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), &buffer);
 	buffers.push_back(buffer);
 	//outputArgNums.push_back(nextArg);
@@ -39,10 +39,10 @@ CLKernel *CLKernel::out(int N, T *data) {
 }
 template<typename T>
 CLKernel *CLKernel::inout(int N, T *data) {
-	cl_mem buffer = clCreateBuffer(*(easycl->context), CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(T) * N, (void *)data, &error);
-	easycl->checkError(error);
+	cl_mem buffer = clCreateBuffer(*(cl->context), CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(T) * N, (void *)data, &error);
+	cl->checkError(error);
 	error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), &buffer);
-	easycl->checkError(error);
+	cl->checkError(error);
 	buffers.push_back(buffer);
 	outputArgBuffers.push_back(buffer);
 	outputArgPointers.push_back((void *)(data) );
@@ -50,6 +50,4 @@ CLKernel *CLKernel::inout(int N, T *data) {
 	nextArg++;
 	return this;
 }
-
-#endif // _CLKERNEL_STRUCTS_H
-
+}

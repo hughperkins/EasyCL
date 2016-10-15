@@ -14,6 +14,8 @@ using namespace std;
 
 static const char *getKernel();
 
+using namespace easycl;
+
 TEST(testucharwrapper, main) {
     if(!EasyCL::isOpenCLAvailable()) {
         cout << "opencl library not found" << endl;

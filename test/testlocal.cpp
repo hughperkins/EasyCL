@@ -8,6 +8,8 @@ using namespace std;
 
 static const char *getKernel();
 
+using namespace easycl;
+
 TEST(testlocal, uselocal) {
     EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
     CLKernel *kernel = cl->buildKernelFromString(getKernel(), "useLocal", "");

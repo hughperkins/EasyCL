@@ -35,6 +35,7 @@
 
 #include "EasyCL_export.h"
 
+namespace easycl {
 class CLKernel;
 class CLArrayFloat;
 class CLArrayInt;
@@ -158,6 +159,7 @@ private:
 //    long getDeviceInfoInt(cl_device_info name);
     int64_t getDeviceInfoInt64(cl_device_info name);
 };
+}
 
 #include "CLIntWrapper.h"
 #include "CLFloatWrapper.h"
@@ -166,5 +168,3 @@ private:
 #include "CLWrapper.h"
 #include "CLKernel.h"
 #include "DevicesInfo.h"
-
-

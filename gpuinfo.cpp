@@ -22,6 +22,8 @@ using namespace std;
 #include "deviceinfo_helper.h"
 #include "platforminfo_helper.h"
 
+using namespace easycl;
+
 int main(int argc, char *argv[]) {
     #ifdef USE_CLEW
         bool clpresent = 0 == clewInit();
@@ -92,5 +94,3 @@ int main(int argc, char *argv[]) {
     }
     return 0;
 }
-
-

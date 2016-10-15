@@ -60,4 +60,3 @@ namespace easycl {
 
     void strcpy_safe(char *destination, char const*source, int maxLength);
 }
-

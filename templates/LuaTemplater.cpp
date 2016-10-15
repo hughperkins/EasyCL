@@ -24,6 +24,7 @@ using namespace std;
 #define VIRTUAL
 #define PUBLIC
 
+namespace easycl {
 PUBLIC LuaTemplater::LuaTemplater() {
     L = luaL_newstate();
     luaL_openlibs(L);
@@ -278,4 +279,4 @@ std::string LuaTemplater::getTemplaterSource() {
     // [[[end]]]
     return templaterSource;
 }
-
+}

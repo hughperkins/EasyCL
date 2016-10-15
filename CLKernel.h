@@ -13,10 +13,12 @@
 
 #include "mystdint.h"
 
+namespace easycl {
+
 class CLQueue;
 
 class EasyCL_EXPORT CLKernel {
-    EasyCL *easycl; // NOT owned by this object, dont delete!
+    EasyCL *cl; // NOT owned by this object, dont delete!
 #ifdef _WIN32
 #pragma warning(disable: 4251)
 #endif
@@ -121,3 +123,4 @@ public:
     void run(cl_command_queue *queue, int ND, const size_t *global_ws, const size_t *local_ws);
     void run(CLQueue *queue, int ND, const size_t *global_ws, const size_t *local_ws);
 };
+}

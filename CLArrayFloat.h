@@ -14,6 +14,8 @@
 #include "EasyCL.h"
 #include "CLArray.h"
 
+namespace easycl {
+
 class CLArrayFloat : public CLArray {
 protected:
     float *hostarray;
@@ -76,4 +78,4 @@ public:
         return hostarray[n];
     }
 };
-
+}

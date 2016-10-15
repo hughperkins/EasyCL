@@ -8,6 +8,8 @@
 
 using namespace std;
 
+using namespace easycl;
+
 static const char *kernelSource = 
 "kernel void test(int N, global float *in){\n"
 "    if((int)get_global_id(0) >= N) {\n"

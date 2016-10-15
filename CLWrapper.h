@@ -10,6 +10,7 @@
 
 #include "EasyCL_export.h"
 
+namespace easycl {
 //class cl_mem;
 //class cl_int;
 class EasyCL;
@@ -52,4 +53,4 @@ public:
     virtual bool isDeviceDirty();
     virtual void markDeviceDirty();
 };
-
+}

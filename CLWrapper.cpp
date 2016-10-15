@@ -9,6 +9,8 @@
 #include "CLWrapper.h"
 #include "util/easycl_stringhelper.h"
 
+namespace easycl {
+
 CLWrapper::CLWrapper(int N, EasyCL *cl) : N(N), onHost(true), cl(cl) {
     error = CL_SUCCESS;
     onDevice = false;
@@ -147,4 +149,4 @@ void CLWrapper::copyTo(CLWrapper *target, int srcOffset, int dstOffset, int coun
 //    clReleaseEvent(event);
     target->markDeviceDirty();
 }
-
+}

@@ -56,19 +56,29 @@ namespace easycl {
 //        int numDevices = 0;
         for(int platform =  0; platform < (int)num_platforms; platform++) {
             cl_platform_id platform_id = platform_ids[platform];
-    //        cout << "checking platform id " << platform_id << endl;
-            cl_device_id device_ids[100];
+            cout << "checking platform id " << platform_id << endl;
+//            cl_device_id device_ids[100];
             cl_uint num_devices;
-            error = clGetDeviceIDs(platform_id, types, 100, device_ids, &num_devices);
+            error = clGetDeviceIDs(platform_id, types, 0, 0, &num_devices);
             if (error != CL_SUCCESS) {
-                continue;
-    //           throw std::runtime_error("Error getting device ids for platform " + EasyCL::toString(platform) + ": " + errorMessage(error));
+//                continue;
+               throw std::runtime_error("Error getting num devices for platform " + EasyCL::toString(platform) + ": " +
+                   errorMessage(error));
+            }
+            cout << "num devices this platform " << num_devices << endl;
+            cl_device_id *device_ids = new cl_device_id[num_devices];
+            error = clGetDeviceIDs(platform_id, types, num_devices, device_ids, &num_devices);
+            if (error != CL_SUCCESS) {
+//                continue;
+               throw std::runtime_error("Error getting device ids for platform " + EasyCL::toString(platform) + ": " + errorMessage(error));
             }
             if(( index - currentGpuIndex) < (int)num_devices) {
                 *p_platformId = platform_id;
                 *p_deviceId  = device_ids[(index - currentGpuIndex)];
+                delete[] device_ids;
                 return;
             } else {
+                delete[] device_ids;
                 currentGpuIndex += num_devices;
             }
         }
@@ -100,6 +110,7 @@ namespace easycl {
             return 0;
 //           throw std::runtime_error("Error getting platforms ids: " + errorMessage(error));
         }
+        cout << "num platforms " << num_platforms << endl;
         if(num_platforms == 0) {
             return 0;
 //           throw std::runtime_error("Error: no platforms available");
@@ -107,15 +118,23 @@ namespace easycl {
         int numDevices = 0;
         for(int platform =  0; platform < (int)num_platforms; platform++) {
             cl_platform_id platform_id = platform_ids[platform];
-    //        cout << "checking platform id " << platform_id << endl;
-            cl_device_id device_ids[100];
+            cout << "checking platform id " << platform_id << endl;
             cl_uint num_devices;
-            error = clGetDeviceIDs(platform_id, types, 100, device_ids, &num_devices);
+            error = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_ALL, 0, 0, &num_devices);
             if (error != CL_SUCCESS) {
                 continue;
-    //           throw std::runtime_error("Error getting device ids for platform " + EasyCL::toString(platform) + ": " + errorMessage(error));
+//                throw std::runtime_error("Error getting num device ids for platform " + EasyCL::toString(platform) + ": " + errorMessage(error));
             }
+            cout << "num devices " << num_devices << endl;
+//            cl_device_id *device_ids = new cl_device_id[num_devices];
+//            error = clGetDeviceIDs(platform_id, types, num_devices, device_ids, &num_devices);
+//            cout << "num devices " << num_devices << endl;
+//            if (error != CL_SUCCESS) {
+////                continue;
+//                throw std::runtime_error("Error getting device ids for platform " + EasyCL::toString(platform) + ": " + errorMessage(error));
+//            }
             numDevices += num_devices;
+//            delete[] device_ids
         }
         return numDevices;
     }

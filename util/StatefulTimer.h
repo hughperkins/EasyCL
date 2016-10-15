@@ -17,6 +17,8 @@
 #define VIRTUAL virtual
 #define STATIC static
 
+namespace easycl {
+
 class EasyCL_EXPORT StatefulTimer {
 public:
 #ifdef _WIN32
@@ -68,4 +70,4 @@ private:
 	// [[[end]]]
 
 };
-
+}

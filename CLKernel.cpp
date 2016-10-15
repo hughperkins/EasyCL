@@ -15,6 +15,8 @@ using namespace std;
 
 #include "EasyCL_export.h"
 
+namespace easycl {
+
 template<typename T>
 std::string CLKernel::toString(T val) {
 	std::ostringstream myostringstream;
@@ -22,11 +24,11 @@ std::string CLKernel::toString(T val) {
 	return myostringstream.str();
 }
 
-CLKernel::CLKernel(EasyCL *easycl, std::string sourceFilename, std::string kernelName, std::string source, cl_program program, cl_kernel kernel) {
+CLKernel::CLKernel(EasyCL *cl, std::string sourceFilename, std::string kernelName, std::string source, cl_program program, cl_kernel kernel) {
   this->sourceFilename = sourceFilename;
   this->kernelName = kernelName;
   this->source = source;
-	this->easycl = easycl;
+	this->cl = cl;
 	nextArg = 0;
 	error = CL_SUCCESS;
 	this->program = program;
@@ -53,7 +55,7 @@ CLKernel *CLKernel::input(CLArray *clarray1d) {
     }
     cl_mem *devicearray = clarray1d->getDeviceArray();
     error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), devicearray);
-    easycl->checkError(error);
+    cl->checkError(error);
     nextArg++;
     return this;
 }
@@ -68,7 +70,7 @@ CLKernel *CLKernel::output(CLArray *clarray1d) {
     }
     assert(clarray1d->isOnDevice() && !clarray1d->isOnHost());
     error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), (clarray1d->getDeviceArray()));
-    easycl->checkError(error);
+    cl->checkError(error);
     nextArg++;  
     return this;      
 }
@@ -83,7 +85,7 @@ CLKernel *CLKernel::inout(cl_mem *buf) {
     // }
     // cl_mem *devicearray = clarray1d->getDeviceArray();
     error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), buf);
-    easycl->checkError(error);
+    cl->checkError(error);
     nextArg++;
     return this;
 }
@@ -98,7 +100,7 @@ CLKernel *CLKernel::inout(CLArray *clarray1d) {
     }
     cl_mem *devicearray = clarray1d->getDeviceArray();
     error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), devicearray);
-    easycl->checkError(error);
+    cl->checkError(error);
     nextArg++;
     return this;
 }
@@ -110,7 +112,7 @@ CLKernel *CLKernel::input(CLWrapper *wrapper) {
     }
     cl_mem *devicearray = wrapper->getDeviceArray();
     error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), devicearray);
-    easycl->checkError(error);
+    cl->checkError(error);
     nextArg++;
     return this;
 }
@@ -122,7 +124,7 @@ CLKernel *CLKernel::inout(CLWrapper *wrapper) {
     }
     cl_mem *devicearray = wrapper->getDeviceArray();
     error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), devicearray);
-    easycl->checkError(error);
+    cl->checkError(error);
     nextArg++;
     wrappersToDirty.push_back(wrapper);
     return this;
@@ -134,7 +136,7 @@ CLKernel *CLKernel::output(CLWrapper *wrapper) {
         wrapper->createOnDevice();
     }
     error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), (wrapper->getDeviceArray()));
-    easycl->checkError(error);
+    cl->checkError(error);
     nextArg++;
     wrappersToDirty.push_back(wrapper);
     return this;      
@@ -142,13 +144,13 @@ CLKernel *CLKernel::output(CLWrapper *wrapper) {
 
 CLKernel *CLKernel::localFloats(int count) {
 	error = clSetKernelArg(kernel, nextArg, count * sizeof(cl_float), 0);
-	easycl->checkError(error);
+	cl->checkError(error);
 	nextArg++;
 	return this;
 }
 CLKernel *CLKernel::localInts(int count) {
 	error = clSetKernelArg(kernel, nextArg, count * sizeof(cl_int), 0);
-	easycl->checkError(error);
+	cl->checkError(error);
 	nextArg++;
 	return this;
 }
@@ -159,7 +161,7 @@ CLKernel *CLKernel::local(int N) {
 CLKernel *CLKernel::input(TYPE value) { \
 	inputArg##NAME##s.push_back(value); \
 	error = clSetKernelArg(kernel, nextArg, sizeof(TYPE), &(inputArg##NAME##s[inputArg##NAME##s.size() - 1])); \
-	easycl->checkError(error); \
+	cl->checkError(error); \
 	nextArg++; \
 	return this; \
 } \
@@ -180,21 +182,21 @@ CLKERNEL_CREATE_SCALAR_INPUT(float, Float);
 //CLKernel *CLKernel::input(unsigned int value) {
 //	inputArgUInts.push_back(value);
 //	error = clSetKernelArg(kernel, nextArg, sizeof(unsigned int), &(inputArgUInts[inputArgUInts.size() - 1]));
-//	easycl->checkError(error);
+//	cl->checkError(error);
 //	nextArg++;
 //	return this;
 //}
 //CLKernel *CLKernel::input(long value) {
 //	inputArgInt64s.push_back(value);
 //	error = clSetKernelArg(kernel, nextArg, sizeof(long), &(inputArgInt64s[inputArgInt64s.size() - 1]));
-//	easycl->checkError(error);
+//	cl->checkError(error);
 //	nextArg++;
 //	return this;
 //}
 //CLKernel *CLKernel::input(float value) {
 //	inputArgFloats.push_back(value);
 //	error = clSetKernelArg(kernel, nextArg, sizeof(float), &(inputArgFloats[inputArgFloats.size() - 1]));
-//	easycl->checkError(error);
+//	cl->checkError(error);
 //	nextArg++;
 //	return this;
 //}
@@ -204,10 +206,10 @@ CLKERNEL_CREATE_SCALAR_INPUT(float, Float);
 
 #ifndef _CLKERNEL_STRUCTS_H
 template<typename T> CLKernel *CLKernel::input(int N, const T *data) {
-	cl_mem buffer = clCreateBuffer(*(easycl->context), CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(T) * N, (void *)data, &error);
-	easycl->checkError(error);
+	cl_mem buffer = clCreateBuffer(*(cl->context), CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(T) * N, (void *)data, &error);
+	cl->checkError(error);
 	error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), &buffer);
-	easycl->checkError(error);
+	cl->checkError(error);
 	buffers.push_back(buffer);
 	nextArg++;
 	return this;
@@ -218,8 +220,8 @@ CLKernel *CLKernel::in(int N, const T *data) {
 }
 template<typename T>
 CLKernel *CLKernel::output(int N, T *data) {
-	cl_mem buffer = clCreateBuffer(*(easycl->context), CL_MEM_WRITE_ONLY, sizeof(T) * N, 0, &error);
-	easycl->checkError(error);
+	cl_mem buffer = clCreateBuffer(*(cl->context), CL_MEM_WRITE_ONLY, sizeof(T) * N, 0, &error);
+	cl->checkError(error);
 	error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), &buffer);
 	buffers.push_back(buffer);
 	//outputArgNums.push_back(nextArg);
@@ -235,10 +237,10 @@ CLKernel *CLKernel::out(int N, T *data) {
 }
 template<typename T>
 CLKernel *CLKernel::inout(int N, T *data) {
-	cl_mem buffer = clCreateBuffer(*(easycl->context), CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(T) * N, (void *)data, &error);
-	easycl->checkError(error);
+	cl_mem buffer = clCreateBuffer(*(cl->context), CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(T) * N, (void *)data, &error);
+	cl->checkError(error);
 	error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), &buffer);
-	easycl->checkError(error);
+	cl->checkError(error);
 	buffers.push_back(buffer);
 	outputArgBuffers.push_back(buffer);
 	outputArgPointers.push_back((void *)(data) );
@@ -251,7 +253,7 @@ CLKernel *CLKernel::inout(int N, T *data) {
 void CLKernel::run_1d(int global_worksize, int local_worksize) {
 	// size_t global_ws = global_worksize;
 	// size_t local_ws = local_worksize;
-	run_1d(easycl->queue, global_worksize, local_worksize);
+	run_1d(cl->queue, global_worksize, local_worksize);
 }
 
 void CLKernel::run_1d(CLQueue *clqueue, int global_worksize, int local_worksize) {
@@ -261,7 +263,7 @@ void CLKernel::run_1d(CLQueue *clqueue, int global_worksize, int local_worksize)
 }
 
 void CLKernel::run(int ND, const size_t *global_ws, const size_t *local_ws) {
-    run(easycl->queue, ND, global_ws, local_ws);
+    run(cl->queue, ND, global_ws, local_ws);
 }
 
 void CLKernel::run(CLQueue *clqueue, int ND, const size_t *global_ws, const size_t *local_ws) {
@@ -275,15 +277,15 @@ void CLKernel::run_1d(cl_command_queue *queue, int global_worksize, int local_wo
 }
 
 void CLKernel::run(cl_command_queue *queue, int ND, const size_t *global_ws, const size_t *local_ws) {
-	//cout << "running kernel" << std::endl;
+  //cout << "running kernel" << std::endl;
   cl_event *event = 0;
-  if(easycl->profilingOn) {
+  if(cl->profilingOn) {
     event = new cl_event();
-    easycl->pushEvent(sourceFilename + "." + kernelName, event);
+    cl->pushEvent(sourceFilename + "." + kernelName, event);
   }
-	error = clEnqueueNDRangeKernel(*(queue), kernel, ND, NULL, global_ws, local_ws, 0, NULL, event);
+  error = clEnqueueNDRangeKernel(*(queue), kernel, ND, NULL, global_ws, local_ws, 0, NULL, event);
   if(error != 0) {
-      vector<std::string> splitSource = easycl::split(source, "\n");
+      vector<std::string> splitSource = split(source, "\n");
       std::string sourceWithNumbers = "\nkernel source:\n";
       for(int i = 0; i < (int)splitSource.size(); i++) {
           sourceWithNumbers += toString(i + 1) + ": " + splitSource[i] + "\n";
@@ -311,9 +313,9 @@ void CLKernel::run(cl_command_queue *queue, int ND, const size_t *global_ws, con
 		        throw std::runtime_error(sourceWithNumbers + "\nSomething went wrong, code " + toString(error));
       }
 	}
-	easycl->checkError(error);
-	//        error = clFinish(easycl->queue);
-	//        easycl->checkError(error);
+	cl->checkError(error);
+	//        error = clFinish(cl->queue);
+	//        cl->checkError(error);
 	//}
 
 	//void retrieveresultsandcleanup() {
@@ -374,4 +376,4 @@ EASYCL_INSTANTIATE_FOR_TYPE(uint64_t);
 //template EasyCL_EXPORT CLKernel *CLKernel::inout(int N, int *data);
 
 
-
+}

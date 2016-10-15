@@ -9,6 +9,7 @@
 #include "test/asserts.h"
 
 using namespace std;
+using namespace easycl;
 
 TEST(testcopybuffer, main) {
     if(!EasyCL::isOpenCLAvailable()) {

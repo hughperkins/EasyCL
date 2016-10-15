@@ -11,6 +11,8 @@
 #include "EasyCL.h"
 #include "CLWrapper.h"
 
+namespace easycl {
+
 // this wraps an existing array, which we wont free, rather than creating a new array
 // probably more efficient....
 class CLFloatWrapperConst : public CLWrapper {
@@ -47,4 +49,4 @@ public:
         return hostarray;
     }
 };
-
+}

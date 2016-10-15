@@ -18,6 +18,7 @@ using namespace std;
 #define STATIC
 #define PUBLIC
 
+namespace easycl {
 PUBLIC TemplatedKernel::TemplatedKernel(EasyCL *cl) :
         cl(cl) {
     templater = new LuaTemplater();
@@ -78,4 +79,4 @@ CLKernel *TemplatedKernel::_buildKernel(std::string uniqueName, std::string file
 PUBLIC std::string TemplatedKernel::getRenderedKernel(std::string templateSource) {
     return templater->render(templateSource);
 }
-
+}

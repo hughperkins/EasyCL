@@ -5,6 +5,7 @@
 #include "EasyCL.h"
 
 using namespace std;
+using namespace easycl;
 
 static const char *getKernel();
 

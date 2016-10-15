@@ -24,6 +24,8 @@ using namespace std;
 #define STATIC
 #define PUBLIC
 
+namespace easycl {
+
 bool StatefulTimer::enabled = false;
 
 PUBLIC STATIC StatefulTimer *StatefulTimer::instance() {
@@ -135,4 +137,4 @@ void StatefulTimer::_timeCheck(const char *_state) {
     countByState[state]++;
     last = now;
 }
-
+}

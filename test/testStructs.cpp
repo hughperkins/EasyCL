@@ -13,6 +13,8 @@ using namespace std;
 
 static const char *getKernel();
 
+using namespace easycl;
+
 typedef struct MyStruct {
     int anint;
     float afloat;

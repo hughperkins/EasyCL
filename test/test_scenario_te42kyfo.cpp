@@ -6,6 +6,7 @@
 #include "test/asserts.h"
 
 using namespace std;
+using namespace easycl;
 
 static const char *getKernel();
 

@@ -2,6 +2,8 @@
 
 #include "EasyCL_export.h"
 
+namespace easycl {
+
 class EasyCL_EXPORT CLArray {
 public:
     int N;
@@ -9,13 +11,13 @@ public:
     bool onDevice;
 
     cl_mem devicearray;
-    EasyCL *easycl; // NOT owned by this object, so dont free!
+    EasyCL *cl; // NOT owned by this object, so dont free!
 
     cl_int error;
 
-    CLArray(int N, EasyCL *easycl) {
+    CLArray(int N, EasyCL *cl) {
         this->N = N;
-        this->easycl = easycl;
+        this->cl = cl;
         error = CL_SUCCESS;
 
         onDevice = false;
@@ -31,19 +33,19 @@ public:
     virtual void *getHostArray() = 0;
     void createOnDevice() {
         assert(!onHost && !onDevice);
-        devicearray = clCreateBuffer(*(easycl->context), CL_MEM_READ_WRITE, getElementSize() * N, 0, &error);
+        devicearray = clCreateBuffer(*(cl->context), CL_MEM_READ_WRITE, getElementSize() * N, 0, &error);
         assert(error == CL_SUCCESS);        
         onDevice = true;        
     }
     void copyToDevice() {
         assert(onHost && !onDevice);
-        devicearray = clCreateBuffer(*(easycl->context), CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, getElementSize() * N, getHostArray(), &error);
-        easycl->checkError(error);
+        devicearray = clCreateBuffer(*(cl->context), CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, getElementSize() * N, getHostArray(), &error);
+        cl->checkError(error);
         onDevice = true;
     }
     void moveToDevice() {
         assert(onHost && !onDevice);
-        devicearray = clCreateBuffer(*(easycl->context), CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, getElementSize() * N, getHostArray(), &error);
+        devicearray = clCreateBuffer(*(cl->context), CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, getElementSize() * N, getHostArray(), &error);
         assert(error == CL_SUCCESS);
         deleteHostArray();
         onDevice = true;
@@ -59,8 +61,8 @@ public:
             allocateHostArray(N);
             onHost = true;                
         }
-        error = clEnqueueReadBuffer(*(easycl->queue), devicearray, CL_TRUE, 0, getElementSize() * N, getHostArray(), 0, NULL, NULL);    
-        easycl->checkError(error);
+        error = clEnqueueReadBuffer(*(cl->queue), devicearray, CL_TRUE, 0, getElementSize() * N, getHostArray(), 0, NULL, NULL);    
+        cl->checkError(error);
     }
     void deleteFromHost(){
         assert(onHost);
@@ -91,4 +93,4 @@ public:
     }
     virtual int getElementSize() = 0;
 };
-
+}

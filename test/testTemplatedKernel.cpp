@@ -14,6 +14,7 @@
 #include "templates/TemplatedKernel.h"
 
 using namespace std;
+using namespace easycl;
 
 TEST(testTemplatedKernel, basic) {
     EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();

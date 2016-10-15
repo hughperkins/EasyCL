@@ -44,4 +44,3 @@ namespace easycl {
         std::string toString();
     };
 }
-

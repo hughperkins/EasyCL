@@ -18,6 +18,8 @@
 
 using namespace std;
 
+namespace easycl {
+
 void printDeviceInfoKB(string valuename, cl_device_id deviceId, cl_device_info name) {
     cl_ulong somelong = 0;
     clGetDeviceInfo(deviceId, name, sizeof(cl_ulong), &somelong, 0);
@@ -98,4 +100,4 @@ int64_t getDeviceInfoInt64(cl_device_id deviceId, cl_device_info name) {
     return somelong;
 }
 
-
+}

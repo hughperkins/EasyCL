@@ -13,6 +13,7 @@
 #include "templates/LuaTemplater.h"
 
 using namespace std;
+using namespace easycl;
 
 TEST(testLuaTemplater, basicsubstitution1) {
     string source = "This is my {{avalue}} template.";

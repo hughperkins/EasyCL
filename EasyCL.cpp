@@ -28,6 +28,8 @@ using namespace std;
 #include "CLKernel.h"
 #include "util/easycl_stringhelper.h"
 
+namespace easycl {
+
 CLQueue::CLQueue(EasyCL *cl) : cl(cl) {
     cl_int err;
     this->queue = clCreateCommandQueue(*cl->context, cl->device, 0, &err);
@@ -593,3 +595,4 @@ bool EasyCL::kernelExists(std::string name) {
     return kernelByName.count(name) != 0;
 }
 
+}

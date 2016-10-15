@@ -17,6 +17,8 @@ using namespace std;
 
 static const char *getKernel();
 
+using namespace easycl;
+
 TEST(testqueues, main) {
     cout << "start" << endl;
     if(!EasyCL::isOpenCLAvailable()) {

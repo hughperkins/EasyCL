@@ -12,6 +12,7 @@
 //#include "test/Timer.h"
 
 using namespace std;
+using namespace easycl;
 
 static const char *getKernel();
 

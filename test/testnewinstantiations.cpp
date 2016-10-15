@@ -7,6 +7,8 @@ using namespace std;
 
 static const char *getKernel();
 
+using namespace easycl;
+
 void simpleTest(EasyCL *cl) {
     CLKernel *kernel = cl->buildKernelFromString(getKernel(), "test", "");
     float in[5];
