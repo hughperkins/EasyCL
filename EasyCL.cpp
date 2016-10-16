@@ -35,6 +35,10 @@ CLQueue::CLQueue(EasyCL *cl) : cl(cl) {
     this->queue = clCreateCommandQueue(*cl->context, cl->device, 0, &err);
     cl->checkError(err);
 }
+CLQueue::CLQueue(EasyCL *cl, cl_command_queue queue) :
+        cl(cl), queue(queue) {
+    // takes ownership of this queue. releases it at the end (if we delete this CLQueue object)
+}
 CLQueue::~CLQueue() {
     cl_int err = clReleaseCommandQueue(this->queue);
     cl->checkError(err);
@@ -87,6 +91,7 @@ void EasyCL::commonConstructor(cl_platform_id platform_id, cl_device_id device, 
     if (error != CL_SUCCESS) {
        throw std::runtime_error("Error creating OpenCL command queue, OpenCL errorcode: " + errorMessage(error));
     }
+    default_queue = new CLQueue(this, *queue);
 }
 
 EasyCL::EasyCL(cl_platform_id platform_id, cl_device_id device, bool verbose) {

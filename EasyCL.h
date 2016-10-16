@@ -48,7 +48,8 @@ class EasyCL;
 
 class EasyCL_EXPORT CLQueue {
 public:
-    CLQueue(EasyCL *cl);
+    CLQueue(EasyCL *cl); // creates new command queue, releases it at the end
+    CLQueue(EasyCL *cl, cl_command_queue queue); // takes repsonsibilty for this queue; releases it at the end
     ~CLQueue();
 
     EasyCL *cl;
@@ -66,7 +67,7 @@ public:
 
     cl_context *context;
     cl_command_queue *queue;
-    // CLQueue *default_queue;
+    CLQueue *default_queue;  // contains the queue in `queue` above (we dont delete this CLQueue object ever though)
 
     bool profilingOn;
 

@@ -35,10 +35,11 @@ TEST(testqueues, main) {
     // CLKernel *kernel2 = cl->buildKernelFromString(queue, getKernel(), "test", "");
 
     float in[5];
+    float out[5];
     for(int i = 0; i < 5; i++) {
         in[i] = i * 3;
+        out[i] = 0;
     }
-    float out[5];
     kernel->input(5, in);
     kernel->output(5, out);
     size_t global = 5;
@@ -53,6 +54,7 @@ TEST(testqueues, main) {
     // in[5];
     for(int i = 0; i < 5; i++) {
         in[i] = i * 3;
+        out[i] = 0;
     }
     // float out[5];
     kernel->input(5, in);
@@ -69,6 +71,7 @@ TEST(testqueues, main) {
     // in[5];
     for(int i = 0; i < 5; i++) {
         in[i] = i * 3;
+        out[i] = 0;
     }
     // float out[5];
     kernel->input(5, in);
@@ -85,6 +88,7 @@ TEST(testqueues, main) {
     // in[5];
     for(int i = 0; i < 5; i++) {
         in[i] = i * 3;
+        out[i] = 0;
     }
     // float out[5];
     kernel->input(5, in);
@@ -101,6 +105,7 @@ TEST(testqueues, main) {
     // in[5];
     for(int i = 0; i < 5; i++) {
         in[i] = i * 3;
+        out[i] = 0;
     }
     // float out[5];
     kernel->input(5, in);
@@ -116,6 +121,57 @@ TEST(testqueues, main) {
 
     delete queue2;
     delete queue3;
+
+    cout << "tests completed ok" << endl;
+}
+
+TEST(testqueues, defaultqueue) {
+    cout << "start" << endl;
+    if(!EasyCL::isOpenCLAvailable()) {
+        cout << "opencl library not found" << endl;
+        exit(-1);
+    }
+    cout << "found opencl library" << endl;
+
+    EasyCL *cl = EasyCL::createForFirstGpuOtherwiseCpu();
+
+    CLKernel *kernel = cl->buildKernelFromString(getKernel(), "test", "");
+
+    float in[5];
+    float out[5];
+    for(int i = 0; i < 5; i++) {
+        in[i] = i * 3;
+        out[i] = 0;
+    }
+    kernel->input(5, in);
+    kernel->output(5, out);
+    size_t global = 5;
+    size_t local = 5;
+    kernel->run(1, &global, &local);
+    cl->finish();
+    assertEquals(out[0] , 7);
+    assertEquals(out[1] , 10);
+    assertEquals(out[2] , 13);
+    assertEquals(out[3] , 16);
+    assertEquals(out[4] , 19);
+
+    for(int i = 0; i < 5; i++) {
+        in[i] = i * 3;
+        out[i] = 0;
+    }
+
+    cout << "cl->queue " << (void *)cl->queue << endl;
+    cout << "*cl->queue " << (void *)*cl->queue << endl;
+    cout << "cl->default_queue->queue" << (void *)cl->default_queue->queue << endl;
+    kernel->input(5, in);
+    kernel->output(5, out);
+    kernel->run(cl->default_queue, 1, &global, &local);
+    cl->finish();
+    assertEquals(out[0] , 7);
+    assertEquals(out[1] , 10);
+    assertEquals(out[2] , 13);
+    assertEquals(out[3] , 16);
+    assertEquals(out[4] , 19);
 
     cout << "tests completed ok" << endl;
 }
