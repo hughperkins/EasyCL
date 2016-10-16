@@ -425,6 +425,8 @@ What if I just have a question?
 
 # Recent changes
 
+* 2016 Oct 16th:
+  * added EasyCL::default_queue, which is a `CLQueue`, containing `EasyCL::queue` `cl_command_queue`
 * 2016 Oct 15th:
   * master, and versions 4.0.0 and above, are wrapped in a namespace `easycl` now.  Since it's a breaking change, in terms of compatibility, I've bumped the major version number
 * 2016 Jan 3rd:
