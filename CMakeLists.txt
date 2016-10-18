@@ -17,6 +17,7 @@ OPTION(BUILD_TESTS "Build unit-tests." OFF)
 OPTION(DEV_RUN_COG "Only EasyCL maintainers need this, otherwise set to 'OFF'." OFF)
 OPTION(PROVIDE_LUA_ENGINE "eg for Torch, we use Torch's engine." ON)
 OPTION(USE_CLEW "Use clew, for dynamic runtime linking with opencl." ON)
+OPTION(BUILD_SHARED "Build shared (cannot turn off without disabling clew." ON)
 #set(TYPEDEF_INT64 int64_t CACHE STRING "typedef for int64")
 #set(TYPEDEF_UINT64 uint64_t CACHE STRING "typedef for uint64")
 
@@ -78,10 +79,17 @@ endif(PROVIDE_LUA_ENGINE)
 
 # add_definitions(-DCL_USE_DEPRECATED_OPENCL_1_0_APIS)
 
+if(BUILD_SHARED)
 add_library(EasyCL SHARED EasyCL.cpp CLKernel.cpp CLWrapper.cpp platforminfo_helper.cpp deviceinfo_helper.cpp DevicesInfo.cpp DeviceInfo.cpp 
   util/easycl_stringhelper.cpp util/StatefulTimer.cpp
   ${lua_src}
   ${TEMPLATESRC})
+else()
+add_library(EasyCL EasyCL.cpp CLKernel.cpp CLWrapper.cpp platforminfo_helper.cpp deviceinfo_helper.cpp DevicesInfo.cpp DeviceInfo.cpp 
+  util/easycl_stringhelper.cpp util/StatefulTimer.cpp
+  ${lua_src}
+  ${TEMPLATESRC})
+endif()
 if(WIN32)
     target_link_libraries(EasyCL winmm) # needed for timeGetTime
     add_definitions(-D_CRT_SECURE_NO_WARNINGS)
