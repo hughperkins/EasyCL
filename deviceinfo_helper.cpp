@@ -99,5 +99,19 @@ int64_t getDeviceInfoInt64(cl_device_id deviceId, cl_device_info name) {
     }
     return somelong;
 }
+bool getDeviceInfoBool(cl_device_id deviceId, cl_device_info name) {
+    cl_bool val = false;
+    cl_int error = clGetDeviceInfo(deviceId, name, sizeof(val), &val, 0);
+    if(error != CL_SUCCESS) {
+        if(error == CL_INVALID_DEVICE) {
+            throw runtime_error("Failed to obtain info for device id " + EasyCL::toString(deviceId) + ": invalid device");
+        } else if(error == CL_INVALID_VALUE) {
+            throw runtime_error("Failed to obtain device info " + EasyCL::toString(name) + " for device id " + EasyCL::toString(deviceId) + ": invalid value");
+        } else {
+            throw runtime_error("Failed to obtain device info " + EasyCL::toString(name) + " for device id " + EasyCL::toString(deviceId) + ": unknown error code: " + EasyCL::toString(error) );
+        }
+    }
+    return (bool)val;
+}
 
 }
