@@ -21,7 +21,7 @@ script:
   - otool -L ../dist/lib/libEasyCL.dylib
   - otool -l ../dist/lib/libEasyCL.dylib | grep RPATH -A2
   - ../dist/bin/gpuinfo
-  - ../dist/bin/easycl_unittests tests=-SLOW*:testlocal*:testnewinstantiations.createForFirstGpu:testnewinstantiations.createForIndexedGpu
+  - ../dist/bin/easycl_unittests tests=-SLOW*:testlocal*:testnewinstantiations.createForFirstGpu:testnewinstantiations.createForIndexedGpu:testDeviceInfo.gpus
 
 notifications:
   email:
