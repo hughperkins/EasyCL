@@ -74,6 +74,7 @@ public:
     CLKernel *out(CLArray *clarray1d) { return output(clarray1d); }
 
     CLKernel *inout(cl_mem *buf);
+    CLKernel *in_nullptr();
 
     CLKernel *input(CLWrapper *wrapper);
     CLKernel *output(CLWrapper *wrapper);

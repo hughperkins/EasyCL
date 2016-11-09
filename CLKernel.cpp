@@ -76,15 +76,15 @@ CLKernel *CLKernel::output(CLArray *clarray1d) {
 }
 
 CLKernel *CLKernel::inout(cl_mem *buf) {
-    // assert(clarray1d != 0);
-    // if(!clarray1d->isOnDevice()) {
-    //     clarray1d->moveToDevice();
-    // }
-    // if(clarray1d->isOnHost()) {
-    //     clarray1d->deleteFromHost();
-    // }
-    // cl_mem *devicearray = clarray1d->getDeviceArray();
     error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), buf);
+    cl->checkError(error);
+    nextArg++;
+    return this;
+}
+
+CLKernel *CLKernel::in_nullptr() {
+    // this is for arguments accepting a pointer in the kernel, cl_mem on hostside
+    error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), 0);
     cl->checkError(error);
     nextArg++;
     return this;
