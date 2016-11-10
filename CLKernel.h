@@ -101,6 +101,12 @@ public:
     CLKernel *input(float value);
     CLKernel *in(float value);
 
+    CLKernel *in_int64(int64_t value);
+    CLKernel *in_int32(int32_t value);
+    CLKernel *in_uint64(uint64_t value);
+    CLKernel *in_uint32(uint32_t value);
+
+    // these are deprecated:
     CLKernel *input(int32_t value);
     CLKernel *in(int32_t value);
     CLKernel *input(int64_t value);

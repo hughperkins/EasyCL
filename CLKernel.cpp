@@ -179,6 +179,35 @@ CLKERNEL_CREATE_SCALAR_INPUT(uint64_t, UInt64);
 
 CLKERNEL_CREATE_SCALAR_INPUT(float, Float);
 
+CLKernel *CLKernel::in_int64(int64_t value) {
+    inputArgInt64s.push_back(value);
+    error = clSetKernelArg(kernel, nextArg, sizeof(value), &(inputArgInt64s[inputArgInt64s.size() - 1]));
+    cl->checkError(error);
+    nextArg++;
+    return this;
+}
+CLKernel *CLKernel::in_int32(int32_t value) {
+    inputArgInt32s.push_back(value);
+    error = clSetKernelArg(kernel, nextArg, sizeof(value), &(inputArgInt64s[inputArgInt32s.size() - 1]));
+    cl->checkError(error);
+    nextArg++;
+    return this;
+}
+CLKernel *CLKernel::in_uint64(uint64_t value) {
+    inputArgUInt64s.push_back(value);
+    error = clSetKernelArg(kernel, nextArg, sizeof(value), &(inputArgInt64s[inputArgUInt64s.size() - 1]));
+    cl->checkError(error);
+    nextArg++;
+    return this;
+}
+CLKernel *CLKernel::in_uint32(uint32_t value) {
+    inputArgUInt32s.push_back(value);
+    error = clSetKernelArg(kernel, nextArg, sizeof(value), &(inputArgInt64s[inputArgUInt32s.size() - 1]));
+    cl->checkError(error);
+    nextArg++;
+    return this;
+}
+
 //CLKernel *CLKernel::input(unsigned int value) {
 //	inputArgUInts.push_back(value);
 //	error = clSetKernelArg(kernel, nextArg, sizeof(unsigned int), &(inputArgUInts[inputArgUInts.size() - 1]));
