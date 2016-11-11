@@ -408,22 +408,23 @@ CLKernel *EasyCL::buildKernelFromString(string source, string kernelname, string
 
     cl_kernel kernel = clCreateKernel(program, kernelname.c_str(), &error);
     if(error != CL_SUCCESS) {
-        vector<std::string> splitSource = easycl::split(source, "\n");
-        std::string sourceWithNumbers = "\nkernel source:\n";
-        for(int i = 0; i < (int)splitSource.size(); i++) {
-            sourceWithNumbers += toString(i + 1) + ": " + splitSource[i] + "\n";
-        }
-        sourceWithNumbers += "\n";
         std::string exceptionMessage = "";
         switch(error) {
             case -46:
-                exceptionMessage = sourceWithNumbers + "\nInvalid kernel name, code -46, kernel " + kernelname + "\n" + buildLogMessage;
+                exceptionMessage = "Invalid kernel name, code -46, kernel " + kernelname + "\n" + buildLogMessage;
                 break;
             default:
-                exceptionMessage = sourceWithNumbers + "\nSomething went wrong with clCreateKernel, OpenCL erorr code " + toString(error) + "\n" + buildLogMessage;
+                exceptionMessage = "Something went wrong with clCreateKernel, OpenCL error code " + toString(error) + "\n" + buildLogMessage;
                 break;
         }
         cout << "kernel build error:\n" << exceptionMessage << endl;
+        cout << "storing failed kernel into: easycl-failedkernel.cl" << endl;
+        exceptionMessage += "storing failed kernel into: easycl-failedkernel.cl\n";
+
+        ofstream f;
+        f.open("easycl-failedkernel.cl", ios_base::out);
+        f << source << endl;
+        f.close();
         throw std::runtime_error(exceptionMessage);
     }
     checkError(error);
