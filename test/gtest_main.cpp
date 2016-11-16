@@ -6,7 +6,7 @@
 
 #include <iostream>
 
-#include "easycl_stringhelper.h"
+#include "util/easycl_stringhelper.h"
 
 #include "gtest/gtest.h"
 

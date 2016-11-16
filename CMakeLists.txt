@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 2.8)
 #endif()
 
 if(UNIX)
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wnon-virtual-dtor")
 endif()
 
 if (NOT CMAKE_BUILD_TYPE)
@@ -149,7 +149,7 @@ if(BUILD_TESTS)
       test/testfloatarray.cpp test/testeasycl.cpp test/testinout.cpp test/testintwrapper_huge.cpp
       test/testlocal.cpp test/testdefines.cpp test/testbuildlog.cpp test/testnewinstantiations.cpp
       test/testucharwrapper.cpp test/testkernelstore.cpp test/testdirtywrapper.cpp test/testDeviceInfo.cpp
-      ${TEMPLATETESTS} test/easycl_stringhelper.cpp test/testStructs.cpp
+      ${TEMPLATETESTS} test/testStructs.cpp
       test/asserts.cpp test/gtest_main.cpp test/GtestGlobals.cpp test/testprofiling.cpp
       test/testcopybuffer.cpp test/teststatefultimer.cpp
       ${CLBLAS_TEST_SOURCES})

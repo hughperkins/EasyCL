@@ -17,6 +17,7 @@
 namespace easycl {
     class IHasToString {
     public:
+        virtual ~IHasToString() {}
         virtual std::string toString() = 0;
     };
 
