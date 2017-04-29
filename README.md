@@ -94,6 +94,11 @@ You can run `gpuinfo` to get a list of platforms and devices on your system.
 
 There are some examples in the [test](test) subdirectory.
 
+Environment Vars
+----------------
+
+You can use the environment variable `CL_GPUOFFSET` to choose a GPU. It shifts the gpu numbering downwards by this offset, ie gpu index 1 becomes 0, index 2 becomes 1. For example, if a program uses gpu index 0 by default, setting `CL_GPUOFFSET` to `1` will choose the second gpu, and setting it to `2` will choose the third gpu.
+
 Examples
 --------
 
@@ -425,6 +430,8 @@ What if I just have a question?
 
 # Recent changes
 
+* 2017 Apr 29th:
+  * added var `CL_GPUOFFSET`, which lets you choose a GPU, by setting this var to 1,2,3, ...
 * 2016 Oct 16th:
   * added EasyCL::default_queue, which is a `CLQueue`, containing `EasyCL::queue` `cl_command_queue`
 * 2016 Oct 15th:
@@ -482,5 +489,5 @@ What if I just have a question?
 License
 -------
 
-EasyCL is available under MPL v2 license, http://mozilla.org/MPL/2.0/
+EasyCL is available under MPL v2 license, http://mozilla.org/MPL/2.0/19
 
