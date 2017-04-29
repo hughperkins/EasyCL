@@ -139,6 +139,13 @@ EasyCL *EasyCL::createForIndexedGpu(int gpu, bool verbose) {
             throw std::runtime_error("OpenCL library not found");
         }
     #endif
+    char *gpuOffsetStr = getenv("CL_GPUOFFSET");
+    // int gpuOffset = 0;
+    if(gpuOffsetStr != 0) {
+        int newGpu = gpu + atoi(gpuOffsetStr);
+        cout << "CL_GPUOFFSET var detected, changing gpu offset from " << gpu << " to " << newGpu << endl;
+        gpu = newGpu;
+    }
     cl_int error;
     int currentGpuIndex = 0;
     cl_platform_id platform_ids[10];
