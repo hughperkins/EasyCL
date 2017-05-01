@@ -153,7 +153,10 @@ if(BUILD_TESTS)
       test/asserts.cpp test/gtest_main.cpp test/GtestGlobals.cpp test/testprofiling.cpp
       test/testcopybuffer.cpp test/teststatefultimer.cpp
       ${CLBLAS_TEST_SOURCES})
-  target_link_libraries(easycl_unittests easycl_gtest EasyCL clew)
+  target_link_libraries(easycl_unittests easycl_gtest EasyCL)
+  if(USE_CLEW)
+     target_link_libraries(easycl_unittests clew)
+  endif(USE_CLEW)
   target_include_directories(easycl_unittests PRIVATE thirdparty/gtest)
 endif(BUILD_TESTS)
 
@@ -190,3 +193,10 @@ if(BUILD_TESTS)
   )
 endif(BUILD_TESTS)
 
+########### Add uninstall target ###############
+CONFIGURE_FILE(
+  "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/cmake/cmake_uninstall.cmake"
+  IMMEDIATE @ONLY)
+ADD_CUSTOM_TARGET(uninstall
+  "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake/cmake_uninstall.cmake") 
