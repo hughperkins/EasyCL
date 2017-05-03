@@ -22,6 +22,13 @@ namespace easycl {
         return EasyCL::toString(error);
     }
     DeviceInfo DevicesInfo::getGpuInfo(int index) {
+        char *gpuOffsetStr = getenv("CL_GPUOFFSET");
+        if(gpuOffsetStr != 0) {
+            int gpuOffset = atoi(gpuOffsetStr);
+            int newIndex = index + gpuOffset;
+            cout << "CL_GPUOFFSET var detected, increasing gpu index from " << index << " to " << newIndex << endl;
+            index = newIndex;
+        }
         return getDeviceInfo(index, CL_DEVICE_TYPE_GPU | CL_DEVICE_TYPE_ACCELERATOR);
     }
     DeviceInfo DevicesInfo::getDeviceInfo(int index) {
@@ -89,7 +96,19 @@ namespace easycl {
         }
     }
     int DevicesInfo::getNumGpus() {
-        return getNumDevices(CL_DEVICE_TYPE_GPU | CL_DEVICE_TYPE_ACCELERATOR);
+        char *gpuOffsetStr = getenv("CL_GPUOFFSET");
+        int gpuOffset = 0;
+        int numGpus = getNumDevices(CL_DEVICE_TYPE_GPU | CL_DEVICE_TYPE_ACCELERATOR);
+        if(gpuOffsetStr != 0) {
+            gpuOffset = atoi(gpuOffsetStr);
+            int newNumGpus = numGpus - gpuOffset;
+            if(newNumGpus < 0) {
+                newNumGpus = 0;
+            }
+            cout << "CL_GPUOFFSET var detected, decreasing num gpus from " << numGpus << " to " << newNumGpus << endl;
+            numGpus = newNumGpus;
+        }
+        return numGpus;
     }
     int DevicesInfo::getNumDevices() {
         return getNumDevices(CL_DEVICE_TYPE_ALL);
