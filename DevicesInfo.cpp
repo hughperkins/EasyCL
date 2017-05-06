@@ -158,6 +158,17 @@ namespace easycl {
         return numDevices;
     }
     void DevicesInfo::getIdForIndexedGpu(int gpu, cl_platform_id *p_platformId, cl_device_id *p_deviceId) {
+        char *gpuOffsetStr = getenv("CL_GPUOFFSET");
+        int gpuOffset = 0;
+        if(gpuOffsetStr != 0) {
+            gpuOffset = atoi(gpuOffsetStr);
+            int newGpu = gpu + gpuOffset;
+            // if(newNumGpus < 0) {
+            //     newNumGpus = 0;
+            // }
+            cout << "CL_GPUOFFSET var detected, increasing gpu offset from " << gpu << " to " << newGpu << endl;
+            gpu = newGpu;
+        }
         getDeviceIds(gpu, CL_DEVICE_TYPE_GPU | CL_DEVICE_TYPE_ACCELERATOR, p_platformId, p_deviceId);
     }
     void DevicesInfo::getIdForIndexedDevice(int device, cl_platform_id *p_platformId, cl_device_id *p_deviceId) {
