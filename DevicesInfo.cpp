@@ -72,7 +72,7 @@ namespace easycl {
                throw std::runtime_error("Error getting num devices for platform " + EasyCL::toString(platform) + ": " +
                    errorMessage(error));
             }
-            cout << "num devices this platform " << num_devices << endl;
+            // cout << "num devices this platform " << num_devices << endl;
             cl_device_id *device_ids = new cl_device_id[num_devices];
             error = clGetDeviceIDs(platform_id, types, num_devices, device_ids, &num_devices);
             if (error != CL_SUCCESS) {
