@@ -144,7 +144,7 @@ namespace easycl {
                 continue;
 //                throw std::runtime_error("Error getting num device ids for platform " + EasyCL::toString(platform) + ": " + errorMessage(error));
             }
-            cout << "num devices " << num_devices << endl;
+            // cout << "num devices " << num_devices << endl;
 //            cl_device_id *device_ids = new cl_device_id[num_devices];
 //            error = clGetDeviceIDs(platform_id, types, num_devices, device_ids, &num_devices);
 //            cout << "num devices " << num_devices << endl;
