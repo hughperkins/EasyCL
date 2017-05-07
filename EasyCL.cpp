@@ -564,6 +564,7 @@ void EasyCL::checkError(cl_int error) {
                 message = "CL_INVALID_BUFFER_SIZE";
                 break;
         }
+        cout << "opencl execution error, code " << error << " " << message << endl;
         throw std::runtime_error(std::string("OpenCL error, code: ") + message);
     }
 }
