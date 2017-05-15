@@ -63,7 +63,7 @@ namespace easycl {
 //        int numDevices = 0;
         for(int platform =  0; platform < (int)num_platforms; platform++) {
             cl_platform_id platform_id = platform_ids[platform];
-            cout << "checking platform id " << platform_id << endl;
+            // cout << "checking platform id " << platform_id << endl;
 //            cl_device_id device_ids[100];
             cl_uint num_devices;
             error = clGetDeviceIDs(platform_id, types, 0, 0, &num_devices);
@@ -129,7 +129,7 @@ namespace easycl {
             return 0;
 //           throw std::runtime_error("Error getting platforms ids: " + errorMessage(error));
         }
-        cout << "num platforms " << num_platforms << endl;
+        // cout << "num platforms " << num_platforms << endl;
         if(num_platforms == 0) {
             return 0;
 //           throw std::runtime_error("Error: no platforms available");
@@ -137,7 +137,7 @@ namespace easycl {
         int numDevices = 0;
         for(int platform =  0; platform < (int)num_platforms; platform++) {
             cl_platform_id platform_id = platform_ids[platform];
-            cout << "checking platform id " << platform_id << endl;
+            // cout << "checking platform id " << platform_id << endl;
             cl_uint num_devices;
             error = clGetDeviceIDs(platform_id, types, 0, 0, &num_devices);
             if (error != CL_SUCCESS) {
