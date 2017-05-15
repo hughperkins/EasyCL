@@ -74,9 +74,11 @@ void EasyCL::commonConstructor(cl_platform_id platform_id, cl_device_id device, 
     this->device = device;
 
     if(verbose) {
-        std::cout << "Using " << getPlatformInfoString(platform_id, CL_PLATFORM_VENDOR) << " , OpenCL platform: " << getPlatformInfoString(platform_id, CL_PLATFORM_NAME) << std::endl;
+        // std::cout << "Using " << getPlatformInfoString(platform_id, CL_PLATFORM_VENDOR) << ", OpenCL platform: " << getPlatformInfoString(platform_id, CL_PLATFORM_NAME) << std::endl;
+        std::cout << "OpenCL platform: " << getPlatformInfoString(platform_id, CL_PLATFORM_NAME) << std::endl;
     //    std::cout << "Using " << getPlatformInfoString(platform_id, CL_PLATFORM_NAME) << std::endl;
-        std::cout << "Using OpenCL device: " << getDeviceInfoString(device, CL_DEVICE_NAME) << std::endl;
+        // std::cout << "Using OpenCL device: " << getDeviceInfoString(device, CL_DEVICE_NAME) << std::endl;
+        std::cout << "OpenCL device: " << getDeviceInfoString(device, CL_DEVICE_NAME) << std::endl;
     }
 
     // Context
@@ -142,9 +144,12 @@ EasyCL *EasyCL::createForIndexedGpu(int gpu, bool verbose) {
     char *gpuOffsetStr = getenv("CL_GPUOFFSET");
     // int gpuOffset = 0;
     if(gpuOffsetStr != 0) {
-        int newGpu = gpu + atoi(gpuOffsetStr);
-        cout << "CL_GPUOFFSET var detected, changing gpu offset from " << gpu << " to " << newGpu << endl;
-        gpu = newGpu;
+        int gpuOffset = atoi(gpuOffsetStr);
+        if(gpuOffset != 0) {
+            int newGpu = gpu + gpuOffset;
+            cout << "CL_GPUOFFSET var detected, changing gpu offset from " << gpu << " to " << newGpu << endl;
+            gpu = newGpu;
+        }
     }
     cl_int error;
     int currentGpuIndex = 0;

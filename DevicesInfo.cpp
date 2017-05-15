@@ -25,9 +25,11 @@ namespace easycl {
         char *gpuOffsetStr = getenv("CL_GPUOFFSET");
         if(gpuOffsetStr != 0) {
             int gpuOffset = atoi(gpuOffsetStr);
-            int newIndex = index + gpuOffset;
-            cout << "CL_GPUOFFSET var detected, increasing gpu index from " << index << " to " << newIndex << endl;
-            index = newIndex;
+            if(gpuOffset != 0) {
+                int newIndex = index + gpuOffset;
+                cout << "CL_GPUOFFSET var detected, increasing gpu index from " << index << " to " << newIndex << endl;
+                index = newIndex;
+            }
         }
         return getDeviceInfo(index, CL_DEVICE_TYPE_GPU | CL_DEVICE_TYPE_ACCELERATOR);
     }
@@ -101,12 +103,14 @@ namespace easycl {
         int numGpus = getNumDevices(CL_DEVICE_TYPE_GPU | CL_DEVICE_TYPE_ACCELERATOR);
         if(gpuOffsetStr != 0) {
             gpuOffset = atoi(gpuOffsetStr);
-            int newNumGpus = numGpus - gpuOffset;
-            if(newNumGpus < 0) {
-                newNumGpus = 0;
+            if(gpuOffset != 0) {
+                int newNumGpus = numGpus - gpuOffset;
+                if(newNumGpus < 0) {
+                    newNumGpus = 0;
+                }
+                // cout << "CL_GPUOFFSET var detected, decreasing num gpus from " << numGpus << " to " << newNumGpus << endl;
+                numGpus = newNumGpus;
             }
-            cout << "CL_GPUOFFSET var detected, decreasing num gpus from " << numGpus << " to " << newNumGpus << endl;
-            numGpus = newNumGpus;
         }
         return numGpus;
     }
@@ -162,12 +166,14 @@ namespace easycl {
         int gpuOffset = 0;
         if(gpuOffsetStr != 0) {
             gpuOffset = atoi(gpuOffsetStr);
-            int newGpu = gpu + gpuOffset;
-            // if(newNumGpus < 0) {
-            //     newNumGpus = 0;
-            // }
-            cout << "CL_GPUOFFSET var detected, increasing gpu offset from " << gpu << " to " << newGpu << endl;
-            gpu = newGpu;
+            if(gpuOffset != 0) {
+                int newGpu = gpu + gpuOffset;
+                // if(newNumGpus < 0) {
+                //     newNumGpus = 0;
+                // }
+                cout << "CL_GPUOFFSET var detected, increasing gpu offset from " << gpu << " to " << newGpu << endl;
+                gpu = newGpu;
+            }
         }
         getDeviceIds(gpu, CL_DEVICE_TYPE_GPU | CL_DEVICE_TYPE_ACCELERATOR, p_platformId, p_deviceId);
     }
