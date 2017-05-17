@@ -147,7 +147,7 @@ EasyCL *EasyCL::createForIndexedGpu(int gpu, bool verbose) {
         int gpuOffset = atoi(gpuOffsetStr);
         if(gpuOffset != 0) {
             int newGpu = gpu + gpuOffset;
-            cout << "CL_GPUOFFSET var detected, changing gpu offset from " << gpu << " to " << newGpu << endl;
+            // cout << "CL_GPUOFFSET var detected, changing gpu offset from " << gpu << " to " << newGpu << endl;
             gpu = newGpu;
         }
     }

@@ -27,7 +27,7 @@ namespace easycl {
             int gpuOffset = atoi(gpuOffsetStr);
             if(gpuOffset != 0) {
                 int newIndex = index + gpuOffset;
-                cout << "CL_GPUOFFSET var detected, increasing gpu index from " << index << " to " << newIndex << endl;
+                // cout << "CL_GPUOFFSET var detected, increasing gpu index from " << index << " to " << newIndex << endl;
                 index = newIndex;
             }
         }
@@ -171,7 +171,7 @@ namespace easycl {
                 // if(newNumGpus < 0) {
                 //     newNumGpus = 0;
                 // }
-                cout << "CL_GPUOFFSET var detected, increasing gpu offset from " << gpu << " to " << newGpu << endl;
+                // cout << "CL_GPUOFFSET var detected, increasing gpu offset from " << gpu << " to " << newGpu << endl;
                 gpu = newGpu;
             }
         }
