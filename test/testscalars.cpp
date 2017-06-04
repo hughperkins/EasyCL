@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstdlib>
+#include <cmath>
 using namespace std;
 
 #include "gtest/gtest.h"
@@ -70,11 +71,10 @@ TEST(testscalars, test1) {
     assertEquals(int64out[2] ,  (int64_t)(-2524653ll) + 2);
     assertEquals(uint64out[2] , (uint64_t)(1353523545ll + 2));
 
-    assertEquals(floatout[0] , 1.234f);
-    assertEquals(floatout[1] , 2.234f);
-    assertEquals(floatout[2] , 3.234f);
-    assertEquals(floatout[3] , 4.234f);
-    assertEquals(floatout[4] , 5.234f);
+    for(int i = 0; i < 5; i++) {
+        EXPECT_FLOAT_NEAR(1.0f + i + 0.234f, floatout[i]);
+        // EXPECT_TRUE(std::abs(floatout[i] - i - 0.234f) <= 1e-4f);
+    }
     cout << "tests completed ok" << endl;
 
     delete kernel;
