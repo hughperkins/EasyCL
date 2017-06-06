@@ -380,17 +380,17 @@ CLFloatWrapperConst *EasyCL::wrap(int N, float const*source) {
     return new CLFloatWrapperConst(N, source, this);
 }
 
-CLKernel *EasyCL::buildKernel(string kernelfilepath, string kernelname) {
-    return buildKernel(kernelfilepath, kernelname, "");
+CLKernel *EasyCL::buildKernel(string kernelfilepath, string kernelname, bool quiet) {
+    return buildKernel(kernelfilepath, kernelname, "", quiet);
 }
 
-CLKernel *EasyCL::buildKernel(string kernelfilepath, string kernelname, string options) {
+CLKernel *EasyCL::buildKernel(string kernelfilepath, string kernelname, string options, bool quiet) {
     std::string path = kernelfilepath.c_str();
     std::string source = getFileContents(path);
-    return buildKernelFromString(source, kernelname, options, kernelfilepath);
+    return buildKernelFromString(source, kernelname, options, kernelfilepath, quiet);
 }
 
-CLKernel *EasyCL::buildKernelFromString(string source, string kernelname, string options, string sourcefilename) {
+CLKernel *EasyCL::buildKernelFromString(string source, string kernelname, string options, string sourcefilename, bool quiet) {
     size_t src_size = 0;
     const char *source_char = source.c_str();
     src_size = strlen(source_char);
@@ -413,7 +413,9 @@ CLKernel *EasyCL::buildKernelFromString(string source, string kernelname, string
     string buildLogMessage = "";
     if(log_size > 2) {
         buildLogMessage = sourcefilename + " build log: "  + "\n" + build_log;
-        cout << buildLogMessage << endl;
+        if(!quiet) {
+            cout << buildLogMessage << endl;
+        }
     }
     delete[] build_log;
     checkError(error);
@@ -429,6 +431,9 @@ CLKernel *EasyCL::buildKernelFromString(string source, string kernelname, string
                 exceptionMessage = "Something went wrong with clCreateKernel, OpenCL error code " + toString(error) + "\n" + buildLogMessage;
                 break;
         }
+        if(quiet) {
+            cout << buildLogMessage << std::endl;
+        }
         cout << "kernel build error:\n" << exceptionMessage << endl;
         cout << "storing failed kernel into: easycl-failedkernel.cl" << endl;
         exceptionMessage += "storing failed kernel into: easycl-failedkernel.cl\n";
@@ -441,7 +446,9 @@ CLKernel *EasyCL::buildKernelFromString(string source, string kernelname, string
     }
     checkError(error);
 //    clReleaseProgram(program);
-    return new CLKernel(this, sourcefilename, kernelname, source, program, kernel);
+    CLKernel *newkernel = new CLKernel(this, sourcefilename, kernelname, source, program, kernel);
+    newkernel->buildLog = buildLogMessage;
+    return newkernel;
 }
 
 bool EasyCL::isOpenCLAvailable() {

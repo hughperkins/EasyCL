@@ -129,9 +129,9 @@ public:
     CLUCharWrapper *wrap(int N, unsigned char *source);
     CLFloatWrapper *wrap(int N, float *source);
     CLFloatWrapperConst *wrap(int N, float const*source);
-    CLKernel *buildKernel(std::string kernelfilepath, std::string kernelname);
-    CLKernel *buildKernel(std::string kernelfilepath, std::string kernelname, std::string options);
-    CLKernel *buildKernelFromString(std::string source, std::string kernelname, std::string options, std::string sourcefilename = "");
+    CLKernel *buildKernel(std::string kernelfilepath, std::string kernelname, bool quiet=false);
+    CLKernel *buildKernel(std::string kernelfilepath, std::string kernelname, std::string options, bool quiet=false);
+    CLKernel *buildKernelFromString(std::string source, std::string kernelname, std::string options, std::string sourcefilename = "", bool quiet=false);
 
     // simple associate-array of kernels, specific to each EasyCL object
     // so we can cache them easily, if we want

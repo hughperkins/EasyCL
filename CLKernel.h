@@ -1,4 +1,4 @@
-// Copyright Hugh Perkins 2013, 2014, 2015 hughperkins at gmail
+// Copyright Hugh Perkins 2013, 2014, 2015, 2016, 2017 hughperkins at gmail
 //
 // This Source Code Form is subject to the terms of the Mozilla Public License, 
 // v. 2.0. If a copy of the MPL was not distributed with this file, You can 
@@ -129,5 +129,7 @@ public:
     void run(int ND, const size_t *global_ws, const size_t *local_ws);
     void run(cl_command_queue *queue, int ND, const size_t *global_ws, const size_t *local_ws);
     void run(CLQueue *queue, int ND, const size_t *global_ws, const size_t *local_ws);
+
+    std::string buildLog;
 };
 }
