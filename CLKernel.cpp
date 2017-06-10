@@ -177,7 +177,24 @@ CLKERNEL_CREATE_SCALAR_INPUT(uint32_t, UInt32);
 CLKERNEL_CREATE_SCALAR_INPUT(int64_t, Int64);
 CLKERNEL_CREATE_SCALAR_INPUT(uint64_t, UInt64);
 
-CLKERNEL_CREATE_SCALAR_INPUT(float, Float);
+// CLKERNEL_CREATE_SCALAR_INPUT(char, Char);
+// CLKERNEL_CREATE_SCALAR_INPUT(float, Float);
+
+CLKernel *CLKernel::in_char(char value) {
+    inputArgChars.push_back(value);
+    error = clSetKernelArg(kernel, nextArg, sizeof(char), &(inputArgChars[inputArgChars.size() - 1]));
+    cl->checkError(error);
+    nextArg++;
+    return this;
+}
+
+CLKernel *CLKernel::in_float(float value) {
+    inputArgFloats.push_back(value);
+    error = clSetKernelArg(kernel, nextArg, sizeof(float), &(inputArgFloats[inputArgFloats.size() - 1]));
+    cl->checkError(error);
+    nextArg++;
+    return this;
+}
 
 CLKernel *CLKernel::in_int64(int64_t value) {
     inputArgInt64s.push_back(value);
@@ -369,6 +386,7 @@ void CLKernel::run(cl_command_queue *queue, int ND, const size_t *global_ws, con
     inputArgInt64s.clear();
     inputArgUInt64s.clear();
     inputArgFloats.clear();
+    inputArgChars.clear();
     wrappersToDirty.clear();
     nextArg = 0;
 }

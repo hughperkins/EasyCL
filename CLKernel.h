@@ -42,6 +42,7 @@ class EasyCL_EXPORT CLKernel {
     std::vector<int64_t> inputArgInt64s;
     std::vector<uint64_t> inputArgUInt64s;
     std::vector<float> inputArgFloats;
+    std::vector<char> inputArgChars;
 
     std::vector<cl_mem> outputArgBuffers;
     std::vector<void *> outputArgPointers;
@@ -105,6 +106,8 @@ public:
     CLKernel *in_int32(int32_t value);
     CLKernel *in_uint64(uint64_t value);
     CLKernel *in_uint32(uint32_t value);
+    CLKernel *in_char(char value);
+    CLKernel *in_float(float value);
 
     // these are deprecated:
     CLKernel *input(int32_t value);
