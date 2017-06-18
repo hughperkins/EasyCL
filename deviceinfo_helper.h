@@ -21,15 +21,17 @@
 
 #include "mystdint.h"
 
-namespace easycl {
-void printDeviceInfoKB(std::string valuename, cl_device_id deviceId, cl_device_info name);
-void printDeviceInfoMB(std::string valuename, cl_device_id deviceId, cl_device_info name);
-void printDeviceInfo(std::string valuename, cl_device_id deviceId, cl_device_info name);
-void printDeviceInfoArray(std::string valuename, cl_device_id deviceId, cl_device_info name, int length);
-void printDeviceInfoString(std::string valuename, cl_device_id deviceId, cl_device_info name);
+#include "EasyCL_export.h"
 
-std::string getDeviceInfoString(cl_device_id deviceId, cl_device_info name);
-int getDeviceInfoInt(cl_device_id deviceId, cl_device_info name);
-int64_t getDeviceInfoInt64(cl_device_id deviceId, cl_device_info name);
-bool getDeviceInfoBool(cl_device_id deviceId, cl_device_info name);
+namespace easycl {
+EasyCL_EXPORT void printDeviceInfoKB(std::string valuename, cl_device_id deviceId, cl_device_info name);
+EasyCL_EXPORT void printDeviceInfoMB(std::string valuename, cl_device_id deviceId, cl_device_info name);
+EasyCL_EXPORT void printDeviceInfo(std::string valuename, cl_device_id deviceId, cl_device_info name);
+EasyCL_EXPORT void printDeviceInfoArray(std::string valuename, cl_device_id deviceId, cl_device_info name, int length);
+EasyCL_EXPORT void printDeviceInfoString(std::string valuename, cl_device_id deviceId, cl_device_info name);
+
+EasyCL_EXPORT std::string getDeviceInfoString(cl_device_id deviceId, cl_device_info name);
+EasyCL_EXPORT int getDeviceInfoInt(cl_device_id deviceId, cl_device_info name);
+EasyCL_EXPORT int64_t getDeviceInfoInt64(cl_device_id deviceId, cl_device_info name);
+EasyCL_EXPORT bool getDeviceInfoBool(cl_device_id deviceId, cl_device_info name);
 }
