@@ -12,10 +12,10 @@
 #include <iostream>
 #include <cstdlib>
 
-// #include "DeepCLDllExport.h"
+#include "../EasyCL_export.h"
 
 namespace easycl {
-    class IHasToString {
+    EasyCL_EXPORT class IHasToString {
     public:
         virtual ~IHasToString() {}
         virtual std::string toString() = 0;
@@ -34,8 +34,8 @@ namespace easycl {
        return myostringstream.str();
     }
 
-    std::vector<std::string> split(const std::string &str, const std::string &separator = " ");
-    std::string trim(const std::string &target);
+    EasyCL_EXPORT std::vector<std::string> split(const std::string &str, const std::string &separator = " ");
+    EasyCL_EXPORT std::string trim(const std::string &target);
 
     inline float atof(std::string stringvalue) {
        return (float)std::atof(stringvalue.c_str());
@@ -54,10 +54,10 @@ namespace easycl {
        }
     }
 
-    std::string replace(std::string targetString, std::string oldValue, std::string newValue);
-    std::string replaceGlobal(std::string targetString, std::string oldValue, std::string newValue);
+    EasyCL_EXPORT std::string replace(std::string targetString, std::string oldValue, std::string newValue);
+    EasyCL_EXPORT std::string replaceGlobal(std::string targetString, std::string oldValue, std::string newValue);
 
-    std::string toLower(std::string in);
+    EasyCL_EXPORT std::string toLower(std::string in);
 
-    void strcpy_safe(char *destination, char const*source, int maxLength);
+    EasyCL_EXPORT void strcpy_safe(char *destination, char const*source, int maxLength);
 }
