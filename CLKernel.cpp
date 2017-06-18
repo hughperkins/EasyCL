@@ -178,7 +178,7 @@ CLKERNEL_CREATE_SCALAR_INPUT(int64_t, Int64);
 CLKERNEL_CREATE_SCALAR_INPUT(uint64_t, UInt64);
 
 // CLKERNEL_CREATE_SCALAR_INPUT(char, Char);
-// CLKERNEL_CREATE_SCALAR_INPUT(float, Float);
+CLKERNEL_CREATE_SCALAR_INPUT(float, Float);
 
 CLKernel *CLKernel::in_char(char value) {
     inputArgChars.push_back(value);
