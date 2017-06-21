@@ -366,7 +366,7 @@ void CLKernel::run(cl_command_queue *queue, int ND, const size_t *global_ws, con
 
     //void retrieveresultsandcleanup() {
     for (int i = 0; i < (int)outputArgBuffers.size(); i++) {
-        clEnqueueReadBuffer(*(queue), outputArgBuffers[i], CL_TRUE, 0, outputArgSizes[i], outputArgPointers[i], 0, NULL, NULL);
+        clEnqueueReadBuffer(*(queue), outputArgBuffers[i], CL_FALSE, 0, outputArgSizes[i], outputArgPointers[i], 0, NULL, NULL);
     }
     //        std::cout << "done" << std::endl;
 
@@ -377,6 +377,7 @@ void CLKernel::run(cl_command_queue *queue, int ND, const size_t *global_ws, con
     for(int i = 0; i < (int)wrappersToDirty.size(); i++) {
         wrappersToDirty[i]->markDeviceDirty();
     }
+    cl->finish();
     buffers.clear();
     outputArgBuffers.clear();
     outputArgPointers.clear();
