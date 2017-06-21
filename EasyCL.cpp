@@ -543,19 +543,19 @@ void EasyCL::dumpProfiling() {
   profilingEvents.clear();
 }
 int EasyCL::getComputeUnits() {
-    return (int)this->getDeviceInfoInt64(CL_DEVICE_MAX_COMPUTE_UNITS);
+    return computeUnits != -1 ? computeUnits : computeUnits = (int)this->getDeviceInfoInt64(CL_DEVICE_MAX_COMPUTE_UNITS);
 }
 int EasyCL::getLocalMemorySize() {
-    return (int)this->getDeviceInfoInt64(CL_DEVICE_LOCAL_MEM_SIZE);
+    return localMemorySize != -1 ? localMemorySize : localMemorySize = (int)this->getDeviceInfoInt64(CL_DEVICE_LOCAL_MEM_SIZE);
 }
 int EasyCL::getLocalMemorySizeKB() {
-    return (int)(this->getDeviceInfoInt64(CL_DEVICE_LOCAL_MEM_SIZE) / 1024);
+    return localMemorySizeKB != -1 ? localMemorySizeKB : localMemorySizeKB = (int)(getLocalMemorySize() / 1024);
 }
 int EasyCL::getMaxWorkgroupSize() {
-    return (int)this->getDeviceInfoInt64(CL_DEVICE_MAX_WORK_GROUP_SIZE);
+    return maxWorkgroupSize != -1 ? maxWorkgroupSize : maxWorkgroupSize = (int)(this->getDeviceInfoInt64(CL_DEVICE_MAX_WORK_GROUP_SIZE));
 }
 int EasyCL::getMaxAllocSizeMB() {
-    return (int)(this->getDeviceInfoInt64(CL_DEVICE_MAX_MEM_ALLOC_SIZE) / 1024 / 1024);
+    return maxAllocSizeMB != -1 ? maxAllocSizeMB : maxAllocSizeMB = (int)(this->getDeviceInfoInt64(CL_DEVICE_MAX_MEM_ALLOC_SIZE) / 1024 / 1024);
 }
 
 std::string EasyCL::errorMessage(cl_int error) {

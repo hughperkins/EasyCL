@@ -57,6 +57,12 @@ public:
 };
 
 class EasyCL_EXPORT EasyCL {
+private:
+    int maxWorkgroupSize = -1;
+    int localMemorySizeKB = -1;
+    int localMemorySize = -1
+    int maxAllocSizeMB = -1;
+    int computeUnits = -1;
 public:
     bool verbose;
 
