@@ -74,7 +74,7 @@ void CLWrapper::copyToHost() {
     error = clEnqueueReadBuffer(*(cl->queue), devicearray, CL_TRUE, 0, getElementSize() * N, getHostArray(), 0, NULL, NULL);    
     cl->checkError(error);
     if (error != CL_SUCCESS) {
-        throw std::runtime_error("wait for event on copytohost failed with " + easycl::toString(err) );
+        throw std::runtime_error("clEnqueueReadBuffer failed with " + easycl::toString(error) );
     }
     deviceDirty = false;
 }
