@@ -19,6 +19,7 @@ class CLQueue;
 
 class EasyCL_EXPORT CLKernel {
     EasyCL *cl; // NOT owned by this object, dont delete!
+    int preferredMultiple = -1;
 #ifdef _WIN32
 #pragma warning(disable: 4251)
 #endif
@@ -132,6 +133,7 @@ public:
     void run(int ND, const size_t *global_ws, const size_t *local_ws);
     void run(cl_command_queue *queue, int ND, const size_t *global_ws, const size_t *local_ws);
     void run(CLQueue *queue, int ND, const size_t *global_ws, const size_t *local_ws);
+    int getPreferredWorkGroupSizeMultiple();
 
     std::string buildLog;
 };

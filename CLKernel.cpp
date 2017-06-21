@@ -392,6 +392,22 @@ void CLKernel::run(cl_command_queue *queue, int ND, const size_t *global_ws, con
     nextArg = 0;
 }
 
+int CLKernel::getPreferredWorkGroupSizeMultiple()
+{
+    if (preferredMultiple != -1)
+        return preferredMultiple;
+
+    size_t value;
+    error = clGetKernelWorkGroupInfo(kernel, cl->device, CL_KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE, sizeof(size_t), &value, NULL);
+
+    if (error != CL_SUCCESS)
+    {
+        cl->checkError(error);
+    }
+
+    return preferredMultiple = (int)value;
+}
+
 // template class std::vector<cl_mem>;
 
 #define EASYCL_INSTANTIATE_FOR_TYPE(TYPE) \
