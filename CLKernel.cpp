@@ -324,12 +324,9 @@ void CLKernel::run_1d(cl_command_queue *queue, int global_worksize, int local_wo
 
 void CLKernel::run(cl_command_queue *queue, int ND, const size_t *global_ws, const size_t *local_ws) {
     //cout << "running kernel" << std::endl;
-    cl_event *event = 0;
-    if(cl->profilingOn) {
-        event = new cl_event();
-        cl->pushEvent(sourceFilename + "." + kernelName, event);
-    }
-    error = clEnqueueNDRangeKernel(*(queue), kernel, ND, NULL, global_ws, local_ws, 0, NULL, event);
+
+    cl_event *kernelFinishedEvent = new cl_event();
+    error = clEnqueueNDRangeKernel(*(queue), kernel, ND, NULL, global_ws, local_ws, 0, NULL, kernelFinishedEvent);
     if(error != 0) {
         cout << "kernel failed to run, saving to easycl-failedkernel.cl" << endl;
         ofstream f;
@@ -360,14 +357,22 @@ void CLKernel::run(cl_command_queue *queue, int ND, const size_t *global_ws, con
       }
     }
     cl->checkError(error);
-    //        error = clFinish(cl->queue);
-    //        cl->checkError(error);
-    //}
 
-    //void retrieveresultsandcleanup() {
-    for (int i = 0; i < (int)outputArgBuffers.size(); i++) {
-        clEnqueueReadBuffer(*(queue), outputArgBuffers[i], CL_TRUE, 0, outputArgSizes[i], outputArgPointers[i], 0, NULL, NULL);
+    //std::cout << "kernelFinishedEvent: " << kernelFinishedEvent << std::endl;
+
+    int numOutputBuffers = (int)outputArgBuffers.size();
+    cl_event readBufferEvents[numOutputBuffers];
+    for (int i = 0; i < numOutputBuffers; i++) {
+        clEnqueueReadBuffer(*(queue), outputArgBuffers[i], CL_FALSE, 0, outputArgSizes[i], outputArgPointers[i], 1, kernelFinishedEvent, &readBufferEvents[i]);
     }
+    clWaitForEvents(numOutputBuffers, readBufferEvents);
+
+    if(cl->profilingOn) {
+        cl->pushEvent(sourceFilename + "." + kernelName, kernelFinishedEvent);
+    }else{
+    	delete kernelFinishedEvent;
+    }
+
     //        std::cout << "done" << std::endl;
 
     for (int i = 0; i < (int)buffers.size(); i++) {
