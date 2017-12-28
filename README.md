@@ -99,7 +99,7 @@ Environment Vars
 
 You can use the environment variable `CL_GPUOFFSET` to choose a GPU. It shifts the gpu numbering downwards by this offset, ie gpu index 1 becomes 0, index 2 becomes 1. For example, if a program uses gpu index 0 by default, setting `CL_GPUOFFSET` to `1` will choose the second gpu, and setting it to `2` will choose the third gpu.
 
-The enviroment variable 'FAST_READ' should make reading buffers faster (not much), i.e. 'kernel->run' should now be a bit faster. Enable this behaviour by setting 'FAST_READ=true'.
+The enviroment variable `FAST_READ` should make reading buffers faster (not much), i.e. 'kernel->run' should now be a bit faster. Enable this behaviour by setting `FAST_READ=true`.
 
 Examples
 --------
