@@ -71,8 +71,8 @@ CLKernel *CLKernel::output(CLArray *clarray1d) {
     assert(clarray1d->isOnDevice() && !clarray1d->isOnHost());
     error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), (clarray1d->getDeviceArray()));
     cl->checkError(error);
-    nextArg++;  
-    return this;      
+    nextArg++;
+    return this;
 }
 
 CLKernel *CLKernel::inout(cl_mem *buf) {
@@ -139,7 +139,7 @@ CLKernel *CLKernel::output(CLWrapper *wrapper) {
     cl->checkError(error);
     nextArg++;
     wrappersToDirty.push_back(wrapper);
-    return this;      
+    return this;
 }
 
 CLKernel *CLKernel::localFloats(int count) {
@@ -361,11 +361,18 @@ void CLKernel::run(cl_command_queue *queue, int ND, const size_t *global_ws, con
     //std::cout << "kernelFinishedEvent: " << kernelFinishedEvent << std::endl;
 
     int numOutputBuffers = (int)outputArgBuffers.size();
-    cl_event readBufferEvents[numOutputBuffers];
-    for (int i = 0; i < numOutputBuffers; i++) {
-        clEnqueueReadBuffer(*(queue), outputArgBuffers[i], CL_FALSE, 0, outputArgSizes[i], outputArgPointers[i], 1, kernelFinishedEvent, &readBufferEvents[i]);
+    if(getenv("FAST_READ")){
+        //std::cout << "FAST_READ" << std::endl;
+        cl_event readBufferEvents[numOutputBuffers];
+        for (int i = 0; i < numOutputBuffers; i++) {
+            clEnqueueReadBuffer(*(queue), outputArgBuffers[i], CL_FALSE, 0, outputArgSizes[i], outputArgPointers[i], 1, kernelFinishedEvent, &readBufferEvents[i]);
+        }
+        clWaitForEvents(numOutputBuffers, readBufferEvents);
+    }else{
+        for (int i = 0; i < numOutputBuffers; i++) {
+            clEnqueueReadBuffer(*(queue), outputArgBuffers[i], CL_TRUE, 0, outputArgSizes[i], outputArgPointers[i], 1, kernelFinishedEvent, NULL);
+        }
     }
-    clWaitForEvents(numOutputBuffers, readBufferEvents);
 
     if(cl->profilingOn) {
         cl->pushEvent(sourceFilename + "." + kernelName, kernelFinishedEvent);
