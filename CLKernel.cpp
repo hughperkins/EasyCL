@@ -1,7 +1,7 @@
 // Copyright Hugh Perkins 2013, 2014, 2015 hughperkins at gmail
 //
-// This Source Code Form is subject to the terms of the Mozilla Public License, 
-// v. 2.0. If a copy of the MPL was not distributed with this file, You can 
+// This Source Code Form is subject to the terms of the Mozilla Public License,
+// v. 2.0. If a copy of the MPL was not distributed with this file, You can
 // obtain one at http://mozilla.org/MPL/2.0/.
 
 #include <stdexcept>
@@ -296,33 +296,33 @@ CLKernel *CLKernel::inout(int N, T *data) {
 }
 #endif // _CLKERNEL_STRUCTS_H
 
-void CLKernel::run_1d(int global_worksize, int local_worksize) {
+void CLKernel::run_1d(int global_worksize, int local_worksize, bool fast_read) {
     // size_t global_ws = global_worksize;
     // size_t local_ws = local_worksize;
-    run_1d(cl->queue, global_worksize, local_worksize);
+    run_1d(cl->queue, global_worksize, local_worksize, fast_read);
 }
 
-void CLKernel::run_1d(CLQueue *clqueue, int global_worksize, int local_worksize) {
+void CLKernel::run_1d(CLQueue *clqueue, int global_worksize, int local_worksize, bool fast_read) {
     // size_t global_ws = global_worksize;
     // size_t local_ws = local_worksize;
-    run_1d(&clqueue->queue, global_worksize, local_worksize);
+    run_1d(&clqueue->queue, global_worksize, local_worksize, fast_read);
 }
 
-void CLKernel::run(int ND, const size_t *global_ws, const size_t *local_ws) {
-    run(cl->queue, ND, global_ws, local_ws);
+void CLKernel::run(int ND, const size_t *global_ws, const size_t *local_ws, bool fast_read) {
+    run(cl->queue, ND, global_ws, local_ws, fast_read);
 }
 
-void CLKernel::run(CLQueue *clqueue, int ND, const size_t *global_ws, const size_t *local_ws) {
-    run(&clqueue->queue, ND, global_ws, local_ws);
+void CLKernel::run(CLQueue *clqueue, int ND, const size_t *global_ws, const size_t *local_ws, bool fast_read) {
+    run(&clqueue->queue, ND, global_ws, local_ws, fast_read);
 }
 
-void CLKernel::run_1d(cl_command_queue *queue, int global_worksize, int local_worksize) {
+void CLKernel::run_1d(cl_command_queue *queue, int global_worksize, int local_worksize, bool fast_read) {
     size_t global_ws = global_worksize;
     size_t local_ws = local_worksize;
-    run(queue, 1, &global_ws, &local_ws);
+    run(queue, 1, &global_ws, &local_ws, fast_read);
 }
 
-void CLKernel::run(cl_command_queue *queue, int ND, const size_t *global_ws, const size_t *local_ws) {
+void CLKernel::run(cl_command_queue *queue, int ND, const size_t *global_ws, const size_t *local_ws, bool fast_read) {
     //cout << "running kernel" << std::endl;
 
     cl_event *kernelFinishedEvent = new cl_event();
@@ -361,7 +361,7 @@ void CLKernel::run(cl_command_queue *queue, int ND, const size_t *global_ws, con
     //std::cout << "kernelFinishedEvent: " << kernelFinishedEvent << std::endl;
 
     int numOutputBuffers = (int)outputArgBuffers.size();
-    if(getenv("FAST_READ")){
+    if(fast_read){
         //std::cout << "FAST_READ" << std::endl;
         cl_event readBufferEvents[numOutputBuffers];
         for (int i = 0; i < numOutputBuffers; i++) {
