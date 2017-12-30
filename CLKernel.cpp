@@ -1,7 +1,7 @@
 // Copyright Hugh Perkins 2013, 2014, 2015 hughperkins at gmail
 //
-// This Source Code Form is subject to the terms of the Mozilla Public License, 
-// v. 2.0. If a copy of the MPL was not distributed with this file, You can 
+// This Source Code Form is subject to the terms of the Mozilla Public License,
+// v. 2.0. If a copy of the MPL was not distributed with this file, You can
 // obtain one at http://mozilla.org/MPL/2.0/.
 
 #include <stdexcept>
@@ -71,8 +71,8 @@ CLKernel *CLKernel::output(CLArray *clarray1d) {
     assert(clarray1d->isOnDevice() && !clarray1d->isOnHost());
     error = clSetKernelArg(kernel, nextArg, sizeof(cl_mem), (clarray1d->getDeviceArray()));
     cl->checkError(error);
-    nextArg++;  
-    return this;      
+    nextArg++;
+    return this;
 }
 
 CLKernel *CLKernel::inout(cl_mem *buf) {
@@ -139,7 +139,7 @@ CLKernel *CLKernel::output(CLWrapper *wrapper) {
     cl->checkError(error);
     nextArg++;
     wrappersToDirty.push_back(wrapper);
-    return this;      
+    return this;
 }
 
 CLKernel *CLKernel::localFloats(int count) {
@@ -296,40 +296,37 @@ CLKernel *CLKernel::inout(int N, T *data) {
 }
 #endif // _CLKERNEL_STRUCTS_H
 
-void CLKernel::run_1d(int global_worksize, int local_worksize) {
+void CLKernel::run_1d(int global_worksize, int local_worksize, bool fast_read) {
     // size_t global_ws = global_worksize;
     // size_t local_ws = local_worksize;
-    run_1d(cl->queue, global_worksize, local_worksize);
+    run_1d(cl->queue, global_worksize, local_worksize, fast_read);
 }
 
-void CLKernel::run_1d(CLQueue *clqueue, int global_worksize, int local_worksize) {
+void CLKernel::run_1d(CLQueue *clqueue, int global_worksize, int local_worksize, bool fast_read) {
     // size_t global_ws = global_worksize;
     // size_t local_ws = local_worksize;
-    run_1d(&clqueue->queue, global_worksize, local_worksize);
+    run_1d(&clqueue->queue, global_worksize, local_worksize, fast_read);
 }
 
-void CLKernel::run(int ND, const size_t *global_ws, const size_t *local_ws) {
-    run(cl->queue, ND, global_ws, local_ws);
+void CLKernel::run(int ND, const size_t *global_ws, const size_t *local_ws, bool fast_read) {
+    run(cl->queue, ND, global_ws, local_ws, fast_read);
 }
 
-void CLKernel::run(CLQueue *clqueue, int ND, const size_t *global_ws, const size_t *local_ws) {
-    run(&clqueue->queue, ND, global_ws, local_ws);
+void CLKernel::run(CLQueue *clqueue, int ND, const size_t *global_ws, const size_t *local_ws, bool fast_read) {
+    run(&clqueue->queue, ND, global_ws, local_ws, fast_read);
 }
 
-void CLKernel::run_1d(cl_command_queue *queue, int global_worksize, int local_worksize) {
+void CLKernel::run_1d(cl_command_queue *queue, int global_worksize, int local_worksize, bool fast_read) {
     size_t global_ws = global_worksize;
     size_t local_ws = local_worksize;
-    run(queue, 1, &global_ws, &local_ws);
+    run(queue, 1, &global_ws, &local_ws, fast_read);
 }
 
-void CLKernel::run(cl_command_queue *queue, int ND, const size_t *global_ws, const size_t *local_ws) {
+void CLKernel::run(cl_command_queue *queue, int ND, const size_t *global_ws, const size_t *local_ws, bool fast_read) {
     //cout << "running kernel" << std::endl;
-    cl_event *event = 0;
-    if(cl->profilingOn) {
-        event = new cl_event();
-        cl->pushEvent(sourceFilename + "." + kernelName, event);
-    }
-    error = clEnqueueNDRangeKernel(*(queue), kernel, ND, NULL, global_ws, local_ws, 0, NULL, event);
+
+    cl_event *kernelFinishedEvent = new cl_event();
+    error = clEnqueueNDRangeKernel(*(queue), kernel, ND, NULL, global_ws, local_ws, 0, NULL, kernelFinishedEvent);
     if(error != 0) {
         cout << "kernel failed to run, saving to easycl-failedkernel.cl" << endl;
         ofstream f;
@@ -360,14 +357,29 @@ void CLKernel::run(cl_command_queue *queue, int ND, const size_t *global_ws, con
       }
     }
     cl->checkError(error);
-    //        error = clFinish(cl->queue);
-    //        cl->checkError(error);
-    //}
 
-    //void retrieveresultsandcleanup() {
-    for (int i = 0; i < (int)outputArgBuffers.size(); i++) {
-        clEnqueueReadBuffer(*(queue), outputArgBuffers[i], CL_TRUE, 0, outputArgSizes[i], outputArgPointers[i], 0, NULL, NULL);
+    //std::cout << "kernelFinishedEvent: " << kernelFinishedEvent << std::endl;
+
+    int numOutputBuffers = (int)outputArgBuffers.size();
+    if(fast_read){
+        //std::cout << "FAST_READ" << std::endl;
+        cl_event readBufferEvents[numOutputBuffers];
+        for (int i = 0; i < numOutputBuffers; i++) {
+            clEnqueueReadBuffer(*(queue), outputArgBuffers[i], CL_FALSE, 0, outputArgSizes[i], outputArgPointers[i], 1, kernelFinishedEvent, &readBufferEvents[i]);
+        }
+        clWaitForEvents(numOutputBuffers, readBufferEvents);
+    }else{
+        for (int i = 0; i < numOutputBuffers; i++) {
+            clEnqueueReadBuffer(*(queue), outputArgBuffers[i], CL_TRUE, 0, outputArgSizes[i], outputArgPointers[i], 1, kernelFinishedEvent, NULL);
+        }
     }
+
+    if(cl->profilingOn) {
+        cl->pushEvent(sourceFilename + "." + kernelName, kernelFinishedEvent);
+    }else{
+    	delete kernelFinishedEvent;
+    }
+
     //        std::cout << "done" << std::endl;
 
     for (int i = 0; i < (int)buffers.size(); i++) {

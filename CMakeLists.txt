@@ -85,12 +85,12 @@ endif(PROVIDE_LUA_ENGINE)
 # add_definitions(-DCL_USE_DEPRECATED_OPENCL_1_0_APIS)
 
 if(BUILD_SHARED)
-add_library(EasyCL SHARED EasyCL.cpp CLKernel.cpp CLWrapper.cpp platforminfo_helper.cpp deviceinfo_helper.cpp DevicesInfo.cpp DeviceInfo.cpp 
+add_library(EasyCL SHARED EasyCL.cpp CLKernel.cpp CLWrapper.cpp platforminfo_helper.cpp deviceinfo_helper.cpp DevicesInfo.cpp DeviceInfo.cpp
   util/easycl_stringhelper.cpp util/StatefulTimer.cpp
   ${lua_src}
   ${TEMPLATESRC})
 else()
-add_library(EasyCL EasyCL.cpp CLKernel.cpp CLWrapper.cpp platforminfo_helper.cpp deviceinfo_helper.cpp DevicesInfo.cpp DeviceInfo.cpp 
+add_library(EasyCL EasyCL.cpp CLKernel.cpp CLWrapper.cpp platforminfo_helper.cpp deviceinfo_helper.cpp DevicesInfo.cpp DeviceInfo.cpp
   util/easycl_stringhelper.cpp util/StatefulTimer.cpp
   ${lua_src}
   ${TEMPLATESRC})
@@ -151,7 +151,7 @@ if(BUILD_TESTS)
       test/testucharwrapper.cpp test/testkernelstore.cpp test/testdirtywrapper.cpp test/testDeviceInfo.cpp
       ${TEMPLATETESTS} test/testStructs.cpp
       test/asserts.cpp test/gtest_main.cpp test/GtestGlobals.cpp test/testprofiling.cpp
-      test/testcopybuffer.cpp test/teststatefultimer.cpp
+      test/testcopybuffer.cpp test/teststatefultimer.cpp test/testFastRead.cpp
       ${CLBLAS_TEST_SOURCES})
   target_link_libraries(easycl_unittests easycl_gtest EasyCL)
   if(USE_CLEW)
@@ -199,4 +199,4 @@ CONFIGURE_FILE(
   "${CMAKE_CURRENT_BINARY_DIR}/cmake/cmake_uninstall.cmake"
   IMMEDIATE @ONLY)
 ADD_CUSTOM_TARGET(uninstall
-  "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake/cmake_uninstall.cmake") 
+  "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake/cmake_uninstall.cmake")

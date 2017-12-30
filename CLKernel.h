@@ -25,7 +25,6 @@ class EasyCL_EXPORT CLKernel {
     std::string sourceFilename; // just for info really
     std::string kernelName; // this too
     cl_program program;
-    cl_kernel kernel;
     cl_int error;
     std::string source;
 
@@ -61,6 +60,7 @@ class EasyCL_EXPORT CLKernel {
 #endif
 
 public:
+    cl_kernel kernel;
     CLKernel(EasyCL *easycl, std::string sourceFilename, std::string kernelName, std::string source, cl_program program, cl_kernel kernel);
     CLKernel(const CLKernel &kernel);
     CLKernel &operator=(const CLKernel &kernel);
@@ -126,12 +126,12 @@ public:
     // void run(int ND, const size_t *global_ws, const size_t *local_ws);
     // void run_1d(CLQueue *queue, int global_worksize, int local_worksize);
     // void run(CLQueue *queue, int ND, const size_t *global_ws, const size_t *local_ws);
-    void run_1d(int global_worksize, int local_worksize);
-    void run_1d(cl_command_queue *queue, int global_worksize, int local_worksize);
-    void run_1d(CLQueue *queue, int global_worksize, int local_worksize);
-    void run(int ND, const size_t *global_ws, const size_t *local_ws);
-    void run(cl_command_queue *queue, int ND, const size_t *global_ws, const size_t *local_ws);
-    void run(CLQueue *queue, int ND, const size_t *global_ws, const size_t *local_ws);
+    void run_1d(int global_worksize, int local_worksize, bool fast_read=false);
+    void run_1d(cl_command_queue *queue, int global_worksize, int local_worksize, bool fast_read=false);
+    void run_1d(CLQueue *queue, int global_worksize, int local_worksize, bool fast_read=false);
+    void run(int ND, const size_t *global_ws, const size_t *local_ws, bool fast_read=false);
+    void run(cl_command_queue *queue, int ND, const size_t *global_ws, const size_t *local_ws, bool fast_read=false);
+    void run(CLQueue *queue, int ND, const size_t *global_ws, const size_t *local_ws, bool fast_read=false);
 
     std::string buildLog;
 };

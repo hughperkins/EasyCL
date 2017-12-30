@@ -33,7 +33,7 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-EasyCL 
+EasyCL
 ============
 
 Easy to run kernels using OpenCL.  (renamed from OpenCLHelper)
@@ -147,12 +147,12 @@ CLArray and CLWrapper objects
 To make it possible to reuse data between kernels, without moving back to PC
 main memory, and back onto the GPU, you can use CLWrapper objects.
 
-These can be created on the GPU, or on the host, and moved backwards 
+These can be created on the GPU, or on the host, and moved backwards
 and forwards between each other, as required.  They can be passed as an 'input'
 and 'output' to a CLKernel object.  They can be reused between kernels.
 
 There are two 'flavors':
-- CLArray: more automated, but more memory copying, since creates a new array 
+- CLArray: more automated, but more memory copying, since creates a new array
 on the host
 - CLWrapper: wraps an existing host array, you'll need to call `copyToDevice()` and
 `copyToHost()` yourself
@@ -206,7 +206,7 @@ CLWrapper objects are currently available as `CLIntWrapper` and `CLFloatWrapper`
 CLArray objects
 ---------------
 
-Compared to CLWrapper objects, CLArray objects are more automated, but involve more 
+Compared to CLWrapper objects, CLArray objects are more automated, but involve more
 memory copying.
 
 ```c++
@@ -214,7 +214,7 @@ EasyCL cl;
 
 CLArrayFloat *one = cl.arrayFloat(10000); // create CLArray object for 10,000 floats
 (*one)[0] = 5; // give some data...
-(*one)[1] = 7; 
+(*one)[1] = 7;
 
 CLArrayFloat *two = cl.arrayFloat(10000);
 
@@ -222,7 +222,7 @@ CLArrayFloat *two = cl.arrayFloat(10000);
 kernel->in(one)->out(two);
 ```
 
-You can then take the 'two' CLArray object, and pass it as the 'input' to 
+You can then take the 'two' CLArray object, and pass it as the 'input' to
 a different kernel, or you can use operator[] to read values from it.
 
 Currently, CLArray is available as 'CLArrayFloat' and 'CLArrayInt'.
@@ -325,7 +325,7 @@ make install
 #### Pre-requisites
 
 - OpenCL needs to be installed, which means things like:
-  - in linux, you'll need a libOpenCL.so installed, and 
+  - in linux, you'll need a libOpenCL.so installed, and
   - an OpenCL implementation, ie some kind of .so file, and
   - an appropriate text file at /etc/OpenCL/vendors/somename.icd , containing the full path to the Open
 CL implementation .so file
@@ -430,6 +430,10 @@ What if I just have a question?
 
 # Recent changes
 
+* 2017 dec 28th:
+  * @iame6162013 fixed race conditions when reading output buffers
+  * @iame6162013 added kernel fast read option
+    * Should make `kernel->run` a bit faster
 * 2017 Apr 29th:
   * added var `CL_GPUOFFSET`, which lets you choose a GPU, by setting this var to 1,2,3, ...
 * 2016 Oct 16th:
@@ -490,4 +494,3 @@ License
 -------
 
 EasyCL is available under MPL v2 license, http://mozilla.org/MPL/2.0/19
-
