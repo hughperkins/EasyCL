@@ -368,6 +368,9 @@ void CLKernel::run(cl_command_queue *queue, int ND, const size_t *global_ws, con
             clEnqueueReadBuffer(*(queue), outputArgBuffers[i], CL_FALSE, 0, outputArgSizes[i], outputArgPointers[i], 1, kernelFinishedEvent, &readBufferEvents[i]);
         }
         clWaitForEvents(numOutputBuffers, readBufferEvents);
+        for(int i=0; i<numOutputBuffers; i++){
+            clReleaseEvent(readBufferEvents[i]);
+        }
     }else{
         for (int i = 0; i < numOutputBuffers; i++) {
             clEnqueueReadBuffer(*(queue), outputArgBuffers[i], CL_TRUE, 0, outputArgSizes[i], outputArgPointers[i], 1, kernelFinishedEvent, NULL);
@@ -377,7 +380,8 @@ void CLKernel::run(cl_command_queue *queue, int ND, const size_t *global_ws, con
     if(cl->profilingOn) {
         cl->pushEvent(sourceFilename + "." + kernelName, kernelFinishedEvent);
     }else{
-    	delete kernelFinishedEvent;
+        clReleaseEvent(*kernelFinishedEvent);
+        delete kernelFinishedEvent;
     }
 
     //        std::cout << "done" << std::endl;
