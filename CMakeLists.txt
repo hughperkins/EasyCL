@@ -59,9 +59,11 @@ endif()
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 # include_directories("${CMAKE_INSTALL_PREFIX}/include")
 
-include_directories(thirdparty/lua-5.1.5/src)
-set(TEMPLATESRC templates/LuaTemplater.cpp templates/TemplatedKernel.cpp)
-set(TEMPLATETESTS test/testLuaTemplater.cpp test/testTemplatedKernel.cpp)
+if(PROVIDE_LUA_ENGINE)
+    include_directories(thirdparty/lua-5.1.5/src)
+    set(TEMPLATESRC templates/LuaTemplater.cpp templates/TemplatedKernel.cpp)
+    set(TEMPLATETESTS test/testLuaTemplater.cpp test/testTemplatedKernel.cpp)
+endif(PROVIDE_LUA_ENGINE)
 
 SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
